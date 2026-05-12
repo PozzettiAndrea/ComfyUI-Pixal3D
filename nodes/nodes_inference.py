@@ -128,6 +128,16 @@ class Pixal3DGenerateGLB(io.ComfyNode):
                 # GLB knobs
                 io.Int.Input("decimation_target", default=200000, min=10000, max=1000000, step=10000, optional=True),
                 io.Int.Input("texture_size", default=2048, min=512, max=4096, step=256, optional=True),
+                io.Boolean.Input(
+                    "force_opaque",
+                    default=True,
+                    tooltip=(
+                        "Set every vertex alpha to 1.0 (fully opaque) in the exported GLB. "
+                        "Useful when the model emits low-alpha vertices that render as see-through. "
+                        "Untoggle to keep the per-vertex alpha from the texture voxel grid."
+                    ),
+                    optional=True,
+                ),
                 io.String.Input("filename_prefix", default="pixal3d", optional=True),
             ],
             outputs=[
@@ -157,6 +167,7 @@ class Pixal3DGenerateGLB(io.ComfyNode):
         tex_rescale_t: float = 3.0,
         decimation_target: int = 200000,
         texture_size: int = 2048,
+        force_opaque: bool = True,
         filename_prefix: str = "pixal3d",
     ):
         from .stages import generate_glb
@@ -182,6 +193,7 @@ class Pixal3DGenerateGLB(io.ComfyNode):
             tex_steps=tex_steps,
             tex_guidance=tex_guidance,
             tex_rescale=tex_rescale,
+            force_opaque=force_opaque,
             tex_rescale_t=tex_rescale_t,
             decimation_target=decimation_target,
             texture_size=texture_size,

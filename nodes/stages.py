@@ -472,6 +472,7 @@ def generate_glb(
     texture_size: int = 2048,
     pre_simplify: bool = True,
     pre_simplify_target_faces: int = 2_000_000,
+    force_opaque: bool = True,
     filename_prefix: str = "pixal3d",
 ) -> str:
     """Run cascade + extract GLB. Returns absolute path to the saved GLB."""
@@ -526,15 +527,19 @@ def generate_glb(
     base_color_slice = pipeline.pbr_attr_layout.get("base_color", slice(0, 3))
     rgb = vattrs[:, base_color_slice].clamp(0.0, 1.0).cpu().numpy()
     rgb = (rgb * 255).astype(np.uint8)
-    alpha_slice = pipeline.pbr_attr_layout.get("alpha", None)
-    if alpha_slice is not None:
-        a = vattrs[:, alpha_slice].clamp(0.0, 1.0).cpu().numpy()
-        a = (a * 255).astype(np.uint8)
-        if a.ndim == 2 and a.shape[1] == 1:
-            a = a[:, 0]
-        vertex_colors = np.concatenate([rgb, a[:, None]], axis=1)
+    if force_opaque:
+        a = np.full((rgb.shape[0], 1), 255, dtype=np.uint8)
+        vertex_colors = np.concatenate([rgb, a], axis=1)
     else:
-        vertex_colors = rgb
+        alpha_slice = pipeline.pbr_attr_layout.get("alpha", None)
+        if alpha_slice is not None:
+            a = vattrs[:, alpha_slice].clamp(0.0, 1.0).cpu().numpy()
+            a = (a * 255).astype(np.uint8)
+            if a.ndim == 2 and a.shape[1] == 1:
+                a = a[:, 0]
+            vertex_colors = np.concatenate([rgb, a[:, None]], axis=1)
+        else:
+            vertex_colors = rgb
 
     tri = trimesh.Trimesh(
         vertices=verts.cpu().numpy(),
