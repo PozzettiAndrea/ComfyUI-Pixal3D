@@ -414,8 +414,6 @@ def generate_glb(
     filename_prefix: str = "pixal3d",
 ) -> str:
     """Run cascade + extract GLB. Returns absolute path to the saved GLB."""
-    import o_voxel
-
     pipeline = init_pipeline(low_vram=low_vram)
 
     pil = comfy_image_to_pil(image)
@@ -451,25 +449,37 @@ def generate_glb(
     )
 
     mesh = mesh_list[0]
-    log.info(f"[pixal3d] Mesh extracted at resolution {res}; building GLB")
+    log.info(f"[pixal3d] Mesh extracted at resolution {res}; baking vertex colors + GLB")
 
-    # Optional pre-simplify (TRELLIS2 trick) before remesh to keep VRAM in check.
-    # `to_glb` already handles decimation via `decimation_target`, but pre-simplify
-    # before remesh saves headroom when the raw mesh is huge.
-    glb = o_voxel.postprocess.to_glb(
-        vertices=mesh.vertices,
-        faces=mesh.faces,
-        attr_volume=mesh.attrs,
-        coords=mesh.coords,
-        attr_layout=pipeline.pbr_attr_layout,
-        grid_size=res,
-        aabb=[[-0.5, -0.5, -0.5], [0.5, 0.5, 0.5]],
-        decimation_target=decimation_target,
-        texture_size=texture_size,
-        remesh=True,
-        remesh_band=1,
-        remesh_project=0,
-        use_tqdm=True,
+    # MVP export path: query per-vertex PBR from the voxel grid, write a vertex-colored
+    # GLB. Upstream o_voxel.postprocess.to_glb (which does UV unwrap + texture baking) is
+    # not available in the o_voxel_vb_ap fork (its nvdiffrast-dependent paths were
+    # stripped). We trade texture-map fidelity for an MVP that uses only the fork's API.
+    # A future iteration can do the drtk-based UV bake — see plan file Phase 2.
+    import trimesh
+
+    verts = mesh.vertices.detach()
+    faces = mesh.faces.detach()
+    with torch.no_grad():
+        vattrs = mesh.query_vertex_attrs()  # [N, C], C covers base_color/metallic/roughness/alpha
+    base_color_slice = pipeline.pbr_attr_layout.get("base_color", slice(0, 3))
+    rgb = vattrs[:, base_color_slice].clamp(0.0, 1.0).cpu().numpy()
+    rgb = (rgb * 255).astype(np.uint8)
+    alpha_slice = pipeline.pbr_attr_layout.get("alpha", None)
+    if alpha_slice is not None:
+        a = vattrs[:, alpha_slice].clamp(0.0, 1.0).cpu().numpy()
+        a = (a * 255).astype(np.uint8)
+        if a.ndim == 2 and a.shape[1] == 1:
+            a = a[:, 0]
+        vertex_colors = np.concatenate([rgb, a[:, None]], axis=1)
+    else:
+        vertex_colors = rgb
+
+    tri = trimesh.Trimesh(
+        vertices=verts.cpu().numpy(),
+        faces=faces.cpu().numpy(),
+        vertex_colors=vertex_colors,
+        process=False,
     )
 
     # GLTF rotation (Y-up) — verbatim from inference.py:181
@@ -482,16 +492,16 @@ def generate_glb(
         ],
         dtype=np.float64,
     )
-    glb.apply_transform(rot)
+    tri.apply_transform(rot)
 
     out_dir = folder_paths.get_output_directory()
     ts = int(time.time() * 1000)
     out_path = os.path.join(out_dir, f"{filename_prefix}_{ts}.glb")
-    glb.export(out_path, extension_webp=True)
+    tri.export(out_path)
     log.info(f"[pixal3d] Saved GLB to {out_path}")
 
     # Drop large intermediates before returning across IPC.
-    del mesh, mesh_list, shape_slat, tex_slat, glb
+    del mesh, mesh_list, shape_slat, tex_slat, tri, vattrs
     gc.collect()
     torch.cuda.empty_cache()
 
