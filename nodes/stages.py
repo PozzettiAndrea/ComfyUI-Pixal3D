@@ -135,6 +135,10 @@ def _local_pixal3d_dir() -> Path:
 
 _pipeline = None
 _moge_model = None
+# id(model_instance) -> ModelPatcher. Used by _wrap_with_comfy_patcher to route
+# pixal3d's per-stage .to(device) / .cpu() calls through ComfyUI's memory
+# manager (load_models_gpu auto-offloads competing models in the workflow).
+_model_patchers: dict = {}
 
 
 # ============================================================================
@@ -209,8 +213,9 @@ def _patch_rembg_to_public_model():
             )
             model_name = "ZhengPeng7/BiRefNet"
         _orig_init(self, model_name=model_name, **kwargs)
-        # Native dtype (fp16); just pin device.
-        self.model.to(comfy.model_management.get_torch_device())
+        # Stay on CPU at construction; _wrap_pipeline_models_with_patchers will
+        # wrap self.model so subsequent .to(device) / .cpu() route through
+        # ComfyUI's load_models_gpu / unpatch_model.
 
     def _patched_call(self, image):
         # Cast input to model dtype/device. Upstream uses float32 transforms but
@@ -268,6 +273,83 @@ def _set_attention_backends(backend: str):
     log.info(f"[attn] dense + sparse backend = {resolved} (requested: {backend})")
 
 
+def _wrap_with_comfy_patcher(model):
+    """Wrap an nn.Module in a ComfyUI ModelPatcher and reroute its `.to()` / `.cpu()`
+    so pixal3d's per-stage swap goes through `load_models_gpu` / `unpatch_model`.
+
+    The pixal3d pipeline.run() already calls `m.to(device)` before each stage and
+    `m.cpu()` after; we just intercept those to inform ComfyUI's memory manager.
+    Net effect: when ComfyUI loads another model (e.g. an upstream SDXL UNet),
+    it knows our cascade models are evict-able, and vice versa.
+
+    Idempotent per-instance.
+    """
+    import comfy.model_patcher
+
+    if id(model) in _model_patchers:
+        return _model_patchers[id(model)]
+
+    load_device = comfy.model_management.get_torch_device()
+    offload_device = comfy.model_management.unet_offload_device()
+
+    # Build the patcher; the model stays on whatever device it's currently on
+    # (typically CPU after from_pretrained).
+    patcher = comfy.model_patcher.ModelPatcher(
+        model, load_device=load_device, offload_device=offload_device,
+    )
+    _model_patchers[id(model)] = patcher
+
+    _orig_to = model.to
+    _orig_cpu = model.cpu
+
+    def _patched_to(*args, **kwargs):
+        # Detect a request to move to the active CUDA device (pixal3d's swap-in).
+        tgt = args[0] if args else kwargs.get("device")
+        is_cuda_target = False
+        if isinstance(tgt, torch.device):
+            is_cuda_target = tgt.type == "cuda"
+        elif isinstance(tgt, str):
+            is_cuda_target = tgt.startswith("cuda")
+        if is_cuda_target:
+            comfy.model_management.load_models_gpu([patcher])
+            return model
+        # Anything else (dtype-only, explicit CPU, etc.): pass through.
+        return _orig_to(*args, **kwargs)
+
+    def _patched_cpu():
+        # pixal3d's swap-out: unpatch + tell ComfyUI we're done with this slot.
+        patcher.unpatch_model(device_to=offload_device)
+        comfy.model_management.soft_empty_cache()
+        return model
+
+    model.to = _patched_to
+    model.cpu = _patched_cpu
+    return patcher
+
+
+def _wrap_pipeline_models_with_patchers(pipeline):
+    """Wrap every nn.Module the cascade swaps in/out: 8 cascade models +
+    4 DinoV3 cond models + rembg. All start on CPU; load_models_gpu moves
+    them to GPU on first `.to(device)` and offloads on `.cpu()`."""
+    for key, m in pipeline.models.items():
+        _wrap_with_comfy_patcher(m)
+        log.info(f"[patcher] wrapped pipeline.models['{key}']")
+    for attr in (
+        "image_cond_model_ss",
+        "image_cond_model_shape_512",
+        "image_cond_model_shape_1024",
+        "image_cond_model_tex_1024",
+    ):
+        m = getattr(pipeline, attr, None)
+        if m is not None:
+            _wrap_with_comfy_patcher(m)
+            log.info(f"[patcher] wrapped pipeline.{attr}")
+    if getattr(pipeline, "rembg_model", None) is not None:
+        # rembg's BiRefNet wrapper holds the nn.Module at `.model`.
+        _wrap_with_comfy_patcher(pipeline.rembg_model.model)
+        log.info("[patcher] wrapped pipeline.rembg_model.model")
+
+
 def init_pipeline(attn_backend: str = "auto") -> "object":
     """Load + cache Pixal3D pipeline + 4 DinoV3 cond models. Idempotent.
 
@@ -300,17 +382,12 @@ def init_pipeline(attn_backend: str = "auto") -> "object":
     pipeline.image_cond_model_shape_1024 = _build_cond("shape_1024")
     pipeline.image_cond_model_tex_1024 = _build_cond("tex_1024")
 
-    # Always per-stage swap (pixal3d's `low_vram=True`): cascade DiTs swap CPU<->GPU
-    # between stages. This is the only mode that fits a 24 GB card and aligns with
-    # ComfyUI's expectation that off-stage models live on CPU.
+    # Per-stage swap routed through ComfyUI's ModelPatcher / load_models_gpu.
+    # pixal3d's pipeline.run() already calls `model.to(device)` / `model.cpu()`
+    # between stages; we wrap each model so those calls go through ComfyUI's
+    # memory manager (auto-offloads competing models, plays nice across nodes).
     pipeline.low_vram = True
-    device = comfy.model_management.get_torch_device()
-    pipeline.to(device)
-
-    pipeline.image_cond_model_ss.to(device)
-    pipeline.image_cond_model_shape_512.to(device)
-    pipeline.image_cond_model_shape_1024.to(device)
-    pipeline.image_cond_model_tex_1024.to(device)
+    _wrap_pipeline_models_with_patchers(pipeline)
 
     log.info("[pixal3d] Pre-loading NAF upsamplers")
     for attr in (
