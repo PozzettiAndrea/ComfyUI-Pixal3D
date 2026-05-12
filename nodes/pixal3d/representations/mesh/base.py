@@ -28,7 +28,7 @@ class Mesh:
         )
         
     def cuda(self, non_blocking=False):
-        return self.to('cuda', non_blocking=non_blocking)
+        return self.to(comfy.model_management.get_torch_device(), non_blocking=non_blocking)
         
     def cpu(self):
         return self.to('cpu')
