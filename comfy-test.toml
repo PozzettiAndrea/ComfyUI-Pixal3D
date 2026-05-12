@@ -1,13 +1,16 @@
 [test]
-levels = ["syntax", "install", "execution"]
-publish = 'true'
+levels = ["syntax", "install", "registration", "instantiation", "execution"]
+publish = true
 
 [test.workflows]
+# Pixal3D is pixel-aligned image-to-3D (Tencent ARC, SIGGRAPH 2026). The
+# basic workflow loads HF-hosted weights + decodes a textured GLB, so it
+# runs on GPU only. CPU platforms are disabled below for the same reason.
+timeout = 600
 cpu = []
-gpu = ["!mesh_audit"]
+gpu = ["pixal3d_basic"]
 
 [test.platforms]
-# CPU platforms
 linux = false
 macos = false
 windows = false
