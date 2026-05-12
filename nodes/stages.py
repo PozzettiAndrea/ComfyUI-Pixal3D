@@ -795,6 +795,25 @@ def generate_glb(
 
     verts = mesh.vertices.detach()
     faces = mesh.faces.detach()
+
+    # Fix mesh winding the pixal3d/cumesh-native way (matches TRELLIS2
+    # nodes_unwrap.py:431). The shape decoder produces inconsistent / inverted
+    # winding (ray-cast showed ~50% inward face normals on prior outputs).
+    # Upstream pixal3d cleaned this up inside o_voxel.postprocess.to_glb,
+    # which our drtk fork stripped -- but cumesh primitives are still here.
+    # All cleanup runs on GPU.
+    with _phase("cumesh: cleanup + unify_face_orientations"):
+        import cumesh
+        _cm = cumesh.CuMesh()
+        _cm.init(verts.contiguous(), faces.contiguous().int())
+        _cm.remove_duplicate_faces()
+        _cm.repair_non_manifold_edges()
+        _cm.unify_face_orientations()
+        verts, faces = _cm.read()
+        # Refresh the wrapped mesh so query_vertex_attrs sees the cleaned set.
+        mesh.vertices = verts.float()
+        mesh.faces = faces.int()
+
     with torch.no_grad():
         vattrs = mesh.query_vertex_attrs()  # [N, C], C covers base_color/metallic/roughness/alpha
     base_color_slice = pipeline.pbr_attr_layout.get("base_color", slice(0, 3))
@@ -838,16 +857,6 @@ def generate_glb(
         vertex_colors=vertex_colors,
         process=False,
     )
-
-    # Fix mesh winding -- the shape decoder produces inconsistent/inverted
-    # winding (we measured mixed inward/outward face normals on prior runs).
-    # Upstream pixal3d cleaned this up inside o_voxel.postprocess.to_glb(remesh=True),
-    # which our drtk fork stripped. trimesh.repair.fix_winding walks face
-    # adjacency to align winding, then flips globally if the resulting volume
-    # has negative sign. Cheap equivalent of upstream's remesh-driven fix.
-    with _phase("fix_winding"):
-        trimesh.repair.fix_winding(tri)
-
     if material is not None:
         tri.visual.material = material
 
