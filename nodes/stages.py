@@ -290,53 +290,30 @@ def _patch_naf_to_local_model():
 # Pipeline init
 # ============================================================================
 
-def _patch_rembg_to_public_model():
-    """Pixal3D's pipeline.json pins briaai/RMBG-2.0 which is a gated HF repo.
-    Substitute the public ZhengPeng7/BiRefNet (same architecture, MIT-licensed).
-    Also:
-      - keep BiRefNet at its native fp16 (not fp32) -- matches GPU capability.
-      - pin to the active torch device -- the pipeline's low_vram swap
-        (`rembg_model.to(self.device)`) doesn't reliably take effect through
-        the wrapper's `to()` signature.
-      - patch __call__ to cast inputs to model dtype (upstream call site uses
-        float32 transforms but loads fp16 weights -> dtype mismatch).
+def _stub_rembg():
+    """Replace BiRefNet.__init__ with a no-op stub.
+
+    Pixal3D's pipeline.json pins briaai/RMBG-2.0 (gated HF repo). We never call
+    rembg from our wrapper anymore -- preprocess_image() below is pure PIL and
+    pipeline.run(preprocess_image=False) bypasses pixal3d's own rembg call.
+    Stubbing the constructor avoids:
+      1. HF 401 on the gated repo at from_pretrained time, and
+      2. ~1 GB of unused BiRefNet weights sitting in RAM.
+
+    Background removal is now the user's responsibility -- LoadImage's MASK
+    output, or any community rembg node feeding Pixal3DPreprocessImage's mask.
     Idempotent.
     """
     from .pixal3d.pipelines import rembg as _rembg
-    if getattr(_rembg.BiRefNet, "_pixal3d_patched", False):
+    if getattr(_rembg.BiRefNet, "_pixal3d_stubbed", False):
         return
-    _orig_init = _rembg.BiRefNet.__init__
 
-    def _patched_init(self, model_name="ZhengPeng7/BiRefNet", **kwargs):
-        if model_name == "briaai/RMBG-2.0":
-            log.info(
-                "[rembg] Substituting gated 'briaai/RMBG-2.0' -> public "
-                "'ZhengPeng7/BiRefNet' (same arch; accept the license at "
-                "huggingface.co/briaai/RMBG-2.0 and set HF_TOKEN for the original)."
-            )
-            model_name = "ZhengPeng7/BiRefNet"
-        _orig_init(self, model_name=model_name, **kwargs)
-        # Stay on CPU at construction; _wrap_pipeline_models_with_patchers will
-        # wrap self.model so subsequent .to(device) / .cpu() route through
-        # ComfyUI's load_models_gpu / unpatch_model.
+    def _stub_init(self, model_name=None, **kwargs):
+        self.model = None
+        self.transform_image = None
 
-    def _patched_call(self, image):
-        # Cast input to model dtype/device. Upstream uses float32 transforms but
-        # the model weights are fp16 -> RuntimeError without this cast.
-        p = next(self.model.parameters())
-        input_images = self.transform_image(image).unsqueeze(0).to(device=p.device, dtype=p.dtype)
-        with torch.no_grad():
-            preds = self.model(input_images)[-1].sigmoid().float().cpu()
-        from torchvision import transforms as _tvt
-        pred = preds[0].squeeze()
-        pred_pil = _tvt.ToPILImage()(pred)
-        mask = pred_pil.resize(image.size)
-        image.putalpha(mask)
-        return image
-
-    _rembg.BiRefNet.__init__ = _patched_init
-    _rembg.BiRefNet.__call__ = _patched_call
-    _rembg.BiRefNet._pixal3d_patched = True
+    _rembg.BiRefNet.__init__ = _stub_init
+    _rembg.BiRefNet._pixal3d_stubbed = True
 
 
 def _resolve_attn_backend(backend: str) -> str:
@@ -447,10 +424,11 @@ def _wrap_pipeline_models_with_patchers(pipeline):
         if m is not None:
             _wrap_with_comfy_patcher(m)
             log.info(f"[patcher] wrapped pipeline.{attr}")
-    if getattr(pipeline, "rembg_model", None) is not None:
-        # rembg's BiRefNet wrapper holds the nn.Module at `.model`.
-        _wrap_with_comfy_patcher(pipeline.rembg_model.model)
-        log.info("[patcher] wrapped pipeline.rembg_model.model")
+    # NOTE: pipeline.rembg_model is intentionally NOT wrapped. We never call it
+    # (pipeline.run(preprocess_image=False) bypasses its preprocess_image), and
+    # wrapping it caused a load_models_gpu <-> patched .to() recursion via the
+    # BiRefNet wrapper. Background removal is the user's responsibility (LoadImage
+    # MASK, or a community rembg node feeding Pixal3DPreprocessImage's mask input).
 
 
 def init_pipeline(attn_backend: str = "auto") -> "object":
@@ -471,7 +449,7 @@ def init_pipeline(attn_backend: str = "auto") -> "object":
         with _phase("download Pixal3D weights"):
             local_dir = _download_pixal3d_weights()
 
-        _patch_rembg_to_public_model()
+        _stub_rembg()
         _patch_naf_to_local_model()
         _set_attention_backends(attn_backend)
 
@@ -565,12 +543,85 @@ def pil_to_comfy_image(img: Image.Image) -> torch.Tensor:
 # Preprocess
 # ============================================================================
 
-def preprocess_image(image: torch.Tensor, bg_color=(0, 0, 0)) -> torch.Tensor:
-    """Background removal + alpha bbox crop + 1024-max resize via pipeline.preprocess_image."""
-    pipeline = init_pipeline()
-    pil = comfy_image_to_pil(image)
-    out = pipeline.preprocess_image(pil, bg_color=tuple(bg_color))
-    return pil_to_comfy_image(out)
+def preprocess_image(
+    image: torch.Tensor,
+    mask: Optional[torch.Tensor] = None,
+    bg_color=(0, 0, 0),
+) -> torch.Tensor:
+    """Pure-PIL preprocess: alpha bbox crop + 1024-max resize + bg fill.
+
+    Mirrors `pixal3d.pipelines.pixal3d_image_to_3d.Pixal3DImageTo3DPipeline.preprocess_image`
+    minus the rembg call. Background removal is the user's responsibility:
+      - If `mask` is provided (ComfyUI MASK, shape [B,H,W] or [H,W], 1.0=opaque,
+        0.0=transparent), it's used as the alpha channel for bbox cropping.
+      - If `mask` is absent, the image is assumed to already have a clean
+        background (e.g. PNG loaded via LoadImage with a transparent BG, where
+        ComfyUI's MASK output represents the alpha and would normally be wired in).
+        We treat the entire image as the subject (no crop on alpha) and just resize.
+
+    Args:
+        image: ComfyUI IMAGE tensor, [B,H,W,3] float in [0,1].
+        mask:  ComfyUI MASK tensor, [B,H,W] or [H,W] float in [0,1]. Optional.
+        bg_color: RGB tuple in 0-255.
+
+    Returns:
+        ComfyUI IMAGE tensor, [1,H',W',3], H'==W'<=1024, subject centered.
+    """
+    # Image -> PIL RGB
+    if image.ndim == 4:
+        image = image[0]
+    img_np = (image.detach().cpu().numpy().clip(0, 1) * 255.0).astype(np.uint8)
+    pil_rgb = Image.fromarray(img_np, mode="RGB")
+
+    # Optional mask -> PIL L
+    pil_alpha = None
+    if mask is not None:
+        m = mask
+        if m.ndim == 3:
+            m = m[0]
+        m_np = (m.detach().cpu().numpy().clip(0, 1) * 255.0).astype(np.uint8)
+        pil_alpha = Image.fromarray(m_np, mode="L")
+        # Sanity: mask spatial dims must match image. If not, resize mask to image.
+        if pil_alpha.size != pil_rgb.size:
+            pil_alpha = pil_alpha.resize(pil_rgb.size, Image.Resampling.NEAREST)
+
+    # Downscale longest side to 1024 (same as upstream pixal3d preprocess_image).
+    max_size = max(pil_rgb.size)
+    scale = min(1.0, 1024 / max_size)
+    if scale < 1.0:
+        new_size = (int(pil_rgb.width * scale), int(pil_rgb.height * scale))
+        pil_rgb = pil_rgb.resize(new_size, Image.Resampling.LANCZOS)
+        if pil_alpha is not None:
+            pil_alpha = pil_alpha.resize(new_size, Image.Resampling.LANCZOS)
+
+    # If we have a meaningful mask (not all-white), crop to alpha bbox.
+    if pil_alpha is not None:
+        a = np.asarray(pil_alpha)
+        if not np.all(a >= int(0.8 * 255)):
+            bbox = np.argwhere(a > 0.8 * 255)
+            if bbox.size > 0:
+                x0, y0 = int(np.min(bbox[:, 1])), int(np.min(bbox[:, 0]))
+                x1, y1 = int(np.max(bbox[:, 1])), int(np.max(bbox[:, 0]))
+                cx, cy = (x0 + x1) / 2.0, (y0 + y1) / 2.0
+                side = max(x1 - x0, y1 - y0)
+                side = int(side * 1.1)
+                half = side // 2
+                bbox = (int(cx - half), int(cy - half), int(cx + half), int(cy + half))
+                # Combine alpha into RGBA before cropping so out-of-frame pixels
+                # become transparent (PIL .crop pads with implicit transparent).
+                rgba = pil_rgb.convert("RGBA")
+                rgba.putalpha(pil_alpha)
+                rgba = rgba.crop(bbox)
+                # Composite onto solid bg.
+                arr = np.asarray(rgba).astype(np.float32) / 255.0
+                rgb = arr[:, :, :3]
+                a01 = arr[:, :, 3:4]
+                bg = np.array(bg_color, dtype=np.float32) / 255.0
+                composed = rgb * a01 + bg * (1.0 - a01)
+                pil_rgb = Image.fromarray((np.clip(composed, 0, 1) * 255).astype(np.uint8))
+
+    out_t = torch.from_numpy(np.asarray(pil_rgb.convert("RGB"), dtype=np.float32) / 255.0).unsqueeze(0)
+    return out_t
 
 
 # ============================================================================

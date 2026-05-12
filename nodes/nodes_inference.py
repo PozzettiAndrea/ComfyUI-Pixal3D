@@ -9,7 +9,7 @@ log = logging.getLogger("pixal3d")
 
 
 class Pixal3DPreprocessImage(io.ComfyNode):
-    """Background removal + alpha bbox crop + 1024-max resize."""
+    """Alpha-aware crop + 1024-max resize + bg fill. No rembg (bring your own MASK)."""
 
     @classmethod
     def define_schema(cls):
@@ -18,12 +18,16 @@ class Pixal3DPreprocessImage(io.ComfyNode):
             display_name="Pixal3D Preprocess Image",
             category="Pixal3D",
             description=(
-                "Runs the pipeline's rembg + alpha bbox crop + 1024-max resize. "
-                "Skip this only if your image is already a clean RGBA with the "
-                "subject centered."
+                "Pure-PIL preprocess for Pixal3D: alpha-bbox crop (using MASK), "
+                "downscale longest side to 1024, fill background with bg_r/g/b. "
+                "Background removal is NOT done here -- feed in a MASK from LoadImage "
+                "(if the source PNG has transparency) or from any rembg node "
+                "(Comfy-rembg, BRIA-RMBG, etc.). If no MASK is wired, the full image "
+                "is treated as the subject (just resized, no crop)."
             ),
             inputs=[
                 io.Image.Input("image"),
+                io.Mask.Input("mask", optional=True, tooltip="Subject mask (1.0=opaque). LoadImage's MASK output works directly."),
                 io.Int.Input("bg_r", default=0, min=0, max=255, optional=True),
                 io.Int.Input("bg_g", default=0, min=0, max=255, optional=True),
                 io.Int.Input("bg_b", default=0, min=0, max=255, optional=True),
@@ -34,10 +38,10 @@ class Pixal3DPreprocessImage(io.ComfyNode):
         )
 
     @classmethod
-    def execute(cls, image, bg_r: int = 0, bg_g: int = 0, bg_b: int = 0):
+    def execute(cls, image, mask=None, bg_r: int = 0, bg_g: int = 0, bg_b: int = 0):
         from .stages import preprocess_image, _phase
         with _phase("Pixal3DPreprocessImage.execute"):
-            out = preprocess_image(image, bg_color=(bg_r, bg_g, bg_b))
+            out = preprocess_image(image, mask=mask, bg_color=(bg_r, bg_g, bg_b))
             return io.NodeOutput(out)
 
 
