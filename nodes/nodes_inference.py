@@ -97,6 +97,7 @@ class Pixal3DGenerateGLB(io.ComfyNode):
             node_id="Pixal3DGenerateGLB",
             display_name="Pixal3D Generate GLB",
             category="Pixal3D",
+            is_output_node=True,
             description=(
                 "Runs the four-stage cascade (sparse structure → shape LR 512 → "
                 "shape HR 1024 → texture 1024) and extracts a textured GLB. "

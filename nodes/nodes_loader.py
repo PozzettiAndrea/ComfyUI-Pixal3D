@@ -40,6 +40,18 @@ class Pixal3DLoadPipeline(io.ComfyNode):
                     tooltip="Swap each stage to/from CPU. Slower but fits on 24 GB cards.",
                     optional=True,
                 ),
+                io.Combo.Input(
+                    "attn_backend",
+                    options=["auto", "flash_attn", "flash_attn_3", "sdpa", "xformers", "naive"],
+                    default="auto",
+                    tooltip=(
+                        "Dense + sparse attention backend (pixal3d native dispatch). "
+                        "'auto' lets pixal3d pick the fastest available (flash_attn 2 by default). "
+                        "'flash_attn_3' needs the separate flash_attn_interface package. "
+                        "Note: sageattention is NOT in pixal3d's native dispatch — would require an upstream patch."
+                    ),
+                    optional=True,
+                ),
             ],
             outputs=[
                 io.Custom("PIXAL3D_PIPELINE").Output(display_name="pipeline"),
@@ -47,12 +59,21 @@ class Pixal3DLoadPipeline(io.ComfyNode):
         )
 
     @classmethod
-    def execute(cls, pipeline_type: str = "1024_cascade", low_vram: bool = False):
+    def execute(
+        cls,
+        pipeline_type: str = "1024_cascade",
+        low_vram: bool = False,
+        attn_backend: str = "auto",
+    ):
         from .stages import init_pipeline
 
-        init_pipeline(low_vram=low_vram)
+        init_pipeline(low_vram=low_vram, attn_backend=attn_backend)
         # Sentinel — pipeline lives in module-level cache.
-        return io.NodeOutput({"pipeline_type": pipeline_type, "low_vram": low_vram})
+        return io.NodeOutput({
+            "pipeline_type": pipeline_type,
+            "low_vram": low_vram,
+            "attn_backend": attn_backend,
+        })
 
 
 NODE_CLASS_MAPPINGS = {

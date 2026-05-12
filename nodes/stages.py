@@ -188,7 +188,7 @@ def _patch_rembg_to_public_model():
     Substitute the public ZhengPeng7/BiRefNet (same architecture, MIT-licensed).
     Idempotent.
     """
-    import pixal3d.pipelines.rembg as _rembg
+    from .pixal3d.pipelines import rembg as _rembg
     if getattr(_rembg.BiRefNet, "_pixal3d_patched", False):
         return
     _orig = _rembg.BiRefNet.__init__
@@ -204,26 +204,47 @@ def _patch_rembg_to_public_model():
         _orig(self, model_name=model_name, **kwargs)
         # ZhengPeng7/BiRefNet ships as fp16 but the upstream caller doesn't cast inputs.
         # Force float32 so transforms (which produce float32 by default) work.
-        self.model.float()
+        # Also pin to CUDA — the pipeline's low_vram swap (`rembg_model.to(self.device)`)
+        # doesn't reliably take effect through the wrapper's `to()` signature; ~1 GB on
+        # GPU is a cheap price for correctness.
+        self.model.float().cuda()
 
     _rembg.BiRefNet.__init__ = _patched
     _rembg.BiRefNet._pixal3d_patched = True
 
 
-def init_pipeline(low_vram: bool = False) -> "object":
+def _set_attention_backends(backend: str):
+    """Wire pixal3d's native dense + sparse attention dispatch.
+
+    Options: 'auto' (skip — let pixal3d auto-detect), 'flash_attn', 'flash_attn_3',
+    'sdpa', 'xformers', 'naive'. flash_attn_3 needs the separate
+    flash_attn_interface package; we ship flash-attn 2.x.
+    """
+    if backend == "auto":
+        return
+    from .pixal3d.modules.attention.config import set_backend as set_dense
+    from .pixal3d.modules.sparse.config import set_attn_backend as set_sparse
+    set_dense(backend)
+    set_sparse(backend)
+    log.info(f"[attn] dense + sparse backend = {backend}")
+
+
+def init_pipeline(low_vram: bool = False, attn_backend: str = "auto") -> "object":
     """Load + cache Pixal3D pipeline + 4 DinoV3 cond models. Idempotent."""
     global _pipeline
     if _pipeline is not None:
         _pipeline.low_vram = low_vram
+        _set_attention_backends(attn_backend)
         return _pipeline
 
     _check_gpu_or_raise()
     local_dir = _download_pixal3d_weights()
 
     _patch_rembg_to_public_model()
+    _set_attention_backends(attn_backend)
 
-    from pixal3d.pipelines import Pixal3DImageTo3DPipeline
-    from pixal3d.trainers.flow_matching.mixins.image_conditioned_proj import (
+    from .pixal3d.pipelines import Pixal3DImageTo3DPipeline
+    from .pixal3d.trainers.flow_matching.mixins.image_conditioned_proj import (
         DinoV3ProjFeatureExtractor,
     )
 
@@ -260,7 +281,7 @@ def init_pipeline(low_vram: bool = False) -> "object":
 
 
 def _build_cond(key: str):
-    from pixal3d.trainers.flow_matching.mixins.image_conditioned_proj import (
+    from .pixal3d.trainers.flow_matching.mixins.image_conditioned_proj import (
         DinoV3ProjFeatureExtractor,
     )
     model = DinoV3ProjFeatureExtractor(**IMAGE_COND_CONFIGS[key])

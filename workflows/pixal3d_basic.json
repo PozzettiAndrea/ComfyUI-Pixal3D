@@ -1,6 +1,6 @@
 {
-  "last_node_id": 6,
-  "last_link_id": 6,
+  "last_node_id": 5,
+  "last_link_id": 5,
   "nodes": [
     {
       "id": 1,
@@ -15,7 +15,7 @@
         {"name": "MASK", "type": "MASK", "links": null, "shape": 3}
       ],
       "properties": {"Node name for S&R": "LoadImage"},
-      "widgets_values": ["example.png", "image"]
+      "widgets_values": ["pixal3d_test.png", "image"]
     },
     {
       "id": 2,
@@ -79,7 +79,7 @@
         {"name": "camera", "type": "PIXAL3D_CAMERA", "link": 5}
       ],
       "outputs": [
-        {"name": "glb_filepath", "type": "STRING", "links": [6], "shape": 3}
+        {"name": "glb_filepath", "type": "STRING", "links": [], "shape": 3}
       ],
       "properties": {"Node name for S&R": "Pixal3DGenerateGLB"},
       "widgets_values": [
@@ -89,20 +89,6 @@
         12, 1.0, 0.0, 3.0,
         200000, 2048, "pixal3d"
       ]
-    },
-    {
-      "id": 6,
-      "type": "PreviewAny",
-      "pos": [1180, 100],
-      "size": [320, 80],
-      "flags": {},
-      "order": 5,
-      "mode": 0,
-      "inputs": [
-        {"name": "source", "type": "*", "link": 6}
-      ],
-      "properties": {"Node name for S&R": "PreviewAny"},
-      "widgets_values": []
     }
   ],
   "links": [
@@ -110,8 +96,7 @@
     [2, 3, 0, 4, 0, "IMAGE"],
     [3, 3, 0, 5, 1, "IMAGE"],
     [4, 2, 0, 5, 0, "PIXAL3D_PIPELINE"],
-    [5, 4, 0, 5, 2, "PIXAL3D_CAMERA"],
-    [6, 5, 0, 6, 0, "*"]
+    [5, 4, 0, 5, 2, "PIXAL3D_CAMERA"]
   ],
   "groups": [],
   "config": {},
