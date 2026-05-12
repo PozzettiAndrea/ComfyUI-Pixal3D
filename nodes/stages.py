@@ -186,14 +186,21 @@ def _download_pixal3d_weights():
 def _patch_rembg_to_public_model():
     """Pixal3D's pipeline.json pins briaai/RMBG-2.0 which is a gated HF repo.
     Substitute the public ZhengPeng7/BiRefNet (same architecture, MIT-licensed).
+    Also:
+      - keep BiRefNet at its native fp16 (not fp32) -- matches GPU capability.
+      - pin to the active torch device -- the pipeline's low_vram swap
+        (`rembg_model.to(self.device)`) doesn't reliably take effect through
+        the wrapper's `to()` signature.
+      - patch __call__ to cast inputs to model dtype (upstream call site uses
+        float32 transforms but loads fp16 weights -> dtype mismatch).
     Idempotent.
     """
     from .pixal3d.pipelines import rembg as _rembg
     if getattr(_rembg.BiRefNet, "_pixal3d_patched", False):
         return
-    _orig = _rembg.BiRefNet.__init__
+    _orig_init = _rembg.BiRefNet.__init__
 
-    def _patched(self, model_name="ZhengPeng7/BiRefNet", **kwargs):
+    def _patched_init(self, model_name="ZhengPeng7/BiRefNet", **kwargs):
         if model_name == "briaai/RMBG-2.0":
             log.info(
                 "[rembg] Substituting gated 'briaai/RMBG-2.0' -> public "
@@ -201,32 +208,64 @@ def _patch_rembg_to_public_model():
                 "huggingface.co/briaai/RMBG-2.0 and set HF_TOKEN for the original)."
             )
             model_name = "ZhengPeng7/BiRefNet"
-        _orig(self, model_name=model_name, **kwargs)
-        # ZhengPeng7/BiRefNet ships as fp16 but the upstream caller doesn't cast inputs.
-        # Force float32 so transforms (which produce float32 by default) work.
-        # Also pin to the active torch device -- the pipeline's low_vram swap
-        # (`rembg_model.to(self.device)`) doesn't reliably take effect through
-        # the wrapper's `to()` signature; ~1 GB on GPU is a cheap price for correctness.
-        self.model.float().to(comfy.model_management.get_torch_device())
+        _orig_init(self, model_name=model_name, **kwargs)
+        # Native dtype (fp16); just pin device.
+        self.model.to(comfy.model_management.get_torch_device())
 
-    _rembg.BiRefNet.__init__ = _patched
+    def _patched_call(self, image):
+        # Cast input to model dtype/device. Upstream uses float32 transforms but
+        # the model weights are fp16 -> RuntimeError without this cast.
+        p = next(self.model.parameters())
+        input_images = self.transform_image(image).unsqueeze(0).to(device=p.device, dtype=p.dtype)
+        with torch.no_grad():
+            preds = self.model(input_images)[-1].sigmoid().float().cpu()
+        from torchvision import transforms as _tvt
+        pred = preds[0].squeeze()
+        pred_pil = _tvt.ToPILImage()(pred)
+        mask = pred_pil.resize(image.size)
+        image.putalpha(mask)
+        return image
+
+    _rembg.BiRefNet.__init__ = _patched_init
+    _rembg.BiRefNet.__call__ = _patched_call
     _rembg.BiRefNet._pixal3d_patched = True
+
+
+def _resolve_attn_backend(backend: str) -> str:
+    """Map 'auto' to the fastest installed backend in pixal3d's native dispatch.
+
+    Probe order matches what ComfyUI does internally: flash_attn_3 > flash_attn >
+    xformers > sdpa. (sageattention is not in pixal3d's native dispatch and would
+    require an upstream patch.) Returns one of the pixal3d-recognized names.
+    """
+    if backend != "auto":
+        return backend
+    import importlib
+    for name, mod in [
+        ("flash_attn_3", "flash_attn_interface"),
+        ("flash_attn", "flash_attn"),
+        ("xformers", "xformers.ops"),
+    ]:
+        try:
+            importlib.import_module(mod)
+            log.info(f"[attn] auto-detect: probed {mod} -> using '{name}'")
+            return name
+        except ImportError:
+            continue
+    log.info("[attn] auto-detect: falling back to sdpa")
+    return "sdpa"
 
 
 def _set_attention_backends(backend: str):
     """Wire pixal3d's native dense + sparse attention dispatch.
-
-    Options: 'auto' (skip — let pixal3d auto-detect), 'flash_attn', 'flash_attn_3',
-    'sdpa', 'xformers', 'naive'. flash_attn_3 needs the separate
-    flash_attn_interface package; we ship flash-attn 2.x.
+    Resolves 'auto' by probing installed packages.
     """
-    if backend == "auto":
-        return
+    resolved = _resolve_attn_backend(backend)
     from .pixal3d.modules.attention.config import set_backend as set_dense
     from .pixal3d.modules.sparse.config import set_attn_backend as set_sparse
-    set_dense(backend)
-    set_sparse(backend)
-    log.info(f"[attn] dense + sparse backend = {backend}")
+    set_dense(resolved)
+    set_sparse(resolved)
+    log.info(f"[attn] dense + sparse backend = {resolved} (requested: {backend})")
 
 
 def init_pipeline(low_vram: bool = False, attn_backend: str = "auto") -> "object":
