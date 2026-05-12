@@ -13,5 +13,5 @@ _env_*
 # autotune caches
 autotune_cache.json
 
-# local-only checkpoints (huge; downloaded at runtime)
-models/
+# (no /models/ ignore — ComfyUI stores model weights at ComfyUI/models/, not inside this pack.
+# Recursive `models/` would also hide the vendored nodes/pixal3d/models/ package!)

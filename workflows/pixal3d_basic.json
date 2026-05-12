@@ -1,0 +1,120 @@
+{
+  "last_node_id": 6,
+  "last_link_id": 6,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "LoadImage",
+      "pos": [40, 100],
+      "size": [320, 320],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "outputs": [
+        {"name": "IMAGE", "type": "IMAGE", "links": [1], "shape": 3},
+        {"name": "MASK", "type": "MASK", "links": null, "shape": 3}
+      ],
+      "properties": {"Node name for S&R": "LoadImage"},
+      "widgets_values": ["example.png", "image"]
+    },
+    {
+      "id": 2,
+      "type": "Pixal3DLoadPipeline",
+      "pos": [40, 460],
+      "size": [320, 120],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "outputs": [
+        {"name": "pipeline", "type": "PIXAL3D_PIPELINE", "links": [4], "shape": 3}
+      ],
+      "properties": {"Node name for S&R": "Pixal3DLoadPipeline"},
+      "widgets_values": ["1024_cascade", false]
+    },
+    {
+      "id": 3,
+      "type": "Pixal3DPreprocessImage",
+      "pos": [400, 100],
+      "size": [320, 140],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {"name": "image", "type": "IMAGE", "link": 1}
+      ],
+      "outputs": [
+        {"name": "image", "type": "IMAGE", "links": [2, 3], "shape": 3}
+      ],
+      "properties": {"Node name for S&R": "Pixal3DPreprocessImage"},
+      "widgets_values": [0, 0, 0]
+    },
+    {
+      "id": 4,
+      "type": "Pixal3DEstimateCamera",
+      "pos": [400, 280],
+      "size": [320, 140],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {"name": "image", "type": "IMAGE", "link": 2}
+      ],
+      "outputs": [
+        {"name": "camera", "type": "PIXAL3D_CAMERA", "links": [5], "shape": 3}
+      ],
+      "properties": {"Node name for S&R": "Pixal3DEstimateCamera"},
+      "widgets_values": [1.0, 0, 512]
+    },
+    {
+      "id": 5,
+      "type": "Pixal3DGenerateGLB",
+      "pos": [760, 100],
+      "size": [380, 600],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {"name": "pipeline", "type": "PIXAL3D_PIPELINE", "link": 4},
+        {"name": "image", "type": "IMAGE", "link": 3},
+        {"name": "camera", "type": "PIXAL3D_CAMERA", "link": 5}
+      ],
+      "outputs": [
+        {"name": "glb_filepath", "type": "STRING", "links": [6], "shape": 3}
+      ],
+      "properties": {"Node name for S&R": "Pixal3DGenerateGLB"},
+      "widgets_values": [
+        42, 49152,
+        12, 7.5, 0.7, 5.0,
+        12, 7.5, 0.5, 3.0,
+        12, 1.0, 0.0, 3.0,
+        200000, 2048, "pixal3d"
+      ]
+    },
+    {
+      "id": 6,
+      "type": "PreviewAny",
+      "pos": [1180, 100],
+      "size": [320, 80],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {"name": "source", "type": "*", "link": 6}
+      ],
+      "properties": {"Node name for S&R": "PreviewAny"},
+      "widgets_values": []
+    }
+  ],
+  "links": [
+    [1, 1, 0, 3, 0, "IMAGE"],
+    [2, 3, 0, 4, 0, "IMAGE"],
+    [3, 3, 0, 5, 1, "IMAGE"],
+    [4, 2, 0, 5, 0, "PIXAL3D_PIPELINE"],
+    [5, 4, 0, 5, 2, "PIXAL3D_CAMERA"],
+    [6, 5, 0, 6, 0, "*"]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {},
+  "version": 0.4
+}
