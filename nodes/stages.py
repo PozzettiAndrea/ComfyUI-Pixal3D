@@ -273,7 +273,7 @@ def _patch_naf_to_local_model():
             with _phase("NAF model build + ckpt load"):
                 from src.model.naf import NAF  # noqa: F401  (resolved via sys.path)
                 m = NAF()
-                m.load_state_dict(torch.load(str(ckpt), map_location="cpu"))
+                m.load_state_dict(comfy.utils.load_torch_file(str(ckpt), safe_load=True))
                 m.eval()
                 m.requires_grad_(False)
                 _naf = m
