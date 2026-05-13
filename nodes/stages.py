@@ -1463,11 +1463,40 @@ def export_glb(tri, filename_prefix: str = "pixal3d") -> str:
 
 
 def export_glb_yup(tri, filename_prefix: str = "pixal3d") -> str:
-    """Rotate Z-up -> Y-up, then write to ComfyUI's output dir. Used by the
-    split-node UV-bake path where ProcessMesh/RasterizePBR run in a Z-up
-    working frame matching TRELLIS2's verified-good regime."""
-    tri.apply_transform(_ZUP_TO_YUP_ROT)
-    return export_glb(tri, filename_prefix=filename_prefix)
+    """Apply Z-up -> Y-up rotation + UV V flip, then write to ComfyUI's output dir.
+
+    Mirrors TRELLIS2 Trellis2ExportTrimesh.execute() lines 1397-1411 EXACTLY:
+      1. Rotate vertices  (x, y, z) -> (x, z, -y)   (Z-up to Y-up).
+      2. Rotate normals   (x, y, z) -> (x, z, -y)   (same swap; we apply it
+         manually instead of via trimesh.apply_transform because the latter
+         invalidates user-supplied vertex_normals and forces a recompute).
+      3. Flip UV V        v -> 1 - v                (CRITICAL: glTF's V
+         convention is inverted relative to cumesh/drtk's UV output.
+         Without this flip the rasterized texture appears V-mirrored per
+         chart on the rendered model, which combined with chart packing
+         looks garbled / discontinuous).
+
+    Deepcopy first so we don't mutate the caller's trimesh (matches TRELLIS2)."""
+    import copy as _copy
+    export_mesh = _copy.deepcopy(tri)
+
+    verts = export_mesh.vertices.copy()
+    verts[:, 1], verts[:, 2] = verts[:, 2].copy(), -verts[:, 1].copy()
+    export_mesh.vertices = verts
+
+    if (hasattr(export_mesh, "vertex_normals")
+            and export_mesh.vertex_normals is not None
+            and len(export_mesh.vertex_normals) > 0):
+        normals = export_mesh.vertex_normals.copy()
+        normals[:, 1], normals[:, 2] = normals[:, 2].copy(), -normals[:, 1].copy()
+        export_mesh.vertex_normals = normals
+
+    if hasattr(export_mesh.visual, "uv") and export_mesh.visual.uv is not None:
+        uvs = export_mesh.visual.uv.copy()
+        uvs[:, 1] = 1 - uvs[:, 1]
+        export_mesh.visual.uv = uvs
+
+    return export_glb(export_mesh, filename_prefix=filename_prefix)
 
 
 # ----------------------------------------------------------------------------
