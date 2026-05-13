@@ -190,13 +190,14 @@
         {"localized_name": "texture_size", "name": "texture_size", "type": "INT", "widget": {"name": "texture_size"}, "link": null},
         {"localized_name": "original_mesh", "name": "original_mesh", "shape": 7, "type": "TRIMESH", "link": 22},
         {"localized_name": "double_sided", "name": "double_sided", "shape": 7, "type": "BOOLEAN", "widget": {"name": "double_sided"}, "link": null},
-        {"localized_name": "bake_mode", "name": "bake_mode", "shape": 7, "type": "COMBO", "widget": {"name": "bake_mode"}, "link": null}
+        {"localized_name": "bake_mode", "name": "bake_mode", "shape": 7, "type": "COMBO", "widget": {"name": "bake_mode"}, "link": null},
+        {"localized_name": "debug_dump", "name": "debug_dump", "shape": 7, "type": "BOOLEAN", "widget": {"name": "debug_dump"}, "link": null}
       ],
       "outputs": [
         {"localized_name": "mesh", "name": "mesh", "type": "TRIMESH", "links": [24]}
       ],
       "properties": {"aux_id": "PozzettiAndrea/ComfyUI-Pixal3D", "Node name for S&R": "Pixal3DRasterizePBR"},
-      "widgets_values": [2048, false, "pbr"]
+      "widgets_values": [2048, false, "pbr", false]
     },
     {
       "id": 23,

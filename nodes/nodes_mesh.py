@@ -221,6 +221,20 @@ class Pixal3DRasterizePBR(io.ComfyNode):
                     ),
                     optional=True,
                 ),
+                io.Boolean.Input(
+                    "debug_dump",
+                    default=False,
+                    tooltip=(
+                        "When ON, prints per-stage mesh stats + UV/vertex bboxes to stderr, "
+                        "and saves three diagnostic files to ComfyUI/output/ alongside the GLB:\n"
+                        "  pixal3d_debug_<ts>_mask.png      - UV-space coverage\n"
+                        "  pixal3d_debug_<ts>_face_ids.png  - per-texel face id (mod 256)\n"
+                        "  pixal3d_debug_<ts>_mesh.obj      - post-ProcessMesh mesh + UVs (open in Blender)\n"
+                        "Use this if textures look wrong; tiny isolated regions in face_ids.png "
+                        "indicate xatlas produced too many small charts."
+                    ),
+                    optional=True,
+                ),
             ],
             outputs=[
                 io.Custom("TRIMESH").Output(display_name="mesh"),
@@ -236,9 +250,10 @@ class Pixal3DRasterizePBR(io.ComfyNode):
         original_mesh=None,
         double_sided: bool = False,
         bake_mode: str = "pbr",
+        debug_dump: bool = False,
     ):
         from .stages import rasterize_pbr, _phase
-        with _phase(f"Pixal3DRasterizePBR.execute ({bake_mode})"):
+        with _phase(f"Pixal3DRasterizePBR.execute ({bake_mode}{' +debug' if debug_dump else ''})"):
             out = rasterize_pbr(
                 trimesh,
                 voxelgrid,
@@ -246,6 +261,7 @@ class Pixal3DRasterizePBR(io.ComfyNode):
                 original_mesh=original_mesh,
                 double_sided=double_sided,
                 bake_mode=bake_mode,
+                debug_dump=debug_dump,
             )
             return io.NodeOutput(out)
 

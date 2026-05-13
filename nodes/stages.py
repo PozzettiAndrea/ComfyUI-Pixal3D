@@ -8,6 +8,7 @@ import gc
 import logging
 import math
 import os
+import sys
 import time
 from pathlib import Path
 from typing import Optional, Tuple
@@ -948,15 +949,32 @@ def _bake_vertex_colors(tri, voxelgrid: dict, force_opaque: bool, double_sided: 
 # ----------------------------------------------------------------------------
 
 
-def _rasterize_uv(vertices, faces, uvs, texture_size, device):
+def _dbg(msg: str) -> None:
+    """Single-line stderr-flushed debug print, prefixed for grep-ability."""
+    print(f"[pixal3d:dbg] {msg}", file=sys.stderr, flush=True)
+
+
+def _log_mesh_stats(label: str, cm) -> None:
+    """Print cumesh state after a step. Cheap (just reads counters)."""
+    try:
+        _dbg(f"  {label}: {cm.num_vertices} verts / {cm.num_faces} faces")
+    except Exception as e:
+        _dbg(f"  {label}: could not read cumesh stats ({e})")
+
+
+def _rasterize_uv(vertices, faces, uvs, texture_size, device, debug=False):
     """drtk port of nvdiffrast's UV-space rasterize+interpolate.
     Returns (mask: [S,S] bool, valid_pos: [N, 3] float, face_ids: [N] long,
-             bary_masked: [N, 3] float) -- the extra outputs let callers
-    interpolate any per-vertex attribute (e.g. normals) without re-running drtk.
+             bary_masked: [N, 3] float, rast_face_ids: [S, S] int32) -- the
+    last entry is the per-texel face id image, preserved for debug dumps.
     Mirrors trellis2/nodes_unwrap.py:1026."""
     import drtk
     chunk_size = 100_000
     S = int(texture_size)
+    if debug:
+        _dbg(f"_rasterize_uv: V={uvs.shape[0]}, F={faces.shape[0]}, S={S}")
+        _dbg(f"  UV bbox: min={uvs.amin(dim=0).tolist()}, max={uvs.amax(dim=0).tolist()}")
+        _dbg(f"  vert bbox: min={vertices.amin(dim=0).tolist()}, max={vertices.amax(dim=0).tolist()}")
     verts_uv = torch.stack([
         uvs[:, 0] * S - 0.5,
         uvs[:, 1] * S - 0.5,
@@ -979,9 +997,20 @@ def _rasterize_uv(vertices, faces, uvs, texture_size, device):
     face_ids = rast_face_ids[mask].long()
     face_verts = vertices[faces[face_ids].long()]
     valid_pos = (face_verts * bary_masked.unsqueeze(-1)).sum(dim=1)
+
+    if debug:
+        cov = mask.sum().item() / mask.numel()
+        n_distinct = int(torch.unique(rast_face_ids[mask]).numel()) if mask.any() else 0
+        _dbg(f"  rasterized: coverage={cov:.1%}, distinct face_ids={n_distinct}/{faces.shape[0]}")
+        _dbg(f"  bary range: [{bary_masked.min().item():.4f}, {bary_masked.max().item():.4f}]")
+        if valid_pos.numel():
+            _dbg(f"  valid_pos bbox: min={valid_pos.amin(dim=0).tolist()}, max={valid_pos.amax(dim=0).tolist()}")
+
+    # Keep rast_face_ids alive for caller if debug dump is on.
+    rast_face_ids_out = rast_face_ids.clone() if debug else None
     del verts_uv, rast_face_ids, bary_img, bary, face_verts
     comfy.model_management.soft_empty_cache()
-    return mask, valid_pos, face_ids, bary_masked
+    return mask, valid_pos, face_ids, bary_masked, rast_face_ids_out
 
 
 def process_mesh(
@@ -1007,7 +1036,9 @@ def process_mesh(
     import trimesh as Trimesh
 
     device = comfy.model_management.get_torch_device()
-    log.info(f"[pixal3d] process_mesh: in {len(tri.vertices)} verts / {len(tri.faces)} faces, target {target_face_count}")
+    _dbg(f"process_mesh: in {len(tri.vertices)} verts / {len(tri.faces)} faces, target {target_face_count}")
+    in_v = np.asarray(tri.vertices)
+    _dbg(f"  vert bbox: min={in_v.min(axis=0).tolist()}, max={in_v.max(axis=0).tolist()}")
 
     verts = torch.tensor(tri.vertices, dtype=torch.float32, device=device)
     faces = torch.tensor(tri.faces, dtype=torch.int32, device=device)
@@ -1016,6 +1047,7 @@ def process_mesh(
         cm = CuMesh.CuMesh()
         cm.init(verts, faces)
         del verts, faces
+    _log_mesh_stats("after init", cm)
 
     if remesh:
         with _phase("process_mesh: DC remesh"):
@@ -1034,10 +1066,12 @@ def process_mesh(
                 remove_inner_faces=remove_inner_faces,
             ))
             del curr_v, curr_f
+        _log_mesh_stats("after DC remesh", cm)
 
     if floater_threshold > 0:
         with _phase(f"process_mesh: remove_small_connected_components({floater_threshold})"):
             cm.remove_small_connected_components(floater_threshold)
+        _log_mesh_stats(f"after remove_small_cc({floater_threshold})", cm)
 
     comfy.model_management.throw_exception_if_processing_interrupted()
 
@@ -1050,7 +1084,9 @@ def process_mesh(
                 cm.remove_small_connected_components(floater_threshold)
             if fill_holes:
                 cm.fill_holes(max_hole_perimeter=fill_holes_perimeter)
+            _log_mesh_stats("cleanup pass 1", cm)
             cm.simplify(target_face_count * 3, verbose=True)
+            _log_mesh_stats(f"after simplify({target_face_count * 3})", cm)
             cm.remove_duplicate_faces()
             cm.repair_non_manifold_edges()
             if floater_threshold > 0:
@@ -1058,6 +1094,7 @@ def process_mesh(
             if fill_holes:
                 cm.fill_holes(max_hole_perimeter=fill_holes_perimeter)
             cm.simplify(target_face_count, verbose=True)
+            _log_mesh_stats(f"after simplify({target_face_count})", cm)
             cm.remove_duplicate_faces()
             cm.repair_non_manifold_edges()
             if floater_threshold > 0:
@@ -1065,9 +1102,11 @@ def process_mesh(
             if fill_holes:
                 cm.fill_holes(max_hole_perimeter=fill_holes_perimeter)
             cm.unify_face_orientations()
+            _log_mesh_stats("after unify_face_orientations", cm)
     else:
         with _phase("process_mesh: simplify (post-remesh)"):
             cm.simplify(target_face_count, verbose=True)
+        _log_mesh_stats(f"after simplify({target_face_count})", cm)
 
     comfy.model_management.throw_exception_if_processing_interrupted()
 
@@ -1077,16 +1116,20 @@ def process_mesh(
             wm = Trimesh.Trimesh(
                 vertices=wv.cpu().numpy(), faces=wf.cpu().numpy(), process=False,
             )
+            pre = len(wm.vertices)
             wm.merge_vertices(digits_vertex=weld_digits)
             wm.remove_unreferenced_vertices()
             wm.update_faces(wm.nondegenerate_faces())
+            _dbg(f"  weld: {pre} -> {len(wm.vertices)} verts (digits={weld_digits})")
             cm.init(
                 torch.tensor(wm.vertices, dtype=torch.float32, device=device),
                 torch.tensor(wm.faces, dtype=torch.int32, device=device),
             )
             del wv, wf, wm
+        _log_mesh_stats("after weld", cm)
 
     with _phase("process_mesh: uv_unwrap (xatlas)"):
+        _log_mesh_stats("pre-uv_unwrap", cm)
         out_v, out_f, out_uvs, out_vmaps = cm.uv_unwrap(
             compute_charts_kwargs={
                 "threshold_cone_half_angle_rad": float(np.radians(chart_cone_angle)),
@@ -1099,6 +1142,13 @@ def process_mesh(
         )
         cm.compute_vertex_normals()
         out_normals = cm.read_vertex_normals()[out_vmaps.to(device)].cpu().numpy()
+        # Per-vertex-split count (out_v >= pre-unwrap verts, due to seams).
+        uvs_np = out_uvs.cpu().numpy() if hasattr(out_uvs, "cpu") else np.asarray(out_uvs)
+        _dbg(
+            f"  uv_unwrap out: {out_v.shape[0]} verts (split-at-seams) / "
+            f"{out_f.shape[0]} faces; UV bbox=[{uvs_np.min(axis=0).tolist()}, "
+            f"{uvs_np.max(axis=0).tolist()}]; pre-unwrap verts={int(out_vmaps.max().item()) + 1}"
+        )
 
     result = Trimesh.Trimesh(
         vertices=out_v.cpu().numpy(),
@@ -1107,7 +1157,7 @@ def process_mesh(
         process=False,
     )
     result.visual = Trimesh.visual.TextureVisuals(uv=out_uvs.cpu().numpy())
-    log.info(f"[pixal3d] process_mesh: out {len(result.vertices)} verts / {len(result.faces)} faces (UVs ready)")
+    _dbg(f"process_mesh: OUT {len(result.vertices)} verts / {len(result.faces)} faces (UVs ready)")
 
     del cm, out_v, out_f, out_uvs, out_vmaps
     gc.collect()
@@ -1122,6 +1172,7 @@ def rasterize_pbr(
     original_mesh=None,
     double_sided: bool = False,
     bake_mode: str = "pbr",
+    debug_dump: bool = False,
 ):
     """drtk UV-space PBR bake. Port of TRELLIS2 Trellis2RasterizePBR.execute().
     Returns a trimesh.Trimesh with a PBRMaterial(baseColorTexture, metallicRoughnessTexture).
@@ -1134,7 +1185,11 @@ def rasterize_pbr(
                          blue=Z will be the "up" axis on the rendered model.
       'xyz_normal'    -- diagnostic: paint texels with the interpolated surface normal
                          as RGB. Normals in [-1, 1] are mapped to [0, 1]. Lets you
-                         visually verify face winding / unify_face_orientations."""
+                         visually verify face winding / unify_face_orientations.
+
+    debug_dump: when True, prints extra stats to stderr AND saves diagnostic PNG/OBJ
+                files to ComfyUI/output/ (prefixed pixal3d_debug_<ts>_). Use to
+                inspect chart layout / mesh state when textures look wrong."""
     import cv2
     import cumesh as CuMesh
     from flex_gemm_ap.ops.grid_sample import grid_sample_3d
@@ -1146,7 +1201,12 @@ def rasterize_pbr(
         raise ValueError("rasterize_pbr: voxelgrid dict is missing 'attrs'.")
 
     device = comfy.model_management.get_torch_device()
-    log.info(f"[pixal3d] rasterize_pbr: {len(tri.vertices)} verts, texture {texture_size}px")
+    _dbg(
+        f"rasterize_pbr: {len(tri.vertices)} verts / {len(tri.faces)} faces, "
+        f"texture {texture_size}px, bake_mode={bake_mode}, "
+        f"original_mesh={'yes' if original_mesh is not None else 'no'}, "
+        f"debug_dump={debug_dump}"
+    )
 
     vertices = torch.tensor(tri.vertices, dtype=torch.float32, device=device)
     faces = torch.tensor(tri.faces, dtype=torch.int32, device=device)
@@ -1170,7 +1230,39 @@ def rasterize_pbr(
     voxel_size_t = torch.tensor([voxel_size_v] * 3, dtype=torch.float32, device=device)
 
     with _phase("rasterize_pbr: drtk UV rasterize"):
-        mask, valid_pos, face_ids, bary_masked = _rasterize_uv(vertices, faces, uvs, texture_size, device)
+        mask, valid_pos, face_ids, bary_masked, rast_face_ids_dbg = _rasterize_uv(
+            vertices, faces, uvs, texture_size, device, debug=debug_dump,
+        )
+
+    # Disk dumps (one-shot). Save mask/face_ids PNGs + OBJ for offline inspection.
+    if debug_dump:
+        with _phase("rasterize_pbr: debug dump (mask/face_ids/obj)"):
+            ts_dbg = int(time.time() * 1000)
+            out_dir_dbg = folder_paths.get_output_directory()
+            prefix = os.path.join(out_dir_dbg, f"pixal3d_debug_{ts_dbg}")
+            try:
+                # Mask PNG: 255 where rasterized, 0 elsewhere.
+                mask_img = (mask.to(torch.uint8) * 255).cpu().numpy()
+                Image.fromarray(mask_img, mode="L").save(f"{prefix}_mask.png")
+                # Face-id PNG: mod 256 to keep it in uint8 range. Tiny isolated
+                # patches in this image indicate tiny UV charts.
+                if rast_face_ids_dbg is not None:
+                    fid = rast_face_ids_dbg.clone()
+                    fid_vis = torch.where(fid >= 0, fid % 256, torch.zeros_like(fid)).to(torch.uint8).cpu().numpy()
+                    Image.fromarray(fid_vis, mode="L").save(f"{prefix}_face_ids.png")
+                    del fid, fid_vis
+                # Mesh OBJ (vertices + faces + UVs). Lets you inspect mesh in Blender.
+                import trimesh as _Trimesh
+                obj_mesh = _Trimesh.Trimesh(
+                    vertices=tri.vertices, faces=tri.faces, process=False,
+                    visual=_Trimesh.visual.TextureVisuals(uv=tri.visual.uv),
+                )
+                obj_mesh.export(f"{prefix}_mesh.obj")
+                del obj_mesh
+                _dbg(f"  wrote {prefix}_{{mask.png, face_ids.png, mesh.obj}}")
+            except Exception as e:
+                _dbg(f"  debug dump failed: {e}")
+            del rast_face_ids_dbg
 
     if original_mesh is not None:
         with _phase("rasterize_pbr: BVH-snap texels to original mesh"):
