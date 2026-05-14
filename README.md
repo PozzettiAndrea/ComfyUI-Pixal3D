@@ -1,3 +1,5 @@
+WORK IN PROGRESS
+
 # ComfyUI-Pixal3D
 
 ComfyUI nodes for **Pixal3D** (SIGGRAPH 2026, TencentARC) — pixel-aligned image-to-3D generation. Single image in, textured GLB out.
