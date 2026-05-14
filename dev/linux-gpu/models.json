@@ -1,0 +1,873 @@
+{
+  "models_dir": "/workspaces/Pixal3D-1133/ComfyUI/models",
+  "summary": {
+    "total_files": 169,
+    "total_size_bytes": 24113349120,
+    "total_size_human": "22.5 GB"
+  },
+  "folders": {
+    "naf": {
+      "total_size_bytes": 68486830,
+      "total_size_human": "65.3 MB",
+      "source": {
+        "type": "unknown"
+      },
+      "files": [
+        {
+          "path": "source/.git/objects/pack/pack-12464eebc4f41244bdf7e276d157d3c72822f062.pack",
+          "size_bytes": 25203121,
+          "size_human": "24.0 MB"
+        },
+        {
+          "path": "source/evaluation/dataset/kitti360/train_split.json",
+          "size_bytes": 12599168,
+          "size_human": "12.0 MB"
+        },
+        {
+          "path": "source/asset/teaser.gif",
+          "size_bytes": 7495471,
+          "size_human": "7.1 MB"
+        },
+        {
+          "path": "source/asset/attention.gif",
+          "size_bytes": 6246349,
+          "size_human": "6.0 MB"
+        },
+        {
+          "path": "source/asset/dog0.jpg",
+          "size_bytes": 5978845,
+          "size_human": "5.7 MB"
+        },
+        {
+          "path": "source/evaluation/dataset/kitti360/val_split.json",
+          "size_bytes": 3149792,
+          "size_human": "3.0 MB"
+        },
+        {
+          "path": "naf_release.pth",
+          "size_bytes": 2664431,
+          "size_human": "2.5 MB"
+        },
+        {
+          "path": "source/asset/dinov3.png",
+          "size_bytes": 1859256,
+          "size_human": "1.8 MB"
+        },
+        {
+          "path": "source/asset/inference.png",
+          "size_bytes": 1297774,
+          "size_human": "1.2 MB"
+        },
+        {
+          "path": "source/asset/resolution.png",
+          "size_bytes": 1069621,
+          "size_human": "1.0 MB"
+        },
+        {
+          "path": "source/asset/results.png",
+          "size_bytes": 429752,
+          "size_human": "419.7 KB"
+        },
+        {
+          "path": "source/asset/architecture.png",
+          "size_bytes": 88107,
+          "size_human": "86.0 KB"
+        },
+        {
+          "path": "source/asset/efficiency.png",
+          "size_bytes": 43919,
+          "size_human": "42.9 KB"
+        },
+        {
+          "path": "source/evaluation/eval_video_seg.py",
+          "size_bytes": 31290,
+          "size_human": "30.6 KB"
+        },
+        {
+          "path": "source/denoising.py",
+          "size_bytes": 18078,
+          "size_human": "17.7 KB"
+        },
+        {
+          "path": "source/evaluation/eval_depth_probing.py",
+          "size_bytes": 15763,
+          "size_human": "15.4 KB"
+        },
+        {
+          "path": "source/test/test_results.json",
+          "size_bytes": 15298,
+          "size_human": "14.9 KB"
+        },
+        {
+          "path": "source/evaluation/eval_seg_probing.py",
+          "size_bytes": 13903,
+          "size_human": "13.6 KB"
+        },
+        {
+          "path": "source/notebooks/attention_maps.ipynb",
+          "size_bytes": 13300,
+          "size_human": "13.0 KB"
+        },
+        {
+          "path": "source/src/model/restormer.py",
+          "size_bytes": 12199,
+          "size_human": "11.9 KB"
+        },
+        {
+          "path": "source/LICENSE",
+          "size_bytes": 11357,
+          "size_human": "11.1 KB"
+        },
+        {
+          "path": "source/README.md",
+          "size_bytes": 9772,
+          "size_human": "9.5 KB"
+        },
+        {
+          "path": "source/src/model/__pycache__/restormer.cpython-310.pyc",
+          "size_bytes": 9616,
+          "size_human": "9.4 KB"
+        },
+        {
+          "path": "source/.git/index",
+          "size_bytes": 9171,
+          "size_human": "9.0 KB"
+        },
+        {
+          "path": "source/evaluation/dataset/kitti360.py",
+          "size_bytes": 8793,
+          "size_human": "8.6 KB"
+        },
+        {
+          "path": "source/utils/training.py",
+          "size_bytes": 7848,
+          "size_human": "7.7 KB"
+        },
+        {
+          "path": "source/evaluation/dataset/coco.py",
+          "size_bytes": 7839,
+          "size_human": "7.7 KB"
+        },
+        {
+          "path": "source/notebooks/inference.ipynb",
+          "size_bytes": 7660,
+          "size_human": "7.5 KB"
+        },
+        {
+          "path": "source/src/layers/rope.py",
+          "size_bytes": 6964,
+          "size_human": "6.8 KB"
+        },
+        {
+          "path": "source/train.py",
+          "size_bytes": 6720,
+          "size_human": "6.6 KB"
+        },
+        {
+          "path": "source/src/model/jafar.py",
+          "size_bytes": 5904,
+          "size_human": "5.8 KB"
+        },
+        {
+          "path": "source/src/backbone/vit_wrapper.py",
+          "size_bytes": 5903,
+          "size_human": "5.8 KB"
+        },
+        {
+          "path": "source/evaluation/dataset/ade20k.py",
+          "size_bytes": 5827,
+          "size_human": "5.7 KB"
+        },
+        {
+          "path": "source/utils/visualization.py",
+          "size_bytes": 5805,
+          "size_human": "5.7 KB"
+        },
+        {
+          "path": "source/src/model/featup.py",
+          "size_bytes": 5582,
+          "size_human": "5.5 KB"
+        },
+        {
+          "path": "source/src/model/__pycache__/featup.cpython-310.pyc",
+          "size_bytes": 5471,
+          "size_human": "5.3 KB"
+        },
+        {
+          "path": "source/src/model/__pycache__/jafar.cpython-310.pyc",
+          "size_bytes": 5454,
+          "size_human": "5.3 KB"
+        },
+        {
+          "path": "source/test/test_utils.py",
+          "size_bytes": 5166,
+          "size_human": "5.0 KB"
+        },
+        {
+          "path": "source/.git/hooks/pre-rebase.sample",
+          "size_bytes": 4898,
+          "size_human": "4.8 KB"
+        },
+        {
+          "path": "source/src/layers/__pycache__/rope.cpython-310.pyc",
+          "size_bytes": 4744,
+          "size_human": "4.6 KB"
+        },
+        {
+          "path": "source/.git/hooks/fsmonitor-watchman.sample",
+          "size_bytes": 4655,
+          "size_human": "4.5 KB"
+        },
+        {
+          "path": "source/.git/objects/pack/pack-12464eebc4f41244bdf7e276d157d3c72822f062.idx",
+          "size_bytes": 4376,
+          "size_human": "4.3 KB"
+        },
+        {
+          "path": "source/evaluation/dataset/image_dataset.py",
+          "size_bytes": 3863,
+          "size_human": "3.8 KB"
+        },
+        {
+          "path": "source/.git/hooks/update.sample",
+          "size_bytes": 3650,
+          "size_human": "3.6 KB"
+        },
+        {
+          "path": "source/src/model/__pycache__/naf.cpython-310.pyc",
+          "size_bytes": 3576,
+          "size_human": "3.5 KB"
+        },
+        {
+          "path": "source/src/model/naf.py",
+          "size_bytes": 3298,
+          "size_human": "3.2 KB"
+        },
+        {
+          "path": "source/evaluation/dataset/cityscapes.py",
+          "size_bytes": 3053,
+          "size_human": "3.0 KB"
+        },
+        {
+          "path": "source/src/model/ircnn.py",
+          "size_bytes": 2980,
+          "size_human": "2.9 KB"
+        },
+        {
+          "path": "source/evaluation/dataset/voc.py",
+          "size_bytes": 2945,
+          "size_human": "2.9 KB"
+        },
+        {
+          "path": "source/.git/hooks/push-to-checkout.sample",
+          "size_bytes": 2783,
+          "size_human": "2.7 KB"
+        },
+        {
+          "path": "source/src/model/__pycache__/ircnn.cpython-310.pyc",
+          "size_bytes": 2716,
+          "size_human": "2.7 KB"
+        },
+        {
+          "path": "source/src/layers/attentions.py",
+          "size_bytes": 2685,
+          "size_human": "2.6 KB"
+        },
+        {
+          "path": "source/src/layers/convolutions.py",
+          "size_bytes": 2605,
+          "size_human": "2.5 KB"
+        },
+        {
+          "path": "source/src/layers/__pycache__/attentions.cpython-310.pyc",
+          "size_bytes": 2416,
+          "size_human": "2.4 KB"
+        },
+        {
+          "path": "source/test/backward_speed.py",
+          "size_bytes": 2180,
+          "size_human": "2.1 KB"
+        },
+        {
+          "path": "source/src/model/rednet.py",
+          "size_bytes": 2127,
+          "size_human": "2.1 KB"
+        },
+        {
+          "path": "source/src/layers/__pycache__/convolutions.cpython-310.pyc",
+          "size_bytes": 2039,
+          "size_human": "2.0 KB"
+        },
+        {
+          "path": "source/src/model/__pycache__/jbu.cpython-310.pyc",
+          "size_bytes": 2019,
+          "size_human": "2.0 KB"
+        },
+        {
+          "path": "source/docs/data.sh",
+          "size_bytes": 2011,
+          "size_human": "2.0 KB"
+        },
+        {
+          "path": "source/docs/INSTALL.md",
+          "size_bytes": 1942,
+          "size_human": "1.9 KB"
+        },
+        {
+          "path": "source/evaluation/dataset/davis.py",
+          "size_bytes": 1898,
+          "size_human": "1.9 KB"
+        },
+        {
+          "path": "source/src/model/__pycache__/rednet.cpython-310.pyc",
+          "size_bytes": 1884,
+          "size_human": "1.8 KB"
+        },
+        {
+          "path": "source/test/forward_speed.py",
+          "size_bytes": 1839,
+          "size_human": "1.8 KB"
+        },
+        {
+          "path": "source/utils/wrapper.py",
+          "size_bytes": 1711,
+          "size_human": "1.7 KB"
+        },
+        {
+          "path": "source/test/backward_memory.py",
+          "size_bytes": 1650,
+          "size_human": "1.6 KB"
+        },
+        {
+          "path": "source/.git/hooks/pre-commit.sample",
+          "size_bytes": 1643,
+          "size_human": "1.6 KB"
+        },
+        {
+          "path": "source/src/model/jbu.py",
+          "size_bytes": 1577,
+          "size_human": "1.5 KB"
+        },
+        {
+          "path": "source/test/flops_params.py",
+          "size_bytes": 1559,
+          "size_human": "1.5 KB"
+        },
+        {
+          "path": "source/.git/hooks/prepare-commit-msg.sample",
+          "size_bytes": 1492,
+          "size_human": "1.5 KB"
+        },
+        {
+          "path": "source/src/model/__pycache__/jbf.cpython-310.pyc",
+          "size_bytes": 1458,
+          "size_human": "1.4 KB"
+        },
+        {
+          "path": "source/.git/hooks/pre-push.sample",
+          "size_bytes": 1374,
+          "size_human": "1.3 KB"
+        },
+        {
+          "path": "source/src/model/jbf.py",
+          "size_bytes": 1310,
+          "size_human": "1.3 KB"
+        },
+        {
+          "path": "source/src/loss.py",
+          "size_bytes": 1286,
+          "size_human": "1.3 KB"
+        },
+        {
+          "path": "source/test/forward_memory.py",
+          "size_bytes": 1272,
+          "size_human": "1.2 KB"
+        },
+        {
+          "path": "source/hydra_plugins/resolvers.py",
+          "size_bytes": 1245,
+          "size_human": "1.2 KB"
+        },
+        {
+          "path": "source/src/model/__pycache__/anyup.cpython-310.pyc",
+          "size_bytes": 1032,
+          "size_human": "1.0 KB"
+        },
+        {
+          "path": "source/docs/TRAINING.md",
+          "size_bytes": 941,
+          "size_human": "941.0 B"
+        },
+        {
+          "path": "source/.git/hooks/commit-msg.sample",
+          "size_bytes": 896,
+          "size_human": "896.0 B"
+        },
+        {
+          "path": "source/docs/README.md",
+          "size_bytes": 865,
+          "size_human": "865.0 B"
+        },
+        {
+          "path": "source/utils/img.py",
+          "size_bytes": 858,
+          "size_human": "858.0 B"
+        },
+        {
+          "path": "source/docs/DATASETS.md",
+          "size_bytes": 852,
+          "size_human": "852.0 B"
+        },
+        {
+          "path": "source/src/model/__pycache__/bilinear.cpython-310.pyc",
+          "size_bytes": 848,
+          "size_human": "848.0 B"
+        },
+        {
+          "path": "source/src/model/__pycache__/nearest.cpython-310.pyc",
+          "size_bytes": 832,
+          "size_human": "832.0 B"
+        },
+        {
+          "path": "source/hubconf.py",
+          "size_bytes": 809,
+          "size_human": "809.0 B"
+        },
+        {
+          "path": "source/src/model/__pycache__/base.cpython-310.pyc",
+          "size_bytes": 782,
+          "size_human": "782.0 B"
+        },
+        {
+          "path": "source/test/conftest.py",
+          "size_bytes": 675,
+          "size_human": "675.0 B"
+        },
+        {
+          "path": "source/src/model/__pycache__/__init__.cpython-310.pyc",
+          "size_bytes": 609,
+          "size_human": "609.0 B"
+        },
+        {
+          "path": "source/.git/hooks/pre-receive.sample",
+          "size_bytes": 544,
+          "size_human": "544.0 B"
+        },
+        {
+          "path": "source/config/base.yaml",
+          "size_bytes": 542,
+          "size_human": "542.0 B"
+        },
+        {
+          "path": "source/src/model/anyup.py",
+          "size_bytes": 520,
+          "size_human": "520.0 B"
+        },
+        {
+          "path": "source/.git/hooks/applypatch-msg.sample",
+          "size_bytes": 478,
+          "size_human": "478.0 B"
+        },
+        {
+          "path": "source/config/base_denoising.yaml",
+          "size_bytes": 466,
+          "size_human": "466.0 B"
+        },
+        {
+          "path": "source/.git/hooks/pre-applypatch.sample",
+          "size_bytes": 424,
+          "size_human": "424.0 B"
+        },
+        {
+          "path": "source/.git/hooks/pre-merge-commit.sample",
+          "size_bytes": 416,
+          "size_human": "416.0 B"
+        },
+        {
+          "path": "source/src/model/bilinear.py",
+          "size_bytes": 395,
+          "size_human": "395.0 B"
+        },
+        {
+          "path": "source/src/model/nearest.py",
+          "size_bytes": 385,
+          "size_human": "385.0 B"
+        },
+        {
+          "path": "source/config/eval_probing.yaml",
+          "size_bytes": 368,
+          "size_human": "368.0 B"
+        },
+        {
+          "path": "source/src/model/__init__.py",
+          "size_bytes": 324,
+          "size_human": "324.0 B"
+        },
+        {
+          "path": "source/src/layers/__pycache__/__init__.cpython-310.pyc",
+          "size_bytes": 292,
+          "size_human": "292.0 B"
+        },
+        {
+          "path": "source/src/model/base.py",
+          "size_bytes": 270,
+          "size_human": "270.0 B"
+        },
+        {
+          "path": "source/docs/EVALUATIONS.md",
+          "size_bytes": 270,
+          "size_human": "270.0 B"
+        },
+        {
+          "path": "source/.git/config",
+          "size_bytes": 261,
+          "size_human": "261.0 B"
+        },
+        {
+          "path": "source/config/eval_video_seg.yaml",
+          "size_bytes": 258,
+          "size_human": "258.0 B"
+        },
+        {
+          "path": "source/.git/info/exclude",
+          "size_bytes": 240,
+          "size_human": "240.0 B"
+        },
+        {
+          "path": "source/config/model/naf.yaml",
+          "size_bytes": 205,
+          "size_human": "205.0 B"
+        },
+        {
+          "path": "source/config/dataset/voc.yaml",
+          "size_bytes": 194,
+          "size_human": "194.0 B"
+        },
+        {
+          "path": "source/.git/hooks/post-update.sample",
+          "size_bytes": 189,
+          "size_human": "189.0 B"
+        },
+        {
+          "path": "source/config/dataloader/train.yaml",
+          "size_bytes": 180,
+          "size_human": "180.0 B"
+        },
+        {
+          "path": "source/.git/logs/HEAD",
+          "size_bytes": 178,
+          "size_human": "178.0 B"
+        },
+        {
+          "path": "source/config/dataset/ade20k.yaml",
+          "size_bytes": 173,
+          "size_human": "173.0 B"
+        },
+        {
+          "path": "source/config/model/jafar.yaml",
+          "size_bytes": 169,
+          "size_human": "169.0 B"
+        },
+        {
+          "path": "source/config/dataset/cityscapes.yaml",
+          "size_bytes": 160,
+          "size_human": "160.0 B"
+        },
+        {
+          "path": "source/config/dataset/coco.yaml",
+          "size_bytes": 150,
+          "size_human": "150.0 B"
+        },
+        {
+          "path": "source/config/dataset/kitti360.yaml",
+          "size_bytes": 148,
+          "size_human": "148.0 B"
+        },
+        {
+          "path": "source/config/model/featup.yaml",
+          "size_bytes": 126,
+          "size_human": "126.0 B"
+        },
+        {
+          "path": "source/.git/packed-refs",
+          "size_bytes": 112,
+          "size_human": "112.0 B"
+        },
+        {
+          "path": "source/config/dataset/imagenet.yaml",
+          "size_bytes": 105,
+          "size_human": "105.0 B"
+        },
+        {
+          "path": "source/src/layers/__init__.py",
+          "size_bytes": 96,
+          "size_human": "96.0 B"
+        },
+        {
+          "path": "source/config/dataset/davis.yaml",
+          "size_bytes": 93,
+          "size_human": "93.0 B"
+        },
+        {
+          "path": "source/config/model/nearest.yaml",
+          "size_bytes": 86,
+          "size_human": "86.0 B"
+        },
+        {
+          "path": "source/config/model/jbf.yaml",
+          "size_bytes": 85,
+          "size_human": "85.0 B"
+        },
+        {
+          "path": "source/config/model/rednet.yaml",
+          "size_bytes": 84,
+          "size_human": "84.0 B"
+        },
+        {
+          "path": "source/config/model/restormer.yaml",
+          "size_bytes": 78,
+          "size_human": "78.0 B"
+        },
+        {
+          "path": "source/config/optimizer/adamw.yaml",
+          "size_bytes": 75,
+          "size_human": "75.0 B"
+        },
+        {
+          "path": "source/.git/description",
+          "size_bytes": 73,
+          "size_human": "73.0 B"
+        },
+        {
+          "path": "source/config/model/jbu.yaml",
+          "size_bytes": 68,
+          "size_human": "68.0 B"
+        },
+        {
+          "path": "source/config/model/ircnn.yaml",
+          "size_bytes": 64,
+          "size_human": "64.0 B"
+        },
+        {
+          "path": "source/config/dataloader/val.yaml",
+          "size_bytes": 61,
+          "size_human": "61.0 B"
+        },
+        {
+          "path": "source/test/pytest.ini",
+          "size_bytes": 57,
+          "size_human": "57.0 B"
+        },
+        {
+          "path": "source/config/loss/base.yaml",
+          "size_bytes": 47,
+          "size_human": "47.0 B"
+        },
+        {
+          "path": "source/src/backbone/__init__.py",
+          "size_bytes": 46,
+          "size_human": "46.0 B"
+        },
+        {
+          "path": "source/config/model/anyup.yaml",
+          "size_bytes": 44,
+          "size_human": "44.0 B"
+        },
+        {
+          "path": "source/config/model/bilinear.yaml",
+          "size_bytes": 43,
+          "size_human": "43.0 B"
+        },
+        {
+          "path": "source/.gitignore",
+          "size_bytes": 41,
+          "size_human": "41.0 B"
+        },
+        {
+          "path": "source/.git/shallow",
+          "size_bytes": 41,
+          "size_human": "41.0 B"
+        },
+        {
+          "path": "source/config/backbone/base.yaml",
+          "size_bytes": 38,
+          "size_human": "38.0 B"
+        },
+        {
+          "path": "source/.git/HEAD",
+          "size_bytes": 21,
+          "size_human": "21.0 B"
+        }
+      ]
+    },
+    "pixal3d": {
+      "total_size_bytes": 24044862290,
+      "total_size_human": "22.4 GB",
+      "source": {
+        "type": "unknown"
+      },
+      "files": [
+        {
+          "path": "ckpts/slat_flow_imgshape2tex_dit_1_3B_1024_bf16.safetensors",
+          "size_bytes": 5546960656,
+          "size_human": "5.2 GB"
+        },
+        {
+          "path": "ckpts/slat_flow_img2shape_dit_1_3B_1024_bf16.safetensors",
+          "size_bytes": 5546764048,
+          "size_human": "5.2 GB"
+        },
+        {
+          "path": "ckpts/slat_flow_img2shape_dit_1_3B_512_bf16.safetensors",
+          "size_bytes": 5546764048,
+          "size_human": "5.2 GB"
+        },
+        {
+          "path": "ckpts/ss_flow_img_dit_1_3B_64_bf16.safetensors",
+          "size_bytes": 5359822584,
+          "size_human": "5.0 GB"
+        },
+        {
+          "path": "ckpts/shape_dec_next_dc_f16c32_fp16.safetensors",
+          "size_bytes": 948490494,
+          "size_human": "904.6 MB"
+        },
+        {
+          "path": "ckpts/tex_dec_next_dc_f16c32_fp16.safetensors",
+          "size_bytes": 948458812,
+          "size_human": "904.5 MB"
+        },
+        {
+          "path": "ckpts/ss_dec_conv3d_16l8_fp16.safetensors",
+          "size_bytes": 147591972,
+          "size_human": "140.8 MB"
+        },
+        {
+          "path": "pipeline.json",
+          "size_bytes": 4068,
+          "size_human": "4.0 KB"
+        },
+        {
+          "path": "ckpts/tex_dec_next_dc_f16c32_fp16.json",
+          "size_bytes": 705,
+          "size_human": "705.0 B"
+        },
+        {
+          "path": "ckpts/shape_dec_next_dc_f16c32_fp16.json",
+          "size_bytes": 678,
+          "size_human": "678.0 B"
+        },
+        {
+          "path": "ckpts/slat_flow_img2shape_dit_1_3B_512_bf16.json",
+          "size_bytes": 535,
+          "size_human": "535.0 B"
+        },
+        {
+          "path": "ckpts/slat_flow_imgshape2tex_dit_1_3B_1024_bf16.json",
+          "size_bytes": 535,
+          "size_human": "535.0 B"
+        },
+        {
+          "path": "ckpts/slat_flow_img2shape_dit_1_3B_1024_bf16.json",
+          "size_bytes": 535,
+          "size_human": "535.0 B"
+        },
+        {
+          "path": "ckpts/ss_flow_img_dit_1_3B_64_bf16.json",
+          "size_bytes": 503,
+          "size_human": "503.0 B"
+        },
+        {
+          "path": "ckpts/ss_dec_conv3d_16l8_fp16.json",
+          "size_bytes": 245,
+          "size_human": "245.0 B"
+        },
+        {
+          "path": ".cache/huggingface/CACHEDIR.TAG",
+          "size_bytes": 191,
+          "size_human": "191.0 B"
+        },
+        {
+          "path": ".cache/huggingface/download/ckpts/slat_flow_img2shape_dit_1_3B_1024_bf16.safetensors.metadata",
+          "size_bytes": 125,
+          "size_human": "125.0 B"
+        },
+        {
+          "path": ".cache/huggingface/download/ckpts/ss_flow_img_dit_1_3B_64_bf16.safetensors.metadata",
+          "size_bytes": 125,
+          "size_human": "125.0 B"
+        },
+        {
+          "path": ".cache/huggingface/download/ckpts/slat_flow_imgshape2tex_dit_1_3B_1024_bf16.safetensors.metadata",
+          "size_bytes": 125,
+          "size_human": "125.0 B"
+        },
+        {
+          "path": ".cache/huggingface/download/ckpts/shape_dec_next_dc_f16c32_fp16.safetensors.metadata",
+          "size_bytes": 125,
+          "size_human": "125.0 B"
+        },
+        {
+          "path": ".cache/huggingface/download/ckpts/tex_dec_next_dc_f16c32_fp16.safetensors.metadata",
+          "size_bytes": 125,
+          "size_human": "125.0 B"
+        },
+        {
+          "path": ".cache/huggingface/download/ckpts/ss_dec_conv3d_16l8_fp16.safetensors.metadata",
+          "size_bytes": 124,
+          "size_human": "124.0 B"
+        },
+        {
+          "path": ".cache/huggingface/download/ckpts/slat_flow_img2shape_dit_1_3B_512_bf16.safetensors.metadata",
+          "size_bytes": 124,
+          "size_human": "124.0 B"
+        },
+        {
+          "path": ".cache/huggingface/download/ckpts/tex_dec_next_dc_f16c32_fp16.json.metadata",
+          "size_bytes": 101,
+          "size_human": "101.0 B"
+        },
+        {
+          "path": ".cache/huggingface/download/ckpts/ss_flow_img_dit_1_3B_64_bf16.json.metadata",
+          "size_bytes": 101,
+          "size_human": "101.0 B"
+        },
+        {
+          "path": ".cache/huggingface/download/ckpts/ss_dec_conv3d_16l8_fp16.json.metadata",
+          "size_bytes": 101,
+          "size_human": "101.0 B"
+        },
+        {
+          "path": ".cache/huggingface/download/ckpts/slat_flow_imgshape2tex_dit_1_3B_1024_bf16.json.metadata",
+          "size_bytes": 101,
+          "size_human": "101.0 B"
+        },
+        {
+          "path": ".cache/huggingface/download/ckpts/slat_flow_img2shape_dit_1_3B_1024_bf16.json.metadata",
+          "size_bytes": 101,
+          "size_human": "101.0 B"
+        },
+        {
+          "path": ".cache/huggingface/download/ckpts/shape_dec_next_dc_f16c32_fp16.json.metadata",
+          "size_bytes": 101,
+          "size_human": "101.0 B"
+        },
+        {
+          "path": ".cache/huggingface/download/ckpts/slat_flow_img2shape_dit_1_3B_512_bf16.json.metadata",
+          "size_bytes": 101,
+          "size_human": "101.0 B"
+        },
+        {
+          "path": ".cache/huggingface/download/pipeline.json.metadata",
+          "size_bytes": 100,
+          "size_human": "100.0 B"
+        },
+        {
+          "path": ".cache/huggingface/.gitignore",
+          "size_bytes": 1,
+          "size_human": "1.0 B"
+        }
+      ]
+    }
+  }
+}
