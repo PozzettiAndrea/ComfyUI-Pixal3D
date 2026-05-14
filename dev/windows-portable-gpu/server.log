@@ -1,0 +1,138 @@
+setup plugin alembic.autogenerate.schemas
+setup plugin alembic.autogenerate.tables
+setup plugin alembic.autogenerate.types
+setup plugin alembic.autogenerate.constraints
+setup plugin alembic.autogenerate.defaults
+setup plugin alembic.autogenerate.comments
+[comfy-env] ComfyUI-Pixal3D: 1 isolation env(s):
+[comfy-env]   nodes -> C:\workspaces\Pixal3D-1336\portable-comfyui\ComfyUI_windows_portable\ComfyUI\custom_nodes\ComfyUI-Pixal3D\nodes
+[comfy-env] Workspace: C:\Users\ContainerAdministrator\AppData\Local\Programs\comfy-env
+[comfy-env]     env: C:\Users\ContainerAdministrator\AppData\Local\Programs\comfy-env\.pixi\envs\pixal3d-nodes  [MISSING -- run install.py]
+[comfy-env] prestartup complete
+
+Prestartup times for custom nodes:
+   0.4 seconds: C:\workspaces\Pixal3D-1336\portable-comfyui\ComfyUI_windows_portable\ComfyUI\custom_nodes\ComfyUI-Pixal3D
+
+Found comfy_kitchen backend eager: {'available': True, 'disabled': False, 'unavailable_reason': None, 'capabilities': ['apply_rope', 'apply_rope1', 'dequantize_mxfp8', 'dequantize_nvfp4', 'dequantize_per_tensor_fp8', 'quantize_mxfp8', 'quantize_nvfp4', 'quantize_per_tensor_fp8', 'scaled_mm_mxfp8', 'scaled_mm_nvfp4']}
+Found comfy_kitchen backend triton: {'available': False, 'disabled': True, 'unavailable_reason': "ImportError: No module named 'triton'", 'capabilities': []}
+Found comfy_kitchen backend cuda: {'available': True, 'disabled': False, 'unavailable_reason': None, 'capabilities': ['apply_rope', 'apply_rope1', 'dequantize_nvfp4', 'dequantize_per_tensor_fp8', 'quantize_mxfp8', 'quantize_nvfp4', 'quantize_per_tensor_fp8', 'scaled_mm_nvfp4']}
+Checkpoint files will always be loaded safely.
+Total VRAM 12287 MB, total RAM 32648 MB
+pytorch version: 2.11.0+cu130
+Set vram state to: NORMAL_VRAM
+Device: cuda:0 NVIDIA GeForce RTX 3060 : cudaMallocAsync
+Using async weight offloading with 2 streams
+Enabled pinned memory 13059.0
+Using pytorch attention
+aimdo: src-win/cuda-detour.c:38:INFO:aimdo_setup_hooks: installing 6 hooks
+aimdo: src-win/cuda-detour.c:28:DEBUG:install_hook_entries: hooks successfully installed
+aimdo: src-win/shmem-detect.c:80:INFO:comfy-aimdo WDDM adapter match: NVIDIA GeForce RTX 3060 runtime_luid=00000000:0000b1f7 dxgi_luid=00000000:0000b1f7
+aimdo: src/control.c:152:INFO:comfy-aimdo inited for GPU: NVIDIA GeForce RTX 3060 (VRAM: 12287 MB)
+DynamicVRAM support detected and enabled
+Python version: 3.13.12 (tags/v3.13.12:1cbe481, Feb  3 2026, 18:22:25) [MSC v.1944 64 bit (AMD64)]
+ComfyUI version: 0.21.1
+comfy-aimdo version: 0.3.0
+comfy-kitchen version: 0.2.8
+****** User settings have been changed to be stored on the server instead of browser storage. ******
+****** For multi-user setups add the --multi-user CLI argument to enable multiple user profiles. ******
+ComfyUI frontend version: 1.43.18
+[Prompt Server] web root: C:\workspaces\Pixal3D-1336\portable-comfyui\ComfyUI_windows_portable\python_embeded\Lib\site-packages\comfyui_frontend_package\static
+Asset seeder disabled
+loading...
+calling register_nodes
+[comfy-env] Version: 0.3.87
+[comfy-env] register_nodes: ComfyUI-Pixal3D
+[comfy-env] ComfyUI source dir: C:\workspaces\Pixal3D-1336\portable-comfyui\ComfyUI_windows_portable\ComfyUI
+[comfy-env] isolation env not found at C:\Users\ContainerAdministrator\AppData\Local\Programs\comfy-env\.pixi\envs\pixal3d-nodes: pixi has not materialized `pixal3d-nodes`; using in-process import. Run `comfy-env install` (or your node's `install.py`) to create it.
+[comfy-env] Found 0 isolation env(s)
+[comfy-env] Importing nodes (root)...
+[comfy-env] Imported nodes root: 8 nodes
+[comfy-env] isolation env not found at C:\Users\ContainerAdministrator\AppData\Local\Programs\comfy-env\.pixi\envs\pixal3d-nodes: pixi has not materialized `pixal3d-nodes`; using in-process import. Run `comfy-env install` (or your node's `install.py`) to create it.
+[comfy-env] No env for nodes -- run 'comfy-env install'
+[comfy-env] Registered 8 total nodes
+
+Import times for custom nodes:
+   0.0 seconds: C:\workspaces\Pixal3D-1336\portable-comfyui\ComfyUI_windows_portable\ComfyUI\custom_nodes\websocket_image_save.py
+   0.0 seconds: C:\workspaces\Pixal3D-1336\portable-comfyui\ComfyUI_windows_portable\ComfyUI\custom_nodes\ComfyUI-validate-endpoint
+   0.8 seconds: C:\workspaces\Pixal3D-1336\portable-comfyui\ComfyUI_windows_portable\ComfyUI\custom_nodes\ComfyUI-Pixal3D
+
+Context impl SQLiteImpl.
+Will assume non-transactional DDL.
+Context impl SQLiteImpl.
+Will assume non-transactional DDL.
+Running upgrade  -> 0001_assets, Initial assets schema
+Revision ID: 0001_assets
+Revises: None
+Create Date: 2025-12-10 00:00:00
+Running upgrade 0001_assets -> 0002_merge_to_asset_references, Merge AssetInfo and AssetCacheState into unified asset_references table.
+Running upgrade 0002_merge_to_asset_references -> 0003_add_metadata_job_id, Add system_metadata and job_id columns to asset_references.
+Change preview_id FK from assets.id to asset_references.id.
+Database upgraded from None to 0003_add_metadata_job_id
+Starting server
+
+To see the GUI go to: http://127.0.0.1:41881
+=== /validate endpoint called ===
+Received JSON with keys: ['prompt']
+Prompt has 11 nodes
+  Node 1: LoadImage
+    Inputs: {"image": "pixal3d_test.png"}
+  Node 3: Pixal3DPreprocessImage
+    Inputs: {"image": ["1", 0], "mask": ["9", 0]}
+  Node 4: Pixal3DEstimateCamera
+    Inputs: {"mesh_scale": 1, "extend_pixel": 0, "image_resolution": 512, "image": ["3", 0]}
+  Node 7: Pixal3DLoadPipeline
+    Inputs: {"pipeline_type": "1024_cascade", "attn_backend": "auto"}
+  Node 8: MaskPreview
+    Inputs: {"mask": ["9", 0]}
+  Node 9: InvertMask
+    Inputs: {"mask": ["1", 1]}
+  Node 16: Preview3D
+    Inputs: {"model_file": ["23", 0], "image": ""}
+  Node 20: Pixal3DGenerateMesh
+    Inputs: {"seed": 42, "max_num_tokens": 49152, "ss_steps": 12, "ss_guidance": 7.5, "ss_rescale": 0.7, "ss_rescale_t": 5, "shape_steps": 12, "shape_guidance": 7.5, "shape_rescale": 0.5, "shape_rescale_t": 3, "t
+  Node 22: Pixal3DRasterizePBR
+    Inputs: {"texture_size": 2048, "double_sided": false, "bake_mode": "pbr", "debug_dump": false, "trimesh": ["24", 0], "voxelgrid": ["20", 1], "original_mesh": ["20", 0]}
+  Node 23: Pixal3DExportGLB
+    Inputs: {"filename_prefix": "pixal3d", "trimesh": ["22", 0]}
+  Node 24: Pixal3DProcessMesh
+    Inputs: {"target_face_count": 200000, "remesh": true, "remesh_resolution": 512, "remesh_band": 1, "remove_inner_faces": true, "fill_holes": true, "fill_holes_perimeter": 0.03, "floater_threshold": 0.001, "wel
+Generated prompt_id: 92a13b86-9aca-442f-82c1-e19e6f11b27f
+Calling execution.validate_prompt()...
+Validation result: valid=True
+=== Validation PASSED ===
+got prompt
+[pixal3d] >>> Pixal3DPreprocessImage.execute ...
+[pixal3d] <<< Pixal3DPreprocessImage.execute  (0.0s)
+[pixal3d] >>> Pixal3DEstimateCamera.execute ...
+[pixal3d] >>> init_moge: MoGeModel.from_pretrained ...
+[pixal3d] !!! init_moge: MoGeModel.from_pretrained FAILED after 0.0s: ModuleNotFoundError: No module named 'moge'
+[pixal3d] !!! Pixal3DEstimateCamera.execute FAILED after 0.0s: ModuleNotFoundError: No module named 'moge'
+!!! Exception during processing !!! No module named 'moge'
+Traceback (most recent call last):
+  File "C:\workspaces\Pixal3D-1336\portable-comfyui\ComfyUI_windows_portable\ComfyUI\execution.py", line 535, in execute
+    output_data, output_ui, has_subgraph, has_pending_tasks = await get_output_data(prompt_id, unique_id, obj, input_data_all, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)
+                                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\workspaces\Pixal3D-1336\portable-comfyui\ComfyUI_windows_portable\ComfyUI\execution.py", line 335, in get_output_data
+    return_values = await _async_map_node_over_list(prompt_id, unique_id, obj, input_data_all, obj.FUNCTION, allow_interrupt=True, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\workspaces\Pixal3D-1336\portable-comfyui\ComfyUI_windows_portable\ComfyUI\execution.py", line 309, in _async_map_node_over_list
+    await process_inputs(input_dict, i)
+  File "C:\workspaces\Pixal3D-1336\portable-comfyui\ComfyUI_windows_portable\ComfyUI\execution.py", line 297, in process_inputs
+    result = f(**inputs)
+  File "C:\workspaces\Pixal3D-1336\portable-comfyui\ComfyUI_windows_portable\ComfyUI\comfy_api\internal\__init__.py", line 149, in wrapped_func
+    return method(locked_class, **inputs)
+  File "C:\workspaces\Pixal3D-1336\portable-comfyui\ComfyUI_windows_portable\ComfyUI\comfy_api\latest\_io.py", line 1833, in EXECUTE_NORMALIZED
+    to_return = cls.execute(*args, **kwargs)
+  File "C:\workspaces\Pixal3D-1336\portable-comfyui\ComfyUI_windows_portable\ComfyUI\custom_nodes\ComfyUI-Pixal3D\nodes\nodes_inference.py", line 79, in execute
+    cam = estimate_camera(
+        image,
+    ...<2 lines>...
+        image_resolution=image_resolution,
+    )
+  File "C:\workspaces\Pixal3D-1336\portable-comfyui\ComfyUI_windows_portable\ComfyUI\custom_nodes\ComfyUI-Pixal3D\nodes\stages.py", line 690, in estimate_camera
+    moge = init_moge()
+  File "C:\workspaces\Pixal3D-1336\portable-comfyui\ComfyUI_windows_portable\ComfyUI\custom_nodes\ComfyUI-Pixal3D\nodes\stages.py", line 551, in init_moge
+    from moge.model.v2 import MoGeModel
+ModuleNotFoundError: No module named 'moge'
+
+Prompt executed in 0.11 seconds

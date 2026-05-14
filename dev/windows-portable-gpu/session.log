@@ -1,0 +1,239 @@
+[00:00] Crash dump logging enabled: C:\logs\Pixal3D-1336\dev\windows-portable-gpu\crash_dump.log
+[00:00] 
+[00:00] [1/5] SYNTAX
+[00:00] ----------------------------------------
+[00:00] 
+[DEBUG] server=None, server_url=None, api=None
+[00:00] Found pyproject.toml (modern format)
+[00:00] Found requirements.txt (legacy format)
+[00:00] Unicode check: OK (all characters cp1252-safe)
+[00:00] Warnings (non-blocking):
+
+nodes\pixal3d\trainers\flow_matching\mixins\image_conditioned_proj.py:
+  Line 971: torch.load() ? use comfy.utils.load_torch_file()
+  Line 1046: torch.load() ? use comfy.utils.load_torch_file()
+  Line 1070: torch.load() ? use comfy.utils.load_torch_file()
+  Line 1096: torch.load() ? use comfy.utils.load_torch_file()
+  Line 1104: torch.load() ? use comfy.utils.load_torch_file()
+  Line 1115: torch.load() ? use comfy.utils.load_torch_file()
+  Line 1188: torch.load() ? use comfy.utils.load_torch_file()
+[00:00] Forbidden patterns check: OK
+[00:00] [SYNTAX] PASSED
+[00:00] 
+[00:00] [2/5] INSTALL
+[00:00] ----------------------------------------
+[00:00] 
+[DEBUG] server=None, server_url=None, api=None
+[00:00] 
+Setting up ComfyUI...
+[00:00] Fetching latest release version...
+[00:00] Latest version: v0.21.1
+[00:00] Downloading portable ComfyUI from https://github.com/comfyanonymous/ComfyUI/releases/download/v0.21.1/ComfyUI_windows_portable_nvidia.7z...
+[00:05]   Downloaded: 10%
+[00:09]   Downloaded: 20%
+[00:12]   Downloaded: 30%
+[00:16]   Downloaded: 40%
+[00:19]   Downloaded: 50%
+[00:23]   Downloaded: 60%
+[00:27]   Downloaded: 70%
+[00:30]   Downloaded: 80%
+[00:34]   Downloaded: 90%
+[00:38]   Downloaded: 100%
+[00:38] Downloaded to C:\Users\ContainerAdministrator\.comfy-test\cache\portable\ComfyUI_portable_v0.21.1.7z
+[00:38] Extracting to cache: C:\Users\ContainerAdministrator\.comfy-test\cache\portable\ComfyUI_portable_v0.21.1
+[00:38] Extracting ComfyUI_portable_v0.21.1.7z...
+[00:38] Using 7z: C:\Program Files\7-Zip\7z.exe
+[02:11] Extracted to C:\Users\ContainerAdministrator\.comfy-test\cache\portable\ComfyUI_portable_v0.21.1
+[02:11] Copying from cache to: C:\workspaces\Pixal3D-1336\portable-comfyui
+[02:27] Installing uv into embedded Python...
+[02:27] Running: C:\workspaces\Pixal3D-1336\portable-comfyui\ComfyUI_windows_portable\python_embeded\python.exe -m pip install uv
+[02:33] Installing ComfyUI requirements...
+[02:33] Running: C:\workspaces\Pixal3D-1336\portable-comfyui\ComfyUI_windows_portable\python_embeded\python.exe -m uv pip install -r C:\workspaces\Pixal3D-1336\portable-comfyui\ComfyUI_windows_portable\ComfyUI\requirements.txt
+[02:34] 
+Installing custom node...
+[02:34] Copying ComfyUI-Pixal3D to custom_nodes/...
+[02:34] Installing node requirements...
+[02:34] Running: C:\workspaces\Pixal3D-1336\portable-comfyui\ComfyUI_windows_portable\python_embeded\python.exe -m pip install -r C:\workspaces\Pixal3D-1336\portable-comfyui\ComfyUI_windows_portable\ComfyUI\custom_nodes\ComfyUI-Pixal3D\requirements.txt
+[02:45] 
+Running install.py...
+[02:45] Running: C:\workspaces\Pixal3D-1336\portable-comfyui\ComfyUI_windows_portable\python_embeded\python.exe C:\workspaces\Pixal3D-1336\portable-comfyui\ComfyUI_windows_portable\ComfyUI\custom_nodes\ComfyUI-Pixal3D\install.py
+[02:45]   [comfy-env] Enabled Windows long path support
+[02:48]   [comfy-env] _discover: scanning C:\workspaces\Pixal3D-1336\portable-comfyui\ComfyUI_windows_portable\ComfyUI\custom_nodes
+[02:48]   [comfy-env] _discover: ComfyUI-Pixal3D -> pixal3d-nodes (custom_nodes\ComfyUI-Pixal3D\nodes\comfy-env.toml)
+[02:48]   [comfy-env] Workspace: C:\Users\ContainerAdministrator\AppData\Local\Programs\comfy-env
+[02:48]   [comfy-env] ComfyUI: C:\workspaces\Pixal3D-1336\portable-comfyui\ComfyUI_windows_portable\ComfyUI
+[02:48]   [comfy-env] Found 1 node config(s):
+[02:48]     - pixal3d-nodes <- custom_nodes\ComfyUI-Pixal3D\nodes\comfy-env.toml (python=3.10)
+[02:48]   [comfy-env] Bootstrap interpreter has python 3.13 + torch 2.11.0 (cu130). Looking for cuda-only wheels matching cu130/torch2.11/cp313.
+[03:14]   [comfy-env] GPU: Detection: torch
+[03:14]   Recommended: CUDA 13.0
+[03:14]   
+[03:14]     GPU 0: NVIDIA GeForce RTX 3060 (sm_86) [Ampere] 12287MB
+[03:14]   [comfy-env] Comfyui feature -> torch 2.11.0 from https://download.pytorch.org/whl/cu130 (CUDA 13.0 via bootstrap torch)
+[03:14]   [comfy-env] cuda-wheels: 6 package(s) need a matched (cuda, torch, python) combo: ['flex_gemm_ap', 'cumesh_vb', 'o_voxel_vb_ap', 'flash-attn', 'sageattention', 'drtk']
+[03:14]   [comfy-env] cuda-wheels tier 1 (bootstrap): probing cu13.0/torch2.11/cp310
+[03:14]   [cuda-wheels] Looking up flex_gemm_ap: cu130 torch2.11 cp310 win_amd64
+[03:14]   [cuda-wheels]   Found: flex_gemm_ap-1.0.0+cu130torch2.11-cp310-cp310-win_amd64.whl
+[03:14]   [cuda-wheels] Looking up cumesh_vb: cu130 torch2.11 cp310 win_amd64
+[03:15]   [cuda-wheels]   Found: cumesh_vb-1.0+cu130torch2.11-cp310-cp310-win_amd64.whl
+[03:15]   [cuda-wheels] Looking up o_voxel_vb_ap: cu130 torch2.11 cp310 win_amd64
+[03:16]   [cuda-wheels]   Found: o_voxel_vb_ap-0.0.1+cu130torch2.11-cp310-cp310-win_amd64.whl
+[03:16]   [cuda-wheels] Looking up flash-attn: cu130 torch2.11 cp310 win_amd64
+[03:16]   [cuda-wheels]   Found: flash_attn-2.8.3+cu130torch2.11-cp310-cp310-win_amd64.whl
+[03:16]   [cuda-wheels] Looking up sageattention: cu130 torch2.11 cp310 win_amd64
+[03:17]   [cuda-wheels]   Found: sageattention-2.2.0+cu130torch2.11-cp310-cp310-win_amd64.whl
+[03:17]   [cuda-wheels] Looking up drtk: cu130 torch2.11 cp310 win_amd64
+[03:17]   [cuda-wheels]   Found: drtk-0.1.0+cu130torch2.11-cp310-cp310-win_amd64.whl
+[03:17]   [comfy-env] cuda-wheels combo: cu13.0/torch2.11 (bootstrap matches; per-node envs will pin to this)
+[03:17]   [cuda-wheels] Looking up flex_gemm_ap: cu130 torch2.11 cp310 win_amd64
+[03:18]   [cuda-wheels]   Found: flex_gemm_ap-1.0.0+cu130torch2.11-cp310-cp310-win_amd64.whl
+[03:18]   [cuda-wheels] Looking up cumesh_vb: cu130 torch2.11 cp310 win_amd64
+[03:19]   [cuda-wheels]   Found: cumesh_vb-1.0+cu130torch2.11-cp310-cp310-win_amd64.whl
+[03:19]   [cuda-wheels] Looking up o_voxel_vb_ap: cu130 torch2.11 cp310 win_amd64
+[03:19]   [cuda-wheels]   Found: o_voxel_vb_ap-0.0.1+cu130torch2.11-cp310-cp310-win_amd64.whl
+[03:19]   [cuda-wheels] Looking up flash-attn: cu130 torch2.11 cp310 win_amd64
+[03:20]   [cuda-wheels]   Found: flash_attn-2.8.3+cu130torch2.11-cp310-cp310-win_amd64.whl
+[03:20]   [cuda-wheels] Looking up sageattention: cu130 torch2.11 cp310 win_amd64
+[03:20]   [cuda-wheels]   Found: sageattention-2.2.0+cu130torch2.11-cp310-cp310-win_amd64.whl
+[03:20]   [cuda-wheels] Looking up drtk: cu130 torch2.11 cp310 win_amd64
+[03:21]   [cuda-wheels]   Found: drtk-0.1.0+cu130torch2.11-cp310-cp310-win_amd64.whl
+[03:21]   [comfy-env] pixal3d-nodes: cuda-wheels deferred for post-pixi install (flex_gemm_ap, cumesh_vb, o_voxel_vb_ap, flash-attn, sageattention, drtk)
+[03:21]   Generated C:\Users\ContainerAdministrator\AppData\Local\Programs\comfy-env\pixi.toml
+[03:21]   [comfy-env] Patched C:\Users\ContainerAdministrator\AppData\Roaming\uv\python\cpython-3.10-windows-x86_64-none\Lib\platform.py for conda-forge compat
+[03:21]   [comfy-env] Patched C:\Users\ContainerAdministrator\AppData\Roaming\uv\python\cpython-3.10.20-windows-x86_64-none\Lib\platform.py for conda-forge compat
+[03:21]   [comfy-env] Patched C:\Users\ContainerAdministrator\AppData\Roaming\uv\python\cpython-3.11-windows-x86_64-none\Lib\platform.py for conda-forge compat
+[03:21]   [comfy-env] Patched C:\Users\ContainerAdministrator\AppData\Roaming\uv\python\cpython-3.11.15-windows-x86_64-none\Lib\platform.py for conda-forge compat
+[03:21]   [comfy-env] Patched C:\Users\ContainerAdministrator\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\platform.py for conda-forge compat
+[03:21]   [comfy-env] Patched C:\Users\ContainerAdministrator\AppData\Roaming\uv\python\cpython-3.12.13-windows-x86_64-none\Lib\platform.py for conda-forge compat
+[03:21]   [comfy-env] Patched C:\Users\ContainerAdministrator\AppData\Roaming\uv\python\cpython-3.13-windows-x86_64-none\Lib\platform.py for conda-forge compat
+[03:21]   [comfy-env] Patched C:\Users\ContainerAdministrator\AppData\Roaming\uv\python\cpython-3.13.13-windows-x86_64-none\Lib\platform.py for conda-forge compat
+[03:21]   [comfy-env] Installing 1 environment(s):
+[03:21]     - pixal3d-nodes (python=3.10, 25 pypi deps, 6 cuda wheels)
+[03:21]   [comfy-env] Running `pixi install -e pixal3d-nodes`...
+[03:32]     Error:   Ã— Cannot install environment 'pixal3d-nodes'
+[03:32]       â•°â”€â–¶ Wheel: natten-0.21.1+torch280cu128-cp310-cp310-linux_x86_64.whl doesn't
+[03:32]           match this systems virtual capabilities for tags: cp310-cp310-win_amd64
+[03:32]           cp310-abi3-win_amd64
+[03:32]           cp310-none-win_amd64
+[03:32]           cp39-abi3-win_amd64
+[03:32]           cp38-abi3-win_amd64
+[03:32]           cp37-abi3-win_amd64
+[03:32]           cp36-abi3-win_amd64
+[03:32]           cp35-abi3-win_amd64
+[03:32]           cp34-abi3-win_amd64
+[03:32]           cp33-abi3-win_amd64
+[03:32]           cp32-abi3-win_amd64
+[03:32]           py310-none-win_amd64
+[03:32]           py3-none-win_amd64
+[03:32]           py39-none-win_amd64
+[03:32]           py38-none-win_amd64
+[03:32]           py37-none-win_amd64
+[03:32]           py36-none-win_amd64
+[03:32]           py35-none-win_amd64
+[03:32]           py34-none-win_amd64
+[03:32]           py33-none-win_amd64
+[03:32]           py32-none-win_amd64
+[03:32]           py31-none-win_amd64
+[03:32]           py30-none-win_amd64
+[03:32]           cp310-none-any
+[03:32]           py310-none-any
+[03:32]           py3-none-any
+[03:32]           py39-none-any
+[03:32]           py38-none-any
+[03:32]           py37-none-any
+[03:32]           py36-none-any
+[03:32]           py35-none-any
+[03:32]           py34-none-any
+[03:32]           py33-none-any
+[03:32]           py32-none-any
+[03:32]           py31-none-any
+[03:32]           py30-none-any
+[03:33] Warning: install.py failed (exit code 1), continuing...
+[03:33]   [!]       py32-none-win_amd64
+[03:33]   [!]       py31-none-win_amd64
+[03:33]   [!]       py30-none-win_amd64
+[03:33]   [!]       cp310-none-any
+[03:33]   [!]       py310-none-any
+[03:33]   [!]       py3-none-any
+[03:33]   [!]       py39-none-any
+[03:33]   [!]       py38-none-any
+[03:33]   [!]       py37-none-any
+[03:33]   [!]       py36-none-any
+[03:33]   [!]       py35-none-any
+[03:33]   [!]       py34-none-any
+[03:33]   [!]       py33-none-any
+[03:33]   [!]       py32-none-any
+[03:33]   [!]       py31-none-any
+[03:33]   [!]       py30-none-any
+[03:33]   [!]       
+[03:33]   [!] 
+[03:33]   [!] 
+[03:33]   [!] stdout:
+[03:33] Installing validation endpoint...
+[03:33]   Cloning PozzettiAndrea/ComfyUI-validate-endpoint...
+[03:33] Running: git clone --depth 1 https://github.com/PozzettiAndrea/ComfyUI-validate-endpoint.git C:\workspaces\Pixal3D-1336\portable-comfyui\ComfyUI_windows_portable\ComfyUI\custom_nodes\ComfyUI-validate-endpoint
+[03:34] CUDA packages absent (will mock): flex_gemm_ap, cumesh_vb, o_voxel_vb_ap, flash_attn, sageattention, drtk
+[03:34] [INSTALL] PASSED
+[03:34] 
+[03:34] [3/5] REGISTRATION
+[03:34] ----------------------------------------
+[03:34] 
+[DEBUG] server=None, server_url=None, api=None
+[03:34] 
+Starting ComfyUI server...
+[03:34] Starting ComfyUI server on port 41881...
+[03:34] CUDA mock packages: flex_gemm_ap, cumesh_vb, o_voxel_vb_ap, flash_attn, sageattention, drtk
+[03:34] Starting ComfyUI server on port 41881...
+[03:34] Server stdout/stderr -> C:\workspaces\Pixal3D-1336\server.log
+[03:34] Waiting for server to be ready (timeout: 600s)...
+[03:34]   [ComfyUI:stdout] reader thread died: AttributeError("'NoneType' object has no attribute 'readline'")
+[03:34]   [ComfyUI:stderr] reader thread died: AttributeError("'NoneType' object has no attribute 'readline'")
+[03:54] Server responding, waiting for nodes to load...
+[04:14] Server is ready!
+[04:14] Checking for import errors in server logs...
+[04:14] No import errors detected
+[04:14] Found 723 registered nodes
+[04:14] [REGISTRATION] PASSED
+[04:14] 
+[04:14] [4/5] INSTANTIATION
+[04:14] ----------------------------------------
+[04:14] 
+[DEBUG] server=<comfy_test.comfyui.server.ComfyUIServer object at 0x0000021AF91A5940>, server_url=None, api=<comfy_test.comfyui.api.ComfyUIAPI object at 0x0000021AF91A6510>
+[04:14] Testing node constructors...
+[04:17] All 8 node(s) instantiated successfully!
+[04:17] [INSTANTIATION] PASSED
+[04:17] 
+[04:17] [5/5] EXECUTION
+[04:17] ----------------------------------------
+[04:17] 
+[DEBUG] server=<comfy_test.comfyui.server.ComfyUIServer object at 0x0000021AF91A5940>, server_url=None, api=<comfy_test.comfyui.api.ComfyUIAPI object at 0x0000021AF91A6510>
+[04:17] GPU runner - will execute 1 workflow(s)
+[04:17] Running 1 workflow(s) (all with videos)...
+[04:17] Installing screenshot dependencies (playwright, pillow)...
+[04:19]   Packages installed, downloading chromium browser...
+[04:38]   Screenshot dependencies installed successfully
+[04:39] Starting headless browser...
+[04:39]   Downloading Mesa llvmpipe for Windows...
+[04:39]   Mesa download error: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1032)>
+[04:39]   Mesa unavailable -- falling back to SwiftShader
+[04:44] Capturing execution frames: pixal3d_basic.json
+[04:52]   Frame 1 saved (frame_000.jpg, t=0.0s)
+[04:52]   Validating workflow...
+[04:52]   Queuing workflow for execution...
+[04:52]   Node executed (1 total), capturing...
+[04:53]   Frame 2 saved (frame_001.jpg, t=0.7s)
+[04:53]   [capture-node] freeze=5ms shot=139ms unfreeze=0ms saved=True
+[04:53]   Execution complete (t=0.7s)
+[04:53]   Execution error: {'prompt_id': 'cf6bcb1f-b946-47ee-83f0-4db556eb7012', 'node_id': '4', 'node_type': 'Pixal3DEstimateCamera', 'executed': ['9', '8', '1', '3'], 'exception_message': "No module named 'moge'\n", 'exception_type': 'ModuleNotFoundError', 'traceback': ['  File "C:\\workspaces\\Pixal3D-1336\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\execution.py", line 535, in execute\n    output_data, output_ui, has_subgraph, has_pending_tasks = await get_output_data(prompt_id, unique_id, obj, input_data_all, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)\n                                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n', '  File "C:\\workspaces\\Pixal3D-1336\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\execution.py", line 335, in get_output_data\n    return_values = await _async_map_node_over_list(prompt_id, unique_id, obj, input_data_all, obj.FUNCTION, allow_interrupt=True, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n', '  File "C:\\workspaces\\Pixal3D-1336\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\execution.py", line 309, in _async_map_node_over_list\n    await process_inputs(input_dict, i)\n', '  File "C:\\workspaces\\Pixal3D-1336\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\execution.py", line 297, in process_inputs\n    result = f(**inputs)\n', '  File "C:\\workspaces\\Pixal3D-1336\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\comfy_api\\internal\\__init__.py", line 149, in wrapped_func\n    return method(locked_class, **inputs)\n', '  File "C:\\workspaces\\Pixal3D-1336\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\comfy_api\\latest\\_io.py", line 1833, in EXECUTE_NORMALIZED\n    to_return = cls.execute(*args, **kwargs)\n', '  File "C:\\workspaces\\Pixal3D-1336\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\custom_nodes\\ComfyUI-Pixal3D\\nodes\\nodes_inference.py", line 79, in execute\n    cam = estimate_camera(\n        image,\n    ...<2 lines>...\n        image_resolution=image_resolution,\n    )\n', '  File "C:\\workspaces\\Pixal3D-1336\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\custom_nodes\\ComfyUI-Pixal3D\\nodes\\stages.py", line 690, in estimate_camera\n    moge = init_moge()\n', '  File "C:\\workspaces\\Pixal3D-1336\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\custom_nodes\\ComfyUI-Pixal3D\\nodes\\stages.py", line 551, in init_moge\n    from moge.model.v2 import MoGeModel\n'], 'current_inputs': {'mesh_scale': [1], 'extend_pixel': [0], 'image_resolution': [512], 'image': ['tensor([[[[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]],\n\n         [[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]],\n\n         [[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]],\n\n         ...,\n\n         [[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]],\n\n         [[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]],\n\n         [[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]]]])']}, 'current_outputs': ['8', '20', '7', '3', '9', '24', '1', '4', '16', '23', '22'], 'timestamp': 1778758891043}
+[04:53] Results saved to C:\logs\Pixal3D-1336\dev\windows-portable-gpu\results.json
+[04:53] Model report: 8 files, 18.7 MB -> C:\logs\Pixal3D-1336\dev\windows-portable-gpu\models.json
+[04:53] Saved: C:\logs\Pixal3D-1336\dev\windows-portable-gpu\index.html
+[04:53] 
+windows_portable: FAILED
+[04:53] Error: Workflow execution failed (1 error(s))
+[04:53] Details: pixal3d_basic.json: Workflow execution failed: {'prompt_id': 'cf6bcb1f-b946-47ee-83f0-4db556eb7012', 'node_id': '4', 'node_type': 'Pixal3DEstimateCamera', 'executed': ['9', '8', '1', '3'], 'exception_message': "No module named 'moge'\n", 'exception_type': 'ModuleNotFoundError', 'traceback': ['  File "C:\\workspaces\\Pixal3D-1336\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\execution.py", line 535, in execute\n    output_data, output_ui, has_subgraph, has_pending_tasks = await get_output_data(prompt_id, unique_id, obj, input_data_all, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)\n                                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n', '  File "C:\\workspaces\\Pixal3D-1336\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\execution.py", line 335, in get_output_data\n    return_values = await _async_map_node_over_list(prompt_id, unique_id, obj, input_data_all, obj.FUNCTION, allow_interrupt=True, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n', '  File "C:\\workspaces\\Pixal3D-1336\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\execution.py", line 309, in _async_map_node_over_list\n    await process_inputs(input_dict, i)\n', '  File "C:\\workspaces\\Pixal3D-1336\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\execution.py", line 297, in process_inputs\n    result = f(**inputs)\n', '  File "C:\\workspaces\\Pixal3D-1336\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\comfy_api\\internal\\__init__.py", line 149, in wrapped_func\n    return method(locked_class, **inputs)\n', '  File "C:\\workspaces\\Pixal3D-1336\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\comfy_api\\latest\\_io.py", line 1833, in EXECUTE_NORMALIZED\n    to_return = cls.execute(*args, **kwargs)\n', '  File "C:\\workspaces\\Pixal3D-1336\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\custom_nodes\\ComfyUI-Pixal3D\\nodes\\nodes_inference.py", line 79, in execute\n    cam = estimate_camera(\n        image,\n    ...<2 lines>...\n        image_resolution=image_resolution,\n    )\n', '  File "C:\\workspaces\\Pixal3D-1336\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\custom_nodes\\ComfyUI-Pixal3D\\nodes\\stages.py", line 690, in estimate_camera\n    moge = init_moge()\n', '  File "C:\\workspaces\\Pixal3D-1336\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\custom_nodes\\ComfyUI-Pixal3D\\nodes\\stages.py", line 551, in init_moge\n    from moge.model.v2 import MoGeModel\n'], 'current_inputs': {'mesh_scale': [1], 'extend_pixel': [0], 'image_resolution': [512], 'image': ['tensor([[[[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]],\n\n         [[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]],\n\n         [[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]],\n\n         ...,\n\n         [[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]],\n\n         [[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]],\n\n         [[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]]]])']}, 'current_outputs': ['8', '20', '7', '3', '9', '24', '1', '4', '16', '23', '22'], 'timestamp': 1778758891043}
+
+Details:
+Workflow: C:\ComfyUI-Pixal3D\workflows\pixal3d_basic.json
+Node error: Pixal3DEstimateCamera
+[04:53] Stopping ComfyUI server...
