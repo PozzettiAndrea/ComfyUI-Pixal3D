@@ -1,11 +1,40 @@
 {
-  "models_dir": "/workspaces/Pixal3D-1133/ComfyUI/models",
+  "models_dir": "/workspaces/Pixal3D-1248/ComfyUI/models",
   "summary": {
-    "total_files": 169,
-    "total_size_bytes": 24113349120,
-    "total_size_human": "22.5 GB"
+    "total_files": 173,
+    "total_size_bytes": 25437165340,
+    "total_size_human": "23.7 GB"
   },
   "folders": {
+    "moge2": {
+      "total_size_bytes": 1323816221,
+      "total_size_human": "1.2 GB",
+      "source": {
+        "type": "unknown"
+      },
+      "files": [
+        {
+          "path": "moge-2-vitl-normal.pt",
+          "size_bytes": 1323815904,
+          "size_human": "1.2 GB"
+        },
+        {
+          "path": ".cache/huggingface/CACHEDIR.TAG",
+          "size_bytes": 191,
+          "size_human": "191.0 B"
+        },
+        {
+          "path": ".cache/huggingface/download/model.pt.metadata",
+          "size_bytes": 125,
+          "size_human": "125.0 B"
+        },
+        {
+          "path": ".cache/huggingface/.gitignore",
+          "size_bytes": 1,
+          "size_human": "1.0 B"
+        }
+      ]
+    },
     "naf": {
       "total_size_bytes": 68486830,
       "total_size_human": "65.3 MB",
@@ -701,7 +730,7 @@
       ]
     },
     "pixal3d": {
-      "total_size_bytes": 24044862290,
+      "total_size_bytes": 24044862289,
       "total_size_human": "22.4 GB",
       "source": {
         "type": "unknown"
@@ -788,6 +817,11 @@
           "size_human": "191.0 B"
         },
         {
+          "path": ".cache/huggingface/download/ckpts/ss_dec_conv3d_16l8_fp16.safetensors.metadata",
+          "size_bytes": 125,
+          "size_human": "125.0 B"
+        },
+        {
           "path": ".cache/huggingface/download/ckpts/slat_flow_img2shape_dit_1_3B_1024_bf16.safetensors.metadata",
           "size_bytes": 125,
           "size_human": "125.0 B"
@@ -813,22 +847,12 @@
           "size_human": "125.0 B"
         },
         {
-          "path": ".cache/huggingface/download/ckpts/ss_dec_conv3d_16l8_fp16.safetensors.metadata",
-          "size_bytes": 124,
-          "size_human": "124.0 B"
-        },
-        {
           "path": ".cache/huggingface/download/ckpts/slat_flow_img2shape_dit_1_3B_512_bf16.safetensors.metadata",
           "size_bytes": 124,
           "size_human": "124.0 B"
         },
         {
           "path": ".cache/huggingface/download/ckpts/tex_dec_next_dc_f16c32_fp16.json.metadata",
-          "size_bytes": 101,
-          "size_human": "101.0 B"
-        },
-        {
-          "path": ".cache/huggingface/download/ckpts/ss_flow_img_dit_1_3B_64_bf16.json.metadata",
           "size_bytes": 101,
           "size_human": "101.0 B"
         },
@@ -848,17 +872,22 @@
           "size_human": "101.0 B"
         },
         {
-          "path": ".cache/huggingface/download/ckpts/shape_dec_next_dc_f16c32_fp16.json.metadata",
-          "size_bytes": 101,
-          "size_human": "101.0 B"
-        },
-        {
           "path": ".cache/huggingface/download/ckpts/slat_flow_img2shape_dit_1_3B_512_bf16.json.metadata",
           "size_bytes": 101,
           "size_human": "101.0 B"
         },
         {
           "path": ".cache/huggingface/download/pipeline.json.metadata",
+          "size_bytes": 100,
+          "size_human": "100.0 B"
+        },
+        {
+          "path": ".cache/huggingface/download/ckpts/ss_flow_img_dit_1_3B_64_bf16.json.metadata",
+          "size_bytes": 100,
+          "size_human": "100.0 B"
+        },
+        {
+          "path": ".cache/huggingface/download/ckpts/shape_dec_next_dc_f16c32_fp16.json.metadata",
           "size_bytes": 100,
           "size_human": "100.0 B"
         },

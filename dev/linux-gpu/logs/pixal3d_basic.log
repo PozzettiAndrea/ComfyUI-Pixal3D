@@ -3,14 +3,12 @@ Capturing execution frames: pixal3d_basic.json
   Validating workflow...
   [ComfyUI] === /validate endpoint called ===
   [ComfyUI] Received JSON with keys: ['prompt']
-  [ComfyUI] Prompt has 11 nodes
   Queuing workflow for execution...
+  [ComfyUI] Prompt has 13 nodes
   [ComfyUI]   Node 1: LoadImage
   [ComfyUI]     Inputs: {"image": "pixal3d_test.png"}
   [ComfyUI]   Node 3: Pixal3DPreprocessImage
   [ComfyUI]     Inputs: {"image": ["1", 0], "mask": ["9", 0]}
-  [ComfyUI]   Node 4: Pixal3DEstimateCamera
-  [ComfyUI]     Inputs: {"mesh_scale": 1, "extend_pixel": 0, "image_resolution": 512, "image": ["3", 0]}
   [ComfyUI]   Node 7: Pixal3DLoadPipeline
   [ComfyUI]     Inputs: {"pipeline_type": "1024_cascade", "attn_backend": "auto"}
   [ComfyUI]   Node 8: MaskPreview
@@ -26,26 +24,32 @@ Capturing execution frames: pixal3d_basic.json
   [ComfyUI]   Node 23: Pixal3DExportGLB
   [ComfyUI]     Inputs: {"filename_prefix": "pixal3d", "trimesh": ["22", 0]}
   [ComfyUI]   Node 24: Pixal3DProcessMesh
+  [ComfyUI] [comfy-env] SubprocessWorker: /root/.ce/.pixi/envs/pixal3d-nodes/bin/python
   [ComfyUI]     Inputs: {"target_face_count": 200000, "remesh": true, "remesh_resolution": 512, "remesh_band": 1, "remove_inner_faces": true, "fill_holes": true, "fill_holes_perimeter": 0.03, "floater_threshold": 0.001, "wel
-  [ComfyUI] Generated prompt_id: c63a5ab1-c78f-4293-8694-b714c03177dd
+  [ComfyUI] [comfy-env] env_vars: {'PYTORCH_CUDA_ALLOC_CONF': 'expandable_segments:True', 'OPENCV_IO_ENABLE_OPENEXR': '1', 'COMFYUI_BASE': '/workspaces/Pixal3D-1248/ComfyUI'}
+  [ComfyUI]   Node 25: DownloadAndLoadMoGe2Model
+  [ComfyUI] [ComfyUI-Pixal3D] python: /root/.ce/.pixi/envs/pixal3d-nodes/bin/python
+  [ComfyUI]     Inputs: {"model": "moge-2-vitl-normal.pt", "precision": "auto", "attention": "auto"}
+  [ComfyUI] [ComfyUI-Pixal3D] sys_path sent to worker: ['/workspaces/Pixal3D-1248/ComfyUI', '/workspaces/Pixal3D-1248/ComfyUI/custom_nodes/ComfyUI-Pixal3D', '/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages', '/workspaces/Pixal3D-1248/ComfyUI/custom_nodes/ComfyUI-Pixal3D']
+  [ComfyUI]   Node 26: MoGe2Inference
+  [ComfyUI] [SubprocessWorker] is_pixi=True, python=/root/.ce/.pixi/envs/pixal3d-nodes/bin/python
+  [ComfyUI]     Inputs: {"resolution_level": 9, "num_tokens": 0, "fov_x_deg": 0, "force_projection": true, "apply_mask": true, "moge_model": ["25", 0], "images": ["3", 0]}
+  [ComfyUI] [SubprocessWorker] launching cmd=['/root/.pixi/bin/pixi', 'run', '--as-is', '--manifest-path', '/root/.ce/pixi.toml', '-e', 'pixal3d-nodes', 'python', '/tmp/comfyui_pvenv_gejqmaao/persistent_worker.py', 'abstract://comfy_worker_9fd22460c78b']...
+  [ComfyUI]   Node 27: Pixal3DCameraFromFOV
+  [ComfyUI] [SubprocessWorker] socket_addr=abstract://comfy_worker_9fd22460c78b (abstract, no filesystem path)
+  [ComfyUI]     Inputs: {"fov_x_deg": ["26", 6], "mesh_scale": 1, "extend_pixel": 0, "image_resolution": 512}
+  [ComfyUI] Generated prompt_id: d7183cd7-188f-4a55-b824-ae78058c7768
   [ComfyUI] Calling execution.validate_prompt()...
   [ComfyUI] Validation result: valid=True
   [ComfyUI] === Validation PASSED ===
   [ComfyUI] got prompt
   [ComfyUI] [comfy-env] Running Pixal3DPreprocessImage: image: torch.float32 [1,409,409,3] cpu, mask: torch.float32 [1,409,409] cpu
-  [ComfyUI] [comfy-env] SubprocessWorker: /root/.ce/.pixi/envs/pixal3d-nodes/bin/python
-  [ComfyUI] [VRAM] Before Pixal3DPreprocessImage: 563 / 24124 MB
-  [ComfyUI] [comfy-env] env_vars: {'PYTORCH_CUDA_ALLOC_CONF': 'expandable_segments:True', 'OPENCV_IO_ENABLE_OPENEXR': '1', 'COMFYUI_BASE': '/workspaces/Pixal3D-1133/ComfyUI'}
+  [ComfyUI] [VRAM] Before Pixal3DPreprocessImage: 302 / 24124 MB
   [ComfyUI] [SubprocessWorker] call_method: nodes.nodes_inference.Pixal3DPreprocessImage.EXECUTE_NORMALIZED
-  [ComfyUI] [ComfyUI-Pixal3D] python: /root/.ce/.pixi/envs/pixal3d-nodes/bin/python
   [ComfyUI] [SubprocessWorker] acquired lock, ensuring started...
-  [ComfyUI] [ComfyUI-Pixal3D] sys_path sent to worker: ['/workspaces/Pixal3D-1133/ComfyUI', '/workspaces/Pixal3D-1133/ComfyUI/custom_nodes/ComfyUI-Pixal3D', '/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages', '/workspaces/Pixal3D-1133/ComfyUI/custom_nodes/ComfyUI-Pixal3D']
-  [ComfyUI] [SubprocessWorker] is_pixi=True, python=/root/.ce/.pixi/envs/pixal3d-nodes/bin/python
-  [ComfyUI] [SubprocessWorker] launching cmd=['/root/.pixi/bin/pixi', 'run', '--as-is', '--manifest-path', '/root/.ce/pixi.toml', '-e', 'pixal3d-nodes', 'python', '/tmp/comfyui_pvenv_v79adoij/persistent_worker.py', 'abstract://comfy_worker_3a7f7925cf47']...
-  [ComfyUI] [SubprocessWorker] socket_addr=abstract://comfy_worker_3a7f7925cf47 (abstract, no filesystem path)
   Node executed (1 total), capturing...
   Frame 2 saved (frame_001.jpg, t=0.9s)
-  [capture-node] freeze=4ms shot=251ms unfreeze=4ms saved=True
+  [capture-node] freeze=4ms shot=240ms unfreeze=4ms saved=True
   [ComfyUI] [worker:ComfyUI-Pixal3D] ERROR: Failed to import comfy_kitchen, Error: No module named 'comfy_kitchen', fp8 and fp4 support will not be available.
   [ComfyUI] [SubprocessWorker] worker started/confirmed
   [ComfyUI] [comfy-env] PRE-SERIALIZE 'image' shape: torch.Size([1, 409, 409, 3])
@@ -61,51 +65,111 @@ Capturing execution frames: pixal3d_basic.json
   [ComfyUI] [worker:ComfyUI-Pixal3D] [comfy-env] DESERIALIZE TensorRef: tensor_size=[1, 409, 409]
   [ComfyUI] [worker:ComfyUI-Pixal3D] [comfy-env] DESERIALIZED tensor shape: torch.Size([1, 409, 409])
   Frame 3 saved (frame_002.jpg, t=3.3s)
-  [capture-periodic] freeze=3ms shot=235ms unfreeze=3ms saved=True
+  [capture-periodic] freeze=3ms shot=220ms unfreeze=3ms saved=True
   [ComfyUI] [worker:ComfyUI-Pixal3D] [pixal3d] >>> Pixal3DPreprocessImage.execute ...
   [ComfyUI] [worker:ComfyUI-Pixal3D] [pixal3d] <<< Pixal3DPreprocessImage.execute  (0.0s)
   [ComfyUI] [SubprocessWorker] got response: ok
-  [ComfyUI] [comfy-env] Pixal3DPreprocessImage done (3.28s): result: NodeOutput
-  [ComfyUI] [VRAM] After Pixal3DPreprocessImage: 825 / 24124 MB
-  [ComfyUI] [comfy-env] Running Pixal3DEstimateCamera: mesh_scale: 1.0, extend_pixel: 0, image_resolution: 512, image: torch.float32 [1,428,428,3] cpu
-  [ComfyUI] [VRAM] Before Pixal3DEstimateCamera: 825 / 24124 MB
-  [ComfyUI] [SubprocessWorker] call_method: nodes.nodes_inference.Pixal3DEstimateCamera.EXECUTE_NORMALIZED
+  [ComfyUI] [comfy-env] Pixal3DPreprocessImage done (3.29s): result: NodeOutput
+  [ComfyUI] [VRAM] After Pixal3DPreprocessImage: 563 / 24124 MB
+  [ComfyUI] [comfy-env] Running DownloadAndLoadMoGe2Model: model: 'moge-2-vitl-normal.pt', precision: 'auto', attention: 'auto'
+  [ComfyUI] [VRAM] Before DownloadAndLoadMoGe2Model: 563 / 24124 MB
+  [ComfyUI] [comfy-env] SubprocessWorker: /root/.ce/.pixi/envs/moge2-nodes/bin/python
+  [ComfyUI] [SubprocessWorker] call_method: nodes.load_model.DownloadAndLoadMoGe2Model.EXECUTE_NORMALIZED
+  [ComfyUI] [comfy-env] env_vars: {'COMFYUI_BASE': '/workspaces/Pixal3D-1248/ComfyUI'}
   [ComfyUI] [SubprocessWorker] acquired lock, ensuring started...
-  [ComfyUI] [ComfyUI-Pixal3D] Health check: ping (timeout=5.0s)...
-  [ComfyUI] [ComfyUI-Pixal3D] Health check: ok
+  [ComfyUI] [ComfyUI-MoGe2] python: /root/.ce/.pixi/envs/moge2-nodes/bin/python
+  [ComfyUI] [ComfyUI-MoGe2] sys_path sent to worker: ['/workspaces/Pixal3D-1248/ComfyUI', '/workspaces/Pixal3D-1248/ComfyUI/custom_nodes/ComfyUI-MoGe2', '/root/.ce/.pixi/envs/moge2-nodes/lib/python3.13/site-packages', '/workspaces/Pixal3D-1248/ComfyUI/custom_nodes/ComfyUI-MoGe2']
+  [ComfyUI] [SubprocessWorker] is_pixi=True, python=/root/.ce/.pixi/envs/moge2-nodes/bin/python
+  [ComfyUI] [SubprocessWorker] launching cmd=['/root/.pixi/bin/pixi', 'run', '--as-is', '--manifest-path', '/root/.ce/pixi.toml', '-e', 'moge2-nodes', 'python', '/tmp/comfyui_pvenv_abf6bvcp/persistent_worker.py', 'abstract://comfy_worker_25bdb2a061a5']...
+  [ComfyUI] [SubprocessWorker] socket_addr=abstract://comfy_worker_25bdb2a061a5 (abstract, no filesystem path)
+  [ComfyUI] [worker:ComfyUI-MoGe2] ERROR: Failed to import comfy_kitchen, Error: No module named 'comfy_kitchen', fp8 and fp4 support will not be available.
+  Frame 4 saved (frame_003.jpg, t=5.6s)
+  [capture-periodic] freeze=3ms shot=227ms unfreeze=11ms saved=True
   [ComfyUI] [SubprocessWorker] worker started/confirmed
-  [ComfyUI] [comfy-env] PRE-SERIALIZE 'image' shape: torch.Size([1, 428, 428, 3])
+  [ComfyUI] [SubprocessWorker] serializing kwargs to shm...
+  [ComfyUI] [SubprocessWorker] created 0 shm blocks
+  [ComfyUI] [SubprocessWorker] sending request via socket...
+  [ComfyUI] [SubprocessWorker] call_id=1 sending call_method
+  [capture-loop] iter=50 t=7.0s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=4.9/31.2GB (16%) swap=0.5/32.0GB (2%) cpu=4% browser_rss=0.89GB
+  [ComfyUI] 
+  Frame 5 saved (frame_004.jpg, t=8.0s)
+  [capture-periodic] freeze=3ms shot=220ms unfreeze=8ms saved=True
+  [capture-loop] iter=100 t=13.2s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=5.1/31.2GB (16%) swap=0.5/32.0GB (2%) cpu=5% browser_rss=0.89GB
+  [ComfyUI] model.pt:   0%|          | 0.00/1.32G [00:00<?, ?B/s]
+  [ComfyUI] model.pt:  10%|█         | 134M/1.32G [00:07<01:02, 19.1MB/s][SubprocessWorker] callback 'report_progress' from call_id=1
+  Frame 6 saved (frame_005.jpg, t=14.9s)
+  [capture-periodic] freeze=4ms shot=232ms unfreeze=18ms saved=True
+  [ComfyUI] 
+  [ComfyUI] model.pt:  41%|████      | 537M/1.32G [00:08<00:10, 77.3MB/s][SubprocessWorker] callback 'report_progress' from call_id=1
+  Frame 7 saved (frame_006.jpg, t=17.2s)
+  [capture-periodic] freeze=3ms shot=219ms unfreeze=11ms saved=True
+  [ComfyUI] 
+  [ComfyUI] model.pt:  46%|████▌     | 604M/1.32G [00:10<00:11, 63.8MB/s][SubprocessWorker] callback 'report_progress' from call_id=1
+  [ComfyUI] 
+  [ComfyUI] model.pt:  61%|██████    | 805M/1.32G [00:10<00:05, 102MB/s] [SubprocessWorker] callback 'report_progress' from call_id=1
+  [ComfyUI] 
+  [ComfyUI] model.pt:  91%|█████████ | 1.21G/1.32G [00:11<00:00, 171MB/s][SubprocessWorker] callback 'report_progress' from call_id=1
+  [capture-loop] iter=150 t=19.2s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=4.4/31.2GB (14%) swap=0.5/32.0GB (2%) cpu=6% browser_rss=0.89GB
+  [ComfyUI] 
+  [ComfyUI] model.pt: 100%|██████████| 1.32G/1.32G [00:12<00:00, 180MB/s][SubprocessWorker] callback 'report_progress' from call_id=1
+  [ComfyUI] 
+  [ComfyUI] model.pt: 100%|██████████| 1.32G/1.32G [00:12<00:00, 105MB/s]
+  [ComfyUI] [SubprocessWorker] got response: ok
+  [ComfyUI] [comfy-env] DownloadAndLoadMoGe2Model done (15.90s): result: NodeOutput
+  [ComfyUI] [VRAM] After DownloadAndLoadMoGe2Model: 824 / 24124 MB
+  [ComfyUI] [comfy-env] Running MoGe2Inference: resolution_level: 9, num_tokens: 0, fov_x_deg: 0.0, force_projection: True, apply_mask: True, moge_model: dict, images: torch.float32 [1,428,428,3] cpu
+  [ComfyUI] [VRAM] Before MoGe2Inference: 824 / 24124 MB
+  [ComfyUI] [SubprocessWorker] call_method: nodes.nodes_inference.MoGe2Inference.EXECUTE_NORMALIZED
+  [ComfyUI] [SubprocessWorker] acquired lock, ensuring started...
+  [ComfyUI] [ComfyUI-MoGe2] Health check: ping (timeout=5.0s)...
+  [ComfyUI] [ComfyUI-MoGe2] Health check: ok
+  [ComfyUI] [SubprocessWorker] worker started/confirmed
+  [ComfyUI] [comfy-env] PRE-SERIALIZE 'images' shape: torch.Size([1, 428, 428, 3])
   [ComfyUI] [SubprocessWorker] serializing kwargs to shm...
   [ComfyUI] [SubprocessWorker] created 0 shm blocks
   [ComfyUI] [SubprocessWorker] sending request via socket...
   [ComfyUI] [SubprocessWorker] call_id=2 sending call_method
-  [ComfyUI] [worker:ComfyUI-Pixal3D] [comfy-env] _from_shm got dict with keys: ['__type__', 'strategy', 'parent_pid', 'fd', 'storage_size']
-  [ComfyUI] [worker:ComfyUI-Pixal3D] [comfy-env] DESERIALIZE TensorRef: tensor_size=[1, 428, 428, 3]
-  [ComfyUI] [worker:ComfyUI-Pixal3D] [comfy-env] DESERIALIZED tensor shape: torch.Size([1, 428, 428, 3])
-  [ComfyUI] [worker:ComfyUI-Pixal3D] [pixal3d] >>> Pixal3DEstimateCamera.execute ...
-  [ComfyUI] [worker:ComfyUI-Pixal3D] [pixal3d] >>> init_moge: MoGeModel.from_pretrained ...
-  [ComfyUI] Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-  [ComfyUI] [worker:ComfyUI-Pixal3D] WARNING: Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-  Frame 4 saved (frame_003.jpg, t=5.6s)
-  [capture-periodic] freeze=3ms shot=206ms unfreeze=18ms saved=True
-  [capture-loop] iter=50 t=7.0s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=5.6/31.2GB (18%) swap=1.7/32.0GB (5%) cpu=6% browser_rss=0.90GB
-  Frame 5 saved (frame_004.jpg, t=8.0s)
-  [capture-periodic] freeze=4ms shot=241ms unfreeze=14ms saved=True
-  [capture-loop] iter=100 t=13.2s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=6.1/31.2GB (19%) swap=1.7/32.0GB (5%) cpu=8% browser_rss=0.89GB
-  [capture-loop] iter=150 t=19.1s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=7.0/31.2GB (22%) swap=1.7/32.0GB (5%) cpu=6% browser_rss=0.89GB
-  [ComfyUI] [worker:ComfyUI-Pixal3D] [VRAM] +723MB (now 723MB) reserved=742MB peak=723MB
-  [ComfyUI] [worker:ComfyUI-Pixal3D] [pixal3d] <<< init_moge: MoGeModel.from_pretrained  (20.0s)
-  [ComfyUI] [worker:ComfyUI-Pixal3D] [VRAM] +535MB (now 1258MB) reserved=2376MB peak=1355MB
-  [capture-loop] iter=200 t=25.2s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=8.0/31.2GB (26%) swap=1.7/32.0GB (5%) cpu=6% browser_rss=0.82GB
-  [ComfyUI] [worker:ComfyUI-Pixal3D] [pixal3d] <<< Pixal3DEstimateCamera.execute  (22.2s)
+  [ComfyUI] [worker:ComfyUI-MoGe2] [comfy-env] _from_shm got dict with keys: ['__type__', 'strategy', 'parent_pid', 'fd', 'storage_size']
+  [ComfyUI] [worker:ComfyUI-MoGe2] [comfy-env] DESERIALIZE TensorRef: tensor_size=[1, 428, 428, 3]
+  [ComfyUI] [worker:ComfyUI-MoGe2] [comfy-env] DESERIALIZED tensor shape: torch.Size([1, 428, 428, 3])
+  Frame 8 saved (frame_007.jpg, t=19.6s)
+  [capture-periodic] freeze=3ms shot=227ms unfreeze=10ms saved=True
+  [ComfyUI] [worker:ComfyUI-MoGe2] WARNING: No comfy kitchen, using old apply_rope functions.
+  Frame 9 saved (frame_008.jpg, t=22.0s)
+  [capture-periodic] freeze=3ms shot=220ms unfreeze=4ms saved=True
+  [capture-loop] iter=200 t=25.4s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=3 ram=4.6/31.2GB (15%) swap=0.5/32.0GB (2%) cpu=9% browser_rss=0.82GB
+  [ComfyUI] [SubprocessWorker] callback 'request_vram_budget' from call_id=2
+  [ComfyUI] [comfy-env] VRAM request: 0.66GB, free before eviction: 24.43GB
+  [ComfyUI] [comfy-env] VRAM after eviction: 24.43GB
+  [ComfyUI] [worker:ComfyUI-MoGe2] [VRAM] +240MB (now 240MB) reserved=256MB peak=240MB
+  [capture-loop] iter=250 t=31.5s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=6.8/31.2GB (22%) swap=0.5/32.0GB (2%) cpu=5% browser_rss=0.82GB
+  [ComfyUI] [SubprocessWorker] callback 'report_progress' from call_id=2
   [ComfyUI] [SubprocessWorker] got response: ok
-  [ComfyUI] [comfy-env] Created 1 model patchers: ['MoGeModel_1']
-  [ComfyUI] [comfy-env] Pixal3DEstimateCamera done (22.35s): result: NodeOutput
-  [ComfyUI] [VRAM] After Pixal3DEstimateCamera: 3277 / 24124 MB
-  [ComfyUI] [VRAM] Loaded: SubprocessModel (1244 MB)
+  [ComfyUI] [comfy-env] Created 1 model patchers: ['MoGeWrapper_1']
+  [ComfyUI] [comfy-env] MoGe2Inference done (12.44s): result: NodeOutput
+  [ComfyUI] [VRAM] After MoGe2Inference: 2606 / 24124 MB
+  [ComfyUI] [VRAM] Loaded: SubprocessModel (631 MB)
+  [ComfyUI] [comfy-env] Running Pixal3DCameraFromFOV: fov_x_deg: 35.99823760986328, mesh_scale: 1.0, extend_pixel: 0, image_resolution: 512
+  [ComfyUI] [VRAM] Before Pixal3DCameraFromFOV: 2606 / 24124 MB
+  [ComfyUI] [VRAM] Loaded: SubprocessModel (631 MB)
+  [ComfyUI] [SubprocessWorker] call_method: nodes.nodes_inference.Pixal3DCameraFromFOV.EXECUTE_NORMALIZED
+  [ComfyUI] [SubprocessWorker] acquired lock, ensuring started...
+  [ComfyUI] [ComfyUI-Pixal3D] Health check: ping (timeout=5.0s)...
+  [ComfyUI] [ComfyUI-Pixal3D] Health check: ok
+  [ComfyUI] [SubprocessWorker] worker started/confirmed
+  [ComfyUI] [SubprocessWorker] serializing kwargs to shm...
+  [ComfyUI] [SubprocessWorker] created 0 shm blocks
+  [ComfyUI] [SubprocessWorker] sending request via socket...
+  [ComfyUI] [SubprocessWorker] call_id=2 sending call_method
+  [ComfyUI] [worker:ComfyUI-Pixal3D] [pixal3d] >>> Pixal3DCameraFromFOV.execute ...
+  [ComfyUI] [worker:ComfyUI-Pixal3D] [pixal3d] <<< Pixal3DCameraFromFOV.execute  (0.0s)
+  [ComfyUI] [SubprocessWorker] got response: ok
+  [ComfyUI] [comfy-env] Pixal3DCameraFromFOV done (0.07s): result: NodeOutput
+  [ComfyUI] [VRAM] After Pixal3DCameraFromFOV: 2606 / 24124 MB
+  [ComfyUI] [VRAM] Loaded: SubprocessModel (631 MB)
   [ComfyUI] [comfy-env] Running Pixal3DLoadPipeline: pipeline_type: '1024_cascade', attn_backend: 'auto'
-  [ComfyUI] [VRAM] Before Pixal3DLoadPipeline: 3277 / 24124 MB
-  [ComfyUI] [VRAM] Loaded: SubprocessModel (1244 MB)
+  [ComfyUI] [VRAM] Before Pixal3DLoadPipeline: 2606 / 24124 MB
+  [ComfyUI] [VRAM] Loaded: SubprocessModel (631 MB)
   [ComfyUI] [SubprocessWorker] call_method: nodes.nodes_loader.Pixal3DLoadPipeline.EXECUTE_NORMALIZED
   [ComfyUI] [SubprocessWorker] acquired lock, ensuring started...
   [ComfyUI] [ComfyUI-Pixal3D] Health check: ping (timeout=5.0s)...
@@ -118,12 +182,12 @@ Capturing execution frames: pixal3d_basic.json
   [ComfyUI] [worker:ComfyUI-Pixal3D] [pixal3d] >>> Pixal3DLoadPipeline.execute ...
   [ComfyUI] [worker:ComfyUI-Pixal3D] [pixal3d] <<< Pixal3DLoadPipeline.execute  (0.0s)
   [ComfyUI] [SubprocessWorker] got response: ok
-  [ComfyUI] [comfy-env] Pixal3DLoadPipeline done (0.07s): result: NodeOutput
-  [ComfyUI] [VRAM] After Pixal3DLoadPipeline: 3277 / 24124 MB
-  [ComfyUI] [VRAM] Loaded: SubprocessModel (1244 MB)
+  [ComfyUI] [comfy-env] Pixal3DLoadPipeline done (0.08s): result: NodeOutput
+  [ComfyUI] [VRAM] After Pixal3DLoadPipeline: 2606 / 24124 MB
+  [ComfyUI] [VRAM] Loaded: SubprocessModel (631 MB)
   [ComfyUI] [comfy-env] Running Pixal3DGenerateMesh: seed: 42, max_num_tokens: 49152, ss_steps: 12, ss_guidance: 7.5, ss_rescale: 0.7, ss_rescale_t: 5.0, shape_steps: 12, shape_guidance: 7.5, shape_rescale: 0.5, shape_rescale_t: 3.0, tex_steps: 12, tex_guidance: 1.0, tex_rescale: 0.0, tex_rescale_t: 3.0, pipeline: dict, image: torch.float32 [1,428,428,3] cpu, camera: dict
-  [ComfyUI] [VRAM] Before Pixal3DGenerateMesh: 3277 / 24124 MB
-  [ComfyUI] [VRAM] Loaded: SubprocessModel (1244 MB)
+  [ComfyUI] [VRAM] Before Pixal3DGenerateMesh: 2606 / 24124 MB
+  [ComfyUI] [VRAM] Loaded: SubprocessModel (631 MB)
   [ComfyUI] [SubprocessWorker] call_method: nodes.nodes_mesh.Pixal3DGenerateMesh.EXECUTE_NORMALIZED
   [ComfyUI] [SubprocessWorker] acquired lock, ensuring started...
   [ComfyUI] [ComfyUI-Pixal3D] Health check: ping (timeout=5.0s)...
@@ -140,100 +204,93 @@ Capturing execution frames: pixal3d_basic.json
   [ComfyUI] [worker:ComfyUI-Pixal3D] [pixal3d] >>> Pixal3DGenerateMesh.execute ...
   [ComfyUI] [worker:ComfyUI-Pixal3D] [pixal3d] >>> init_pipeline TOTAL ...
   [ComfyUI] [worker:ComfyUI-Pixal3D] [pixal3d] >>> download Pixal3D weights ...
+  [ComfyUI] Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+  [ComfyUI] [worker:ComfyUI-Pixal3D] WARNING: Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
   [ComfyUI] 
   [ComfyUI] pipeline.json: 0.00B [00:00, ?B/s]
-  [ComfyUI] pipeline.json: 4.07kB [00:00, 4.65MB/s]
+  [ComfyUI] pipeline.json: 4.07kB [00:00, 8.98MB/s]
   [ComfyUI] 
   [ComfyUI] shape_dec_next_dc_f16c32_fp16.json:   0%|          | 0.00/678 [00:00<?, ?B/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] shape_dec_next_dc_f16c32_fp16.json: 100%|██████████| 678/678 [00:00<00:00, 512kB/s]
-  Frame 6 saved (frame_005.jpg, t=26.3s)
-  [capture-periodic] freeze=4ms shot=259ms unfreeze=4ms saved=True
+  [ComfyUI] shape_dec_next_dc_f16c32_fp16.json: 100%|██████████| 678/678 [00:00<00:00, 682kB/s]
   [ComfyUI] 
+  Frame 10 saved (frame_009.jpg, t=33.4s)
+  [capture-periodic] freeze=3ms shot=196ms unfreeze=4ms saved=True
   [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(…):   0%|          | 0.00/948M [00:00<?, ?B/s]
-  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(…):   0%|          | 419k/948M [00:02<1:16:59, 205kB/s][SubprocessWorker] callback 'report_progress' from call_id=4
-  Frame 7 saved (frame_006.jpg, t=28.7s)
-  [capture-periodic] freeze=3ms shot=260ms unfreeze=8ms saved=True
+  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(…):   0%|          | 419k/948M [00:01<48:43, 324kB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(…):   1%|▏         | 14.1M/948M [00:02<02:09, 7.23MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(…):   1%|▏         | 14.0M/948M [00:02<01:51, 8.41MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(…):   4%|▍         | 40.2M/948M [00:02<00:40, 22.4MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(…):   8%|▊         | 73.4M/948M [00:02<00:17, 49.1MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(…):   7%|▋         | 67.1M/948M [00:03<00:23, 38.0MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(…):  12%|█▏        | 112M/948M [00:02<00:11, 70.5MB/s] [SubprocessWorker] callback 'report_progress' from call_id=4
+  Frame 11 saved (frame_010.jpg, t=35.7s)
+  [capture-periodic] freeze=4ms shot=227ms unfreeze=11ms saved=True
+  [ComfyUI] 
+  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(…):  15%|█▌        | 143M/948M [00:02<00:09, 82.5MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] 
+  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(…):  18%|█▊        | 167M/948M [00:03<00:09, 85.9MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] 
+  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(…):  21%|██        | 199M/948M [00:03<00:07, 96.1MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] 
+  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(…):  23%|██▎       | 221M/948M [00:03<00:07, 94.5MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [capture-loop] iter=300 t=37.5s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=7.2/31.2GB (23%) swap=0.5/32.0GB (2%) cpu=5% browser_rss=0.83GB
+  [ComfyUI] 
+  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(…):  26%|██▌       | 245M/948M [00:04<00:11, 61.0MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] 
+  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(…):  28%|██▊       | 261M/948M [00:04<00:11, 61.4MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] 
+  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(…):  33%|███▎      | 314M/948M [00:04<00:06, 95.2MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] [SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(…):  12%|█▏        | 109M/948M [00:03<00:15, 53.9MB/s] [SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(…):  38%|███▊      | 363M/948M [00:05<00:06, 96.4MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(…):  15%|█▌        | 144M/948M [00:04<00:13, 58.9MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
-  [ComfyUI] 
-  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(…):  20%|█▉        | 189M/948M [00:04<00:09, 82.4MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
-  [ComfyUI] [SubprocessWorker] callback 'report_progress' from call_id=4
-  [capture-loop] iter=250 t=31.5s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=8.1/31.2GB (26%) swap=1.7/32.0GB (5%) cpu=4% browser_rss=0.83GB
-  [ComfyUI] 
-  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(…):  25%|██▌       | 241M/948M [00:04<00:07, 89.7MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
-  [ComfyUI] 
-  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(…):  27%|██▋       | 258M/948M [00:05<00:08, 85.1MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
-  [ComfyUI] 
-  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(…):  29%|██▊       | 271M/948M [00:08<00:31, 21.3MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
-  [ComfyUI] 
-  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(…):  57%|█████▋    | 545M/948M [00:08<00:03, 107MB/s] [SubprocessWorker] callback 'report_progress' from call_id=4
-  [ComfyUI] 
-  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(…):  71%|███████   | 673M/948M [00:09<00:02, 105MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
-  [ComfyUI] 
-  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(…):  81%|████████  | 768M/948M [00:10<00:01, 131MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
-  [capture-loop] iter=300 t=37.3s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=8.4/31.2GB (27%) swap=1.7/32.0GB (5%) cpu=6% browser_rss=0.82GB
-  [ComfyUI] 
-  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(…):  92%|█████████▏| 870M/948M [00:10<00:00, 146MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
-  [ComfyUI] 
-  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(…):  98%|█████████▊| 926M/948M [00:10<00:00, 157MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(…):  40%|████      | 382M/948M [00:05<00:06, 91.9MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] [SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(…): 100%|██████████| 948M/948M [00:11<00:00, 84.8MB/s]
+  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(…):  57%|█████▋    | 545M/948M [00:07<00:03, 103MB/s] [SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] 
+  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(…):  75%|███████▍  | 709M/948M [00:08<00:02, 106MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] 
+  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(…):  81%|████████  | 765M/948M [00:08<00:01, 118MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] [SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] 
+  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(…):  86%|████████▌ | 814M/948M [00:09<00:01, 102MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] [SubprocessWorker] callback 'report_progress' from call_id=4
+  [capture-loop] iter=350 t=43.5s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=7.4/31.2GB (24%) swap=0.5/32.0GB (2%) cpu=5% browser_rss=0.82GB
+  [ComfyUI] 
+  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(…):  91%|█████████ | 865M/948M [00:10<00:00, 91.6MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] 
+  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(…): 100%|██████████| 948M/948M [00:10<00:00, 122MB/s] [SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] 
+  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(…): 100%|██████████| 948M/948M [00:10<00:00, 88.3MB/s]
   [ComfyUI] 
   [ComfyUI] (…)t_flow_img2shape_dit_1_3B_1024_bf16.json:   0%|          | 0.00/535 [00:00<?, ?B/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] (…)t_flow_img2shape_dit_1_3B_1024_bf16.json: 100%|██████████| 535/535 [00:00<00:00, 433kB/s]
+  [ComfyUI] (…)t_flow_img2shape_dit_1_3B_1024_bf16.json: 100%|██████████| 535/535 [00:00<00:00, 414kB/s]
   [ComfyUI] 
   [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(…):   0%|          | 0.00/5.55G [00:00<?, ?B/s]
-  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(…):   5%|▍         | 268M/5.55G [00:04<01:29, 59.3MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
-  [capture-loop] iter=350 t=43.3s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=8.8/31.2GB (28%) swap=1.7/32.0GB (5%) cpu=6% browser_rss=0.82GB
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(…):   1%|          | 67.1M/5.55G [00:03<04:06, 22.2MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(…):   6%|▌         | 335M/5.55G [00:07<02:11, 39.7MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(…):   5%|▍         | 268M/5.55G [00:04<01:06, 79.6MB/s] [SubprocessWorker] callback 'report_progress' from call_id=4
+  [capture-loop] iter=400 t=49.4s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=3 ram=7.6/31.2GB (24%) swap=0.5/32.0GB (2%) cpu=5% browser_rss=0.82GB
+  [capture-loop] iter=450 t=55.4s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=7.8/31.2GB (25%) swap=0.5/32.0GB (2%) cpu=6% browser_rss=0.82GB
   [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(…):  10%|▉         | 536M/5.55G [00:08<01:05, 76.0MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(…):  12%|█▏        | 670M/5.55G [00:11<01:17, 62.7MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(…):  11%|█         | 603M/5.55G [00:08<00:59, 83.3MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(…):  15%|█▍        | 805M/5.55G [00:13<01:20, 58.5MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(…):  12%|█▏        | 670M/5.55G [00:09<00:53, 91.0MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
-  [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(…):  15%|█▍        | 805M/5.55G [00:10<00:49, 96.7MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
-  [capture-loop] iter=400 t=49.2s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=8.9/31.2GB (28%) swap=1.7/32.0GB (5%) cpu=6% browser_rss=0.82GB
-  [capture-loop] iter=450 t=55.2s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=3 ram=9.5/31.2GB (31%) swap=1.7/32.0GB (5%) cpu=6% browser_rss=0.82GB
-  [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(…):  17%|█▋        | 939M/5.55G [00:18<02:11, 34.9MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
-  [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(…):  19%|█▉        | 1.07G/5.55G [00:19<01:30, 49.5MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
-  [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(…):  22%|██▏       | 1.21G/5.55G [00:21<01:17, 55.9MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
-  [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(…):  23%|██▎       | 1.27G/5.55G [00:22<01:17, 55.5MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(…):  16%|█▌        | 872M/5.55G [00:15<01:23, 55.9MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] [worker:ComfyUI-Pixal3D]
   [ComfyUI] === WATCHDOG TICK 1 ===
-  [ComfyUI] [worker:ComfyUI-Pixal3D] Thread 0x00007b4ebb4f2640 (most recent call first):
+  [ComfyUI] [worker:ComfyUI-Pixal3D] Thread 0x000072d51f7af640 (most recent call first):
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 324 in wait
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 607 in wait
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/tqdm/_monitor.py", line 60 in run
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 1016 in _bootstrap_inner
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 973 in _bootstrap
   [ComfyUI] 
-  [ComfyUI] Thread 0x00007b4d055d9640 (most recent call first):
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 324 in wait
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 607 in wait
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/tqdm/_monitor.py", line 60 in run
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 1016 in _bootstrap_inner
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 973 in _bootstrap
-  [ComfyUI] 
-  [ComfyUI] Thread 0x00007b4e47a2a640 (most recent call first):
+  [ComfyUI] Thread 0x000072d5209ca640 (most recent call first):
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/socket.py", line 293 in accept
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/multiprocessing/connection.py", line 609 in accept
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/multiprocessing/connection.py", line 463 in accept
@@ -242,135 +299,120 @@ Capturing execution frames: pixal3d_basic.json
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 1016 in _bootstrap_inner
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 973 in _bootstrap
   [ComfyUI] 
-  [ComfyUI] Thread 0x00007b4ff6446640 (most recent call first):
-  [ComfyUI]   File "/tmp/comfyui_pvenv_v79adoij/persistent_worker.py", line 106 in _vram_poller
+  [ComfyUI] Thread 0x000072d73d5cf640 (most recent call first):
+  [ComfyUI]   File "/tmp/comfyui_pvenv_gejqmaao/persistent_worker.py", line 106 in _vram_poller
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 953 in run
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 1016 in _bootstrap_inner
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 973 in _bootstrap
   [ComfyUI] 
-  [ComfyUI] Current thread 0x00007b4ff6c47640 (most recent call first):
-  [ComfyUI]   File "/tmp/comfyui_pvenv_v79adoij/persistent_worker.py", line 52 in _watchdog
+  [ComfyUI] Current thread 0x000072d73ddd0640 (most recent call first):
+  [ComfyUI]   File "/tmp/comfyui_pvenv_gejqmaao/persistent_worker.py", line 52 in _watchdog
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 953 in run
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 1016 in _bootstrap_inner
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 973 in _bootstrap
   [ComfyUI] 
-  [ComfyUI] Thread 0x00007b4ff721d740 (most recent call first):
+  [ComfyUI] Thread 0x000072d73e3a6740 (most recent call first):
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/huggingface_hub/file_download.py", line 558 in xet_get
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/huggingface_hub/file_download.py", line 1842 in _download_to_tmp_and_move
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/huggingface_hub/file_download.py", line 1427 in _hf_hub_download_to_local_dir
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/huggingface_hub/file_download.py", line 976 in hf_hub_download
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/huggingface_hub/utils/_validators.py", line 88 in _inner_fn
-  [ComfyUI]   File "/workspaces/Pixal3D-1133/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/stages.py", line 212 in _download_pixal3d_weights
-  [ComfyUI]   File "/workspaces/Pixal3D-1133/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/stages.py", line 477 in init_pipeline
-  [ComfyUI]   File "/workspaces/Pixal3D-1133/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/stages.py", line 754 in _run_cascade
-  [ComfyUI]   File "/workspaces/Pixal3D-1133/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/stages.py", line 1520 in generate_mesh_and_voxelgrid
-  [ComfyUI]   File "/workspaces/Pixal3D-1133/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/nodes_mesh.py", line 77 in execute
-  [ComfyUI]   File "/workspaces/Pixal3D-1133/ComfyUI/comfy_api/latest/_io.py", line 1833 in EXECUTE_NORMALIZED
-  [ComfyUI]   File "/tmp/comfyui_pvenv_v79adoij/persistent_worker.py", line 1762 in main
-  [ComfyUI]   File "/tmp/comfyui_pvenv_v79adoij/persistent_worker.py", line 1807 in <module>
+  [ComfyUI]   File "/workspaces/Pixal3D-1248/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/stages.py", line 223 in _download_pixal3d_weights
+  [ComfyUI]   File "/workspaces/Pixal3D-1248/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/stages.py", line 488 in init_pipeline
+  [ComfyUI]   File "/workspaces/Pixal3D-1248/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/stages.py", line 738 in _run_cascade
+  [ComfyUI]   File "/workspaces/Pixal3D-1248/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/stages.py", line 1504 in generate_mesh_and_voxelgrid
+  [ComfyUI]   File "/workspaces/Pixal3D-1248/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/nodes_mesh.py", line 77 in execute
+  [ComfyUI]   File "/workspaces/Pixal3D-1248/ComfyUI/comfy_api/latest/_io.py", line 1833 in EXECUTE_NORMALIZED
+  [ComfyUI]   File "/tmp/comfyui_pvenv_gejqmaao/persistent_worker.py", line 1762 in main
+  [ComfyUI]   File "/tmp/comfyui_pvenv_gejqmaao/persistent_worker.py", line 1807 in <module>
   [ComfyUI] 
   [ComfyUI] [worker:ComfyUI-Pixal3D] === END ===
   [ComfyUI] 
-  [capture-loop] iter=500 t=61.3s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=9.8/31.2GB (31%) swap=1.7/32.0GB (5%) cpu=6% browser_rss=0.82GB
   [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(…):  24%|██▍       | 1.34G/5.55G [00:24<01:29, 46.9MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(…):  17%|█▋        | 939M/5.55G [00:16<01:19, 57.6MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [capture-loop] iter=500 t=61.5s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=8.4/31.2GB (27%) swap=0.5/32.0GB (2%) cpu=6% browser_rss=0.81GB
   [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(…):  35%|███▌      | 1.94G/5.55G [00:27<00:33, 107MB/s] [SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(…):  19%|█▉        | 1.07G/5.55G [00:19<01:22, 54.3MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [capture-loop] iter=550 t=67.3s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=3 ram=9.0/31.2GB (29%) swap=0.5/32.0GB (2%) cpu=6% browser_rss=0.81GB
   [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(…):  42%|████▏     | 2.35G/5.55G [00:27<00:18, 173MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
-  [capture-loop] iter=550 t=67.1s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=3 ram=9.6/31.2GB (31%) swap=1.7/32.0GB (5%) cpu=6% browser_rss=0.82GB
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(…):  22%|██▏       | 1.21G/5.55G [00:23<01:35, 45.2MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(…):  50%|████▉     | 2.75G/5.55G [00:32<00:21, 129MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(…):  24%|██▍       | 1.34G/5.55G [00:23<01:08, 61.4MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(…):  52%|█████▏    | 2.88G/5.55G [00:34<00:25, 106MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
-  [capture-loop] iter=600 t=73.2s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=9.8/31.2GB (31%) swap=1.7/32.0GB (5%) cpu=7% browser_rss=0.82GB
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(…):  25%|██▌       | 1.41G/5.55G [00:24<01:00, 68.2MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(…):  54%|█████▍    | 3.02G/5.55G [00:35<00:21, 119MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(…):  27%|██▋       | 1.48G/5.55G [00:24<00:56, 71.8MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(…):  58%|█████▊    | 3.22G/5.55G [00:35<00:14, 155MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(…):  36%|███▋      | 2.01G/5.55G [00:27<00:26, 135MB/s] [SubprocessWorker] callback 'report_progress' from call_id=4
+  [capture-loop] iter=600 t=73.3s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=8.7/31.2GB (28%) swap=0.5/32.0GB (2%) cpu=6% browser_rss=0.82GB
   [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(…):  60%|██████    | 3.35G/5.55G [00:36<00:15, 142MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(…):  39%|███▊      | 2.15G/5.55G [00:29<00:31, 108MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(…):  64%|██████▍   | 3.55G/5.55G [00:38<00:14, 140MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(…):  40%|███▉      | 2.21G/5.55G [00:31<00:39, 84.3MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(…):  65%|██████▌   | 3.62G/5.55G [00:38<00:12, 149MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(…):  46%|████▌     | 2.55G/5.55G [00:31<00:19, 151MB/s] [SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(…):  69%|██████▉   | 3.82G/5.55G [00:39<00:11, 153MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
-  [capture-loop] iter=650 t=79.2s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=9.5/31.2GB (30%) swap=1.7/32.0GB (5%) cpu=6% browser_rss=0.82GB
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(…):  48%|████▊     | 2.68G/5.55G [00:33<00:22, 125MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(…):  70%|███████   | 3.89G/5.55G [00:41<00:13, 121MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(…):  51%|█████     | 2.82G/5.55G [00:33<00:17, 153MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(…):  71%|███████▏  | 3.96G/5.55G [00:43<00:22, 72.1MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(…):  58%|█████▊    | 3.22G/5.55G [00:34<00:09, 238MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [capture-loop] iter=650 t=79.3s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=8.3/31.2GB (26%) swap=0.5/32.0GB (2%) cpu=7% browser_rss=0.82GB
   [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(…):  77%|███████▋  | 4.29G/5.55G [00:45<00:10, 121MB/s] [SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(…):  62%|██████▏   | 3.42G/5.55G [00:36<00:12, 165MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(…):  92%|█████████▏| 5.10G/5.55G [00:45<00:01, 287MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(…):  64%|██████▍   | 3.55G/5.55G [00:39<00:18, 107MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [capture-loop] iter=700 t=85.2s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=8.7/31.2GB (28%) swap=0.5/32.0GB (2%) cpu=6% browser_rss=0.81GB
   [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(…): 100%|██████████| 5.55G/5.55G [00:46<00:00, 374MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
-  [capture-loop] iter=700 t=85.0s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=3 ram=8.5/31.2GB (27%) swap=1.7/32.0GB (5%) cpu=6% browser_rss=0.82GB
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(…):  71%|███████▏  | 3.96G/5.55G [00:42<00:12, 127MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(…): 100%|██████████| 5.55G/5.55G [00:46<00:00, 118MB/s]
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(…):  76%|███████▌  | 4.22G/5.55G [00:43<00:09, 145MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(…):  92%|█████████▏| 5.10G/5.55G [00:46<00:02, 221MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(…): 100%|██████████| 5.55G/5.55G [00:46<00:00, 286MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [capture-loop] iter=750 t=91.3s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=3 ram=7.4/31.2GB (24%) swap=0.5/32.0GB (2%) cpu=6% browser_rss=0.81GB
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(…): 100%|██████████| 5.55G/5.55G [00:47<00:00, 118MB/s]
   [ComfyUI] 
   [ComfyUI] (…)at_flow_img2shape_dit_1_3B_512_bf16.json:   0%|          | 0.00/535 [00:00<?, ?B/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] (…)at_flow_img2shape_dit_1_3B_512_bf16.json: 100%|██████████| 535/535 [00:00<00:00, 458kB/s]
+  [ComfyUI] (…)at_flow_img2shape_dit_1_3B_512_bf16.json: 100%|██████████| 535/535 [00:00<00:00, 439kB/s]
   [ComfyUI] 
   [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(…):   0%|          | 0.00/5.55G [00:00<?, ?B/s]
-  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(…):   0%|          | 30.7k/5.55G [00:01<51:16:51, 30.0kB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(…):   0%|          | 30.7k/5.55G [00:00<38:46:02, 39.7kB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [capture-loop] iter=800 t=97.1s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=7.9/31.2GB (25%) swap=0.5/32.0GB (2%) cpu=5% browser_rss=0.81GB
   [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(…):   1%|          | 67.1M/5.55G [00:03<04:22, 20.9MB/s]   [SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(…):   5%|▍         | 268M/5.55G [00:06<01:58, 44.4MB/s]    [SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(…):   2%|▏         | 134M/5.55G [00:03<01:58, 45.6MB/s] [SubprocessWorker] callback 'report_progress' from call_id=4
-  [capture-loop] iter=750 t=91.1s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=8.9/31.2GB (29%) swap=1.7/32.0GB (5%) cpu=6% browser_rss=0.82GB
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(…):  10%|▉         | 537M/5.55G [00:08<01:05, 76.3MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(…):   4%|▎         | 201M/5.55G [00:06<02:34, 34.5MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(…):  12%|█▏        | 671M/5.55G [00:10<01:14, 65.4MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [capture-loop] iter=850 t=103.1s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=8.0/31.2GB (26%) swap=0.5/32.0GB (2%) cpu=7% browser_rss=0.81GB
   [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(…):   6%|▌         | 335M/5.55G [00:06<01:10, 73.5MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(…):  15%|█▍        | 805M/5.55G [00:13<01:17, 61.4MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [capture-loop] iter=900 t=109.2s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=8.6/31.2GB (28%) swap=0.5/32.0GB (2%) cpu=6% browser_rss=0.81GB
   [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(…):   8%|▊         | 470M/5.55G [00:09<01:28, 57.1MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(…):  19%|█▉        | 1.07G/5.55G [00:17<01:11, 62.2MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(…):  15%|█▍        | 805M/5.55G [00:11<00:49, 96.0MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
-  [capture-loop] iter=800 t=97.0s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=8.9/31.2GB (29%) swap=1.7/32.0GB (5%) cpu=8% browser_rss=0.82GB
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(…):  21%|██        | 1.14G/5.55G [00:20<01:24, 52.4MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [capture-loop] iter=950 t=115.0s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=9.0/31.2GB (29%) swap=0.5/32.0GB (2%) cpu=6% browser_rss=0.81GB
   [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(…):  16%|█▌        | 872M/5.55G [00:14<01:12, 64.3MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
-  [capture-loop] iter=850 t=103.1s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=9.6/31.2GB (31%) swap=1.7/32.0GB (5%) cpu=8% browser_rss=0.82GB
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(…):  22%|██▏       | 1.21G/5.55G [00:25<02:08, 33.8MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(…):  19%|█▉        | 1.07G/5.55G [00:20<01:34, 47.4MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(…):  34%|███▍      | 1.88G/5.55G [00:26<00:36, 99.6MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(…):  21%|██        | 1.14G/5.55G [00:22<01:36, 45.7MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
-  [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(…):  24%|██▍       | 1.34G/5.55G [00:23<01:01, 68.5MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
-  [capture-loop] iter=900 t=109.2s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=9.9/31.2GB (32%) swap=1.7/32.0GB (5%) cpu=8% browser_rss=0.82GB
-  [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(…):  27%|██▋       | 1.48G/5.55G [00:24<00:53, 76.1MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
-  [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(…):  33%|███▎      | 1.81G/5.55G [00:25<00:31, 118MB/s] [SubprocessWorker] callback 'report_progress' from call_id=4
-  [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(…):  34%|███▍      | 1.88G/5.55G [00:28<00:44, 83.0MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
-  [capture-loop] iter=950 t=115.0s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=10.0/31.2GB (32%) swap=1.7/32.0GB (5%) cpu=7% browser_rss=0.82GB
-  [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(…):  46%|████▌     | 2.55G/5.55G [00:32<00:26, 113MB/s] [SubprocessWorker] callback 'report_progress' from call_id=4
-  [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(…):  47%|████▋     | 2.62G/5.55G [00:33<00:24, 118MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
-  [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(…):  50%|████▉     | 2.75G/5.55G [00:33<00:22, 127MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(…):  37%|███▋      | 2.08G/5.55G [00:28<00:34, 99.8MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] [worker:ComfyUI-Pixal3D]
   [ComfyUI] === WATCHDOG TICK 2 ===
-  [ComfyUI] [worker:ComfyUI-Pixal3D] Thread 0x00007b4ebb4f2640 (most recent call first):
+  [ComfyUI] [worker:ComfyUI-Pixal3D] Thread 0x000072d51f7af640 (most recent call first):
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 324 in wait
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 607 in wait
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/tqdm/_monitor.py", line 60 in run
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 1016 in _bootstrap_inner
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 973 in _bootstrap
   [ComfyUI] 
-  [ComfyUI] Thread 0x00007b4d055d9640 (most recent call first):
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 324 in wait
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 607 in wait
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/tqdm/_monitor.py", line 60 in run
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 1016 in _bootstrap_inner
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 973 in _bootstrap
-  [ComfyUI] 
-  [ComfyUI] Thread 0x00007b4e47a2a640 (most recent call first):
+  [ComfyUI] Thread 0x000072d5209ca640 (most recent call first):
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/socket.py", line 293 in accept
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/multiprocessing/connection.py", line 609 in accept
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/multiprocessing/connection.py", line 463 in accept
@@ -379,323 +421,272 @@ Capturing execution frames: pixal3d_basic.json
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 1016 in _bootstrap_inner
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 973 in _bootstrap
   [ComfyUI] 
-  [ComfyUI] Thread 0x00007b4ff6446640 (most recent call first):
-  [ComfyUI]   File "/tmp/comfyui_pvenv_v79adoij/persistent_worker.py", line 106 in _vram_poller
+  [ComfyUI] Thread 0x000072d73d5cf640 (most recent call first):
+  [ComfyUI]   File "/tmp/comfyui_pvenv_gejqmaao/persistent_worker.py", line 106 in _vram_poller
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 953 in run
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 1016 in _bootstrap_inner
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 973 in _bootstrap
   [ComfyUI] 
-  [ComfyUI] Current thread 0x00007b4ff6c47640 (most recent call first):
-  [ComfyUI]   File "/tmp/comfyui_pvenv_v79adoij/persistent_worker.py", line 52 in _watchdog
+  [ComfyUI] Current thread 0x000072d73ddd0640 (most recent call first):
+  [ComfyUI]   File "/tmp/comfyui_pvenv_gejqmaao/persistent_worker.py", line 52 in _watchdog
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 953 in run
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 1016 in _bootstrap_inner
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 973 in _bootstrap
   [ComfyUI] 
-  [ComfyUI] Thread 0x00007b4ff721d740 (most recent call first):
+  [ComfyUI] Thread 0x000072d73e3a6740 (most recent call first):
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/huggingface_hub/file_download.py", line 558 in xet_get
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/huggingface_hub/file_download.py", line 1842 in _download_to_tmp_and_move
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/huggingface_hub/file_download.py", line 1427 in _hf_hub_download_to_local_dir
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/huggingface_hub/file_download.py", line 976 in hf_hub_download
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/huggingface_hub/utils/_validators.py", line 88 in _inner_fn
-  [ComfyUI]   File "/workspaces/Pixal3D-1133/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/stages.py", line 212 in _download_pixal3d_weights
-  [ComfyUI]   File "/workspaces/Pixal3D-1133/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/stages.py", line 477 in init_pipeline
-  [ComfyUI]   File "/workspaces/Pixal3D-1133/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/stages.py", line 754 in _run_cascade
-  [ComfyUI]   File "/workspaces/Pixal3D-1133/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/stages.py", line 1520 in generate_mesh_and_voxelgrid
-  [ComfyUI]   File "/workspaces/Pixal3D-1133/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/nodes_mesh.py", line 77 in execute
-  [ComfyUI]   File "/workspaces/Pixal3D-1133/ComfyUI/comfy_api/latest/_io.py", line 1833 in EXECUTE_NORMALIZED
-  [ComfyUI]   File "/tmp/comfyui_pvenv_v79adoij/persistent_worker.py", line 1762 in main
-  [ComfyUI]   File "/tmp/comfyui_pvenv_v79adoij/persistent_worker.py", line 1807 in <module>
+  [ComfyUI]   File "/workspaces/Pixal3D-1248/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/stages.py", line 223 in _download_pixal3d_weights
+  [ComfyUI]   File "/workspaces/Pixal3D-1248/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/stages.py", line 488 in init_pipeline
+  [ComfyUI]   File "/workspaces/Pixal3D-1248/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/stages.py", line 738 in _run_cascade
+  [ComfyUI]   File "/workspaces/Pixal3D-1248/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/stages.py", line 1504 in generate_mesh_and_voxelgrid
+  [ComfyUI]   File "/workspaces/Pixal3D-1248/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/nodes_mesh.py", line 77 in execute
+  [ComfyUI]   File "/workspaces/Pixal3D-1248/ComfyUI/comfy_api/latest/_io.py", line 1833 in EXECUTE_NORMALIZED
+  [ComfyUI]   File "/tmp/comfyui_pvenv_gejqmaao/persistent_worker.py", line 1762 in main
+  [ComfyUI]   File "/tmp/comfyui_pvenv_gejqmaao/persistent_worker.py", line 1807 in <module>
   [ComfyUI] 
   [ComfyUI] [worker:ComfyUI-Pixal3D] === END ===
   [ComfyUI] 
+  [capture-loop] iter=1000 t=121.1s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=8.8/31.2GB (28%) swap=0.5/32.0GB (2%) cpu=7% browser_rss=0.81GB
   [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(…):  58%|█████▊    | 3.22G/5.55G [00:35<00:13, 171MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
-  [capture-loop] iter=1000 t=121.1s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=3 ram=9.5/31.2GB (30%) swap=1.7/32.0GB (5%) cpu=8% browser_rss=0.82GB
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(…):  51%|█████     | 2.82G/5.55G [00:33<00:21, 124MB/s] [SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(…):  62%|██████▏   | 3.42G/5.55G [00:37<00:13, 154MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(…):  53%|█████▎    | 2.95G/5.55G [00:34<00:19, 133MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [capture-loop] iter=1050 t=127.2s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=8.2/31.2GB (26%) swap=0.5/32.0GB (2%) cpu=7% browser_rss=0.81GB
   [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(…):  64%|██████▍   | 3.55G/5.55G [00:37<00:11, 167MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
-  [capture-loop] iter=1050 t=127.2s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=9.8/31.2GB (32%) swap=1.7/32.0GB (5%) cpu=8% browser_rss=0.82GB
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(…):  62%|██████▏   | 3.42G/5.55G [00:35<00:12, 177MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(…):  77%|███████▋  | 4.29G/5.55G [00:43<00:08, 150MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(…):  69%|██████▉   | 3.82G/5.55G [00:39<00:12, 135MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [capture-loop] iter=1100 t=133.0s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=8.6/31.2GB (28%) swap=0.5/32.0GB (2%) cpu=6% browser_rss=0.81GB
   [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(…):  79%|███████▊  | 4.36G/5.55G [00:43<00:07, 155MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(…):  74%|███████▎  | 4.09G/5.55G [00:43<00:13, 112MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(…):  81%|████████  | 4.49G/5.55G [00:45<00:08, 122MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(…):  82%|████████▏ | 4.56G/5.55G [00:43<00:05, 171MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(…):  85%|████████▍ | 4.69G/5.55G [00:45<00:05, 158MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(…): 100%|██████████| 5.55G/5.55G [00:46<00:00, 236MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(…): 100%|██████████| 5.55G/5.55G [00:46<00:00, 316MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
-  [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(…): 100%|██████████| 5.55G/5.55G [00:47<00:00, 117MB/s]
-  [capture-loop] iter=1100 t=133.0s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=8.6/31.2GB (28%) swap=1.7/32.0GB (5%) cpu=7% browser_rss=0.82GB
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(…): 100%|██████████| 5.55G/5.55G [00:47<00:00, 118MB/s]
+  [capture-loop] iter=1150 t=139.1s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=3 ram=7.6/31.2GB (24%) swap=0.5/32.0GB (2%) cpu=5% browser_rss=0.81GB
   [ComfyUI] 
   [ComfyUI] (…)low_imgshape2tex_dit_1_3B_1024_bf16.json:   0%|          | 0.00/535 [00:00<?, ?B/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] (…)low_imgshape2tex_dit_1_3B_1024_bf16.json: 100%|██████████| 535/535 [00:00<00:00, 396kB/s]
+  [ComfyUI] (…)low_imgshape2tex_dit_1_3B_1024_bf16.json: 100%|██████████| 535/535 [00:00<00:00, 460kB/s]
   [ComfyUI] 
   [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(…):   0%|          | 0.00/5.55G [00:00<?, ?B/s]
-  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(…):   0%|          | 30.7k/5.55G [00:01<51:20:10, 30.0kB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(…):   0%|          | 30.7k/5.55G [00:00<38:47:32, 39.7kB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(…):   1%|          | 67.1M/5.55G [00:04<05:44, 15.9MB/s]   [SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(…):   1%|          | 67.1M/5.55G [00:01<02:05, 43.5MB/s]   [SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(…):   2%|▏         | 134M/5.55G [00:04<02:31, 35.6MB/s] [SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(…):   2%|▏         | 134M/5.55G [00:04<02:37, 34.3MB/s] [SubprocessWorker] callback 'report_progress' from call_id=4
+  [capture-loop] iter=1200 t=145.2s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=8.1/31.2GB (26%) swap=0.5/32.0GB (2%) cpu=6% browser_rss=0.81GB
   [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(…):   5%|▍         | 268M/5.55G [00:05<01:07, 78.1MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
-  [capture-loop] iter=1150 t=139.1s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=3 ram=9.0/31.2GB (29%) swap=1.7/32.0GB (5%) cpu=8% browser_rss=0.82GB
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(…):   5%|▍         | 268M/5.55G [00:06<01:52, 46.7MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(…):  11%|█         | 604M/5.55G [00:10<01:07, 72.7MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
-  [capture-loop] iter=1200 t=145.2s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=9.3/31.2GB (30%) swap=1.7/32.0GB (5%) cpu=9% browser_rss=0.82GB
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(…):   6%|▌         | 335M/5.55G [00:07<01:47, 48.7MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(…):  12%|█▏        | 671M/5.55G [00:14<01:52, 43.2MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(…):  10%|▉         | 537M/5.55G [00:08<01:02, 80.8MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(…):  19%|█▉        | 1.07G/5.55G [00:16<00:52, 84.9MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
-  [capture-loop] iter=1250 t=151.1s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=9.6/31.2GB (31%) swap=1.7/32.0GB (5%) cpu=8% browser_rss=0.82GB
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(…):  12%|█▏        | 671M/5.55G [00:11<01:07, 71.8MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [capture-loop] iter=1250 t=151.0s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=3 ram=8.2/31.2GB (26%) swap=0.5/32.0GB (2%) cpu=6% browser_rss=0.81GB
   [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(…):  21%|██        | 1.14G/5.55G [00:20<01:15, 58.2MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(…):  15%|█▍        | 805M/5.55G [00:13<01:07, 70.1MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(…):  23%|██▎       | 1.27G/5.55G [00:23<01:19, 54.0MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(…):  16%|█▌        | 872M/5.55G [00:14<01:13, 63.2MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [capture-loop] iter=1300 t=157.0s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=3 ram=8.7/31.2GB (28%) swap=0.5/32.0GB (2%) cpu=6% browser_rss=0.82GB
   [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(…):  27%|██▋       | 1.48G/5.55G [00:23<00:50, 80.9MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
-  [capture-loop] iter=1300 t=157.1s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=9.9/31.2GB (32%) swap=1.7/32.0GB (5%) cpu=8% browser_rss=0.82GB
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(…):  19%|█▉        | 1.07G/5.55G [00:18<01:13, 60.5MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [capture-loop] iter=1350 t=162.9s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=3 ram=9.1/31.2GB (29%) swap=0.5/32.0GB (2%) cpu=6% browser_rss=0.81GB
   [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(…):  34%|███▍      | 1.88G/5.55G [00:29<00:51, 71.6MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
-  [capture-loop] iter=1350 t=163.0s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=5 ram=10.1/31.2GB (32%) swap=1.7/32.0GB (5%) cpu=8% browser_rss=0.82GB
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(…):  25%|██▌       | 1.41G/5.55G [00:24<01:16, 54.4MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(…):  36%|███▋      | 2.01G/5.55G [00:30<00:43, 81.0MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(…):  29%|██▉       | 1.61G/5.55G [00:26<01:02, 63.3MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(…):  54%|█████▍    | 3.02G/5.55G [00:34<00:16, 149MB/s] [SubprocessWorker] callback 'report_progress' from call_id=4
-  [capture-loop] iter=1400 t=169.1s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=9.8/31.2GB (32%) swap=1.7/32.0GB (5%) cpu=8% browser_rss=0.82GB
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(…):  33%|███▎      | 1.81G/5.55G [00:28<00:49, 75.5MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(…):  56%|█████▌    | 3.08G/5.55G [00:36<00:19, 124MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(…):  41%|████      | 2.28G/5.55G [00:29<00:25, 126MB/s] [SubprocessWorker] callback 'report_progress' from call_id=4
+  [capture-loop] iter=1400 t=169.0s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=8.8/31.2GB (28%) swap=0.5/32.0GB (2%) cpu=6% browser_rss=0.81GB
   [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(…):  63%|██████▎   | 3.49G/5.55G [00:37<00:12, 162MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(…):  52%|█████▏    | 2.88G/5.55G [00:31<00:15, 175MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [capture-loop] iter=1450 t=175.1s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=9.0/31.2GB (29%) swap=0.5/32.0GB (2%) cpu=6% browser_rss=0.81GB
   [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(…):  65%|██████▌   | 3.62G/5.55G [00:37<00:11, 171MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(…):  64%|██████▍   | 3.55G/5.55G [00:36<00:12, 155MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(…):  71%|███████▏  | 3.96G/5.55G [00:38<00:07, 216MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
-  [capture-loop] iter=1450 t=175.1s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=3 ram=9.7/31.2GB (31%) swap=1.7/32.0GB (5%) cpu=7% browser_rss=0.82GB
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(…):  69%|██████▉   | 3.82G/5.55G [00:40<00:14, 123MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] [worker:ComfyUI-Pixal3D]
+  [ComfyUI] === WATCHDOG TICK 3 ===
+  [ComfyUI] [worker:ComfyUI-Pixal3D] Thread 0x000072d51f7af640 (most recent call first):
+  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 324 in wait
+  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 607 in wait
+  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/tqdm/_monitor.py", line 60 in run
+  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 1016 in _bootstrap_inner
+  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 973 in _bootstrap
   [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(…):  73%|███████▎  | 4.02G/5.55G [00:43<00:16, 93.4MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] Thread 0x000072d5209ca640 (most recent call first):
+  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/socket.py", line 293 in accept
+  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/multiprocessing/connection.py", line 609 in accept
+  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/multiprocessing/connection.py", line 463 in accept
+  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/multiprocessing/resource_sharer.py", line 138 in _serve
+  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 953 in run
+  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 1016 in _bootstrap_inner
+  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 973 in _bootstrap
   [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(…):  79%|███████▊  | 4.36G/5.55G [00:43<00:08, 145MB/s] [SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] Thread 0x000072d73d5cf640 (most recent call first):
+  [ComfyUI]   File "/tmp/comfyui_pvenv_gejqmaao/persistent_worker.py", line 106 in _vram_poller
+  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 953 in run
+  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 1016 in _bootstrap_inner
+  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 973 in _bootstrap
   [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(…):  81%|████████  | 4.49G/5.55G [00:44<00:06, 167MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] Current thread 0x000072d73ddd0640 (most recent call first):
+  [ComfyUI]   File "/tmp/comfyui_pvenv_gejqmaao/persistent_worker.py", line 52 in _watchdog
+  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 953 in run
+  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 1016 in _bootstrap_inner
+  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 973 in _bootstrap
   [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(…):  82%|████████▏ | 4.56G/5.55G [00:46<00:08, 115MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] Thread 0x000072d73e3a6740 (most recent call first):
+  [capture-loop] iter=1500 t=180.9s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=8.7/31.2GB (28%) swap=0.5/32.0GB (2%) cpu=6% browser_rss=0.81GB
+  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/huggingface_hub/file_download.py", line 558 in xet_get
+  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/huggingface_hub/file_download.py", line 1842 in _download_to_tmp_and_move
+  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/huggingface_hub/file_download.py", line 1427 in _hf_hub_download_to_local_dir
+  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/huggingface_hub/file_download.py", line 976 in hf_hub_download
+  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/huggingface_hub/utils/_validators.py", line 88 in _inner_fn
+  [ComfyUI]   File "/workspaces/Pixal3D-1248/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/stages.py", line 223 in _download_pixal3d_weights
+  [ComfyUI]   File "/workspaces/Pixal3D-1248/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/stages.py", line 488 in init_pipeline
+  [ComfyUI]   File "/workspaces/Pixal3D-1248/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/stages.py", line 738 in _run_cascade
+  [ComfyUI]   File "/workspaces/Pixal3D-1248/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/stages.py", line 1504 in generate_mesh_and_voxelgrid
+  [ComfyUI]   File "/workspaces/Pixal3D-1248/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/nodes_mesh.py", line 77 in execute
+  [ComfyUI]   File "/workspaces/Pixal3D-1248/ComfyUI/comfy_api/latest/_io.py", line 1833 in EXECUTE_NORMALIZED
+  [ComfyUI]   File "/tmp/comfyui_pvenv_gejqmaao/persistent_worker.py", line 1762 in main
+  [ComfyUI]   File "/tmp/comfyui_pvenv_gejqmaao/persistent_worker.py", line 1807 in <module>
   [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(…): 100%|██████████| 5.55G/5.55G [00:46<00:00, 322MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] [worker:ComfyUI-Pixal3D] === END ===
   [ComfyUI] 
-  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(…): 100%|██████████| 5.55G/5.55G [00:47<00:00, 117MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(…):  73%|███████▎  | 4.02G/5.55G [00:42<00:12, 121MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(…):  74%|███████▎  | 4.09G/5.55G [00:42<00:11, 122MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(…):  75%|███████▍  | 4.16G/5.55G [00:43<00:12, 113MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(…):  77%|███████▋  | 4.29G/5.55G [00:44<00:10, 123MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(…):  92%|█████████▏| 5.10G/5.55G [00:45<00:01, 261MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(…): 100%|██████████| 5.55G/5.55G [00:46<00:00, 346MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(…): 100%|██████████| 5.55G/5.55G [00:46<00:00, 118MB/s]
   [ComfyUI] 
   [ComfyUI] ss_dec_conv3d_16l8_fp16.json:   0%|          | 0.00/245 [00:00<?, ?B/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ss_dec_conv3d_16l8_fp16.json: 100%|██████████| 245/245 [00:00<00:00, 205kB/s]
-  [ComfyUI] [worker:ComfyUI-Pixal3D]
-  [ComfyUI] === WATCHDOG TICK 3 ===
-  [ComfyUI] [worker:ComfyUI-Pixal3D] Thread 0x00007b4ebb4f2640 (most recent call first):
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 324 in wait
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 607 in wait
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/tqdm/_monitor.py", line 60 in run
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 1016 in _bootstrap_inner
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 973 in _bootstrap
+  [ComfyUI] ss_dec_conv3d_16l8_fp16.json: 100%|██████████| 245/245 [00:00<00:00, 233kB/s]
   [ComfyUI] 
-  [ComfyUI] Thread 0x00007b4d055d9640 (most recent call first):
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 324 in wait
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 607 in wait
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/tqdm/_monitor.py", line 60 in run
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 1016 in _bootstrap_inner
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 973 in _bootstrap
-  [ComfyUI] 
-  [ComfyUI] Thread 0x00007b4e47a2a640 (most recent call first):
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/socket.py", line 293 in accept
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/multiprocessing/connection.py", line 609 in accept
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/multiprocessing/connection.py", line 463 in accept
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/multiprocessing/resource_sharer.py", line 138 in _serve
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 953 in run
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 1016 in _bootstrap_inner
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 973 in _bootstrap
-  [ComfyUI] 
-  [ComfyUI] Thread 0x00007b4ff6446640 (most recent call first):
-  [ComfyUI]   File "/tmp/comfyui_pvenv_v79adoij/persistent_worker.py", line 106 in _vram_poller
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 953 in run
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 1016 in _bootstrap_inner
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 973 in _bootstrap
-  [ComfyUI] 
-  [ComfyUI] Current thread 0x00007b4ff6c47640 (most recent call first):
-  [ComfyUI]   File "/tmp/comfyui_pvenv_v79adoij/persistent_worker.py", line 52 in _watchdog
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 953 in run
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 1016 in _bootstrap_inner
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 973 in _bootstrap
-  [ComfyUI] 
-  [ComfyUI] Thread 0x00007b4ff721d740 (most recent call first):
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/ssl.py", line 1165 in read
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/ssl.py", line 1292 in recv
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/httpcore/_backends/sync.py", line 128 in read
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/httpcore/_sync/http11.py", line 217 in _receive_event
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/httpcore/_sync/http11.py", line 177 in _receive_response_headers
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/httpcore/_sync/http11.py", line 106 in handle_request
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/httpcore/_sync/connection.py", line 103 in handle_request
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/httpcore/_sync/connection_pool.py", line 236 in handle_request
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/httpx/_transports/default.py", line 250 in handle_request
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/httpx/_client.py", line 1014 in _send_single_request
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/httpx/_client.py", line 979 in _send_handling_redirects
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/httpx/_client.py", line 942 in _send_handling_auth
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/httpx/_client.py", line 914 in send
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/httpx/_client.py", line 825 in request
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/huggingface_hub/utils/_http.py", line 467 in _http_backoff_base
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/huggingface_hub/utils/_http.py", line 559 in http_backoff
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/huggingface_hub/utils/_http.py", line 685 in _httpx_follow_relative_redirects_with_backoff
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/huggingface_hub/file_download.py", line 1591 in get_hf_file_metadata
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/huggingface_hub/utils/_validators.py", line 88 in _inner_fn
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/huggingface_hub/file_download.py", line 1669 in _get_metadata_or_catch_error
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/huggingface_hub/file_download.py", line 1288 in _hf_hub_download_to_local_dir
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/huggingface_hub/file_download.py", line 976 in hf_hub_download
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/huggingface_hub/utils/_validators.py", line 88 in _inner_fn
-  [ComfyUI]   File "/workspaces/Pixal3D-1133/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/stages.py", line 212 in _download_pixal3d_weights
-  [ComfyUI]   File "/workspaces/Pixal3D-1133/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/stages.py", line 477 in init_pipeline
-  [ComfyUI]   File "/workspaces/Pixal3D-1133/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/stages.py", line 754 in _run_cascade
-  [ComfyUI]   File "/workspaces/Pixal3D-1133/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/stages.py", line 1520 in generate_mesh_and_voxelgrid
-  [ComfyUI]   File "/workspaces/Pixal3D-1133/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/nodes_mesh.py", line 77 in execute
-  [ComfyUI]   File "/workspaces/Pixal3D-1133/ComfyUI/comfy_api/latest/_io.py", line 1833 in EXECUTE_NORMALIZED
-  [ComfyUI]   File "/tmp/comfyui_pvenv_v79adoij/persistent_worker.py", line 1762 in main
-  [ComfyUI]   File "/tmp/comfyui_pvenv_v79adoij/persistent_worker.py", line 1807 in <module>
-  [ComfyUI] 
-  [ComfyUI] [worker:ComfyUI-Pixal3D] === END ===
-  [ComfyUI] 
-  [ComfyUI] 
-  [capture-loop] iter=1500 t=181.0s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=8.6/31.2GB (27%) swap=1.7/32.0GB (5%) cpu=6% browser_rss=0.82GB
+  [capture-loop] iter=1550 t=186.9s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=3 ram=7.6/31.2GB (24%) swap=0.5/32.0GB (2%) cpu=6% browser_rss=0.81GB
   [ComfyUI] ckpts/ss_dec_conv3d_16l8_fp16.safetensor(…):   0%|          | 0.00/148M [00:00<?, ?B/s]
-  [ComfyUI] ckpts/ss_dec_conv3d_16l8_fp16.safetensor(…): 100%|██████████| 148M/148M [00:02<00:00, 64.9MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/ss_dec_conv3d_16l8_fp16.safetensor(…): 100%|██████████| 148M/148M [00:02<00:00, 65.0MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/ss_dec_conv3d_16l8_fp16.safetensor(…): 100%|██████████| 148M/148M [00:02<00:00, 63.5MB/s]
+  [ComfyUI] ckpts/ss_dec_conv3d_16l8_fp16.safetensor(…): 100%|██████████| 148M/148M [00:02<00:00, 63.0MB/s]
   [ComfyUI] 
   [ComfyUI] ss_flow_img_dit_1_3B_64_bf16.json:   0%|          | 0.00/503 [00:00<?, ?B/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ss_flow_img_dit_1_3B_64_bf16.json: 100%|██████████| 503/503 [00:00<00:00, 488kB/s]
+  [ComfyUI] ss_flow_img_dit_1_3B_64_bf16.json: 100%|██████████| 503/503 [00:00<00:00, 496kB/s]
   [ComfyUI] 
+  [capture-loop] iter=1600 t=193.0s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=7.8/31.2GB (25%) swap=0.5/32.0GB (2%) cpu=5% browser_rss=0.82GB
   [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(…):   0%|          | 0.00/5.36G [00:00<?, ?B/s]
-  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(…):   1%|▏         | 67.1M/5.36G [00:02<03:19, 26.6MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(…):   4%|▍         | 201M/5.36G [00:04<01:43, 50.0MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(…):   5%|▌         | 268M/5.36G [00:03<00:56, 89.7MB/s] [SubprocessWorker] callback 'report_progress' from call_id=4
-  [capture-loop] iter=1550 t=187.0s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=3 ram=8.8/31.2GB (28%) swap=1.7/32.0GB (5%) cpu=7% browser_rss=0.82GB
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(…):   5%|▌         | 268M/5.36G [00:08<02:46, 30.5MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [capture-loop] iter=1650 t=198.9s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=8.3/31.2GB (27%) swap=0.5/32.0GB (2%) cpu=7% browser_rss=0.81GB
+  [capture-loop] iter=1700 t=204.9s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=8.9/31.2GB (29%) swap=0.5/32.0GB (2%) cpu=6% browser_rss=0.82GB
   [ComfyUI] 
-  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(…):   6%|▋         | 335M/5.36G [00:06<01:32, 54.3MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
-  [capture-loop] iter=1600 t=193.0s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=9.1/31.2GB (29%) swap=1.7/32.0GB (5%) cpu=9% browser_rss=0.82GB
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(…):  16%|█▋        | 872M/5.36G [00:16<01:16, 58.7MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(…):  15%|█▌        | 805M/5.36G [00:11<01:03, 72.0MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
-  [capture-loop] iter=1650 t=198.9s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=9.5/31.2GB (30%) swap=1.7/32.0GB (5%) cpu=8% browser_rss=0.82GB
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(…):  18%|█▊        | 939M/5.36G [00:18<01:27, 50.6MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(…):  18%|█▊        | 939M/5.36G [00:17<01:30, 48.6MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(…):  24%|██▍       | 1.27G/5.36G [00:19<00:47, 86.3MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(…):  20%|██        | 1.07G/5.36G [00:18<01:16, 56.2MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
-  [capture-loop] iter=1700 t=205.0s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=10.0/31.2GB (32%) swap=1.7/32.0GB (5%) cpu=8% browser_rss=0.82GB
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(…):  25%|██▌       | 1.34G/5.36G [00:20<00:46, 86.6MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(…):  24%|██▍       | 1.27G/5.36G [00:22<01:10, 58.1MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(…):  26%|██▋       | 1.41G/5.36G [00:20<00:43, 91.1MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [capture-loop] iter=1750 t=210.7s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=3 ram=8.6/31.2GB (28%) swap=0.5/32.0GB (2%) cpu=6% browser_rss=0.81GB
   [ComfyUI] 
-  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(…):  28%|██▊       | 1.48G/5.36G [00:23<00:52, 73.7MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(…):  28%|██▊       | 1.48G/5.36G [00:22<00:52, 74.2MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(…):  34%|███▍      | 1.81G/5.36G [00:25<00:36, 97.9MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
-  [capture-loop] iter=1750 t=210.8s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=9.9/31.2GB (32%) swap=1.7/32.0GB (5%) cpu=8% browser_rss=0.82GB
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(…):  29%|██▉       | 1.54G/5.36G [00:24<01:00, 62.9MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [capture-loop] iter=1800 t=216.7s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=3 ram=9.2/31.2GB (29%) swap=0.5/32.0GB (2%) cpu=6% browser_rss=0.81GB
   [ComfyUI] 
-  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(…):  39%|███▉      | 2.08G/5.36G [00:29<00:38, 84.8MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(…):  40%|████      | 2.15G/5.36G [00:29<00:36, 88.0MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(…):  40%|████      | 2.15G/5.36G [00:29<00:35, 91.5MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(…):  43%|████▎     | 2.28G/5.36G [00:33<00:42, 72.8MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [capture-loop] iter=1850 t=222.7s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=9.2/31.2GB (30%) swap=0.5/32.0GB (2%) cpu=6% browser_rss=0.82GB
   [ComfyUI] 
-  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(…):  45%|████▌     | 2.41G/5.36G [00:31<00:27, 108MB/s] [SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(…):  56%|█████▋    | 3.02G/5.36G [00:34<00:15, 156MB/s] [SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(…):  48%|████▊     | 2.55G/5.36G [00:31<00:22, 124MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(…):  61%|██████▏   | 3.29G/5.36G [00:36<00:14, 141MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(…):  49%|████▉     | 2.62G/5.36G [00:32<00:21, 125MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
-  [capture-loop] iter=1800 t=216.9s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=10.0/31.2GB (32%) swap=1.7/32.0GB (5%) cpu=8% browser_rss=0.82GB
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(…):  74%|███████▍  | 3.96G/5.36G [00:38<00:07, 192MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [capture-loop] iter=1900 t=228.5s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=3 ram=8.4/31.2GB (27%) swap=0.5/32.0GB (2%) cpu=6% browser_rss=0.81GB
   [ComfyUI] 
-  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(…):  51%|█████▏    | 2.75G/5.36G [00:34<00:27, 96.1MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(…):  75%|███████▌  | 4.02G/5.36G [00:40<00:08, 154MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(…):  66%|██████▋   | 3.55G/5.36G [00:39<00:12, 142MB/s] [SubprocessWorker] callback 'report_progress' from call_id=4
-  [capture-loop] iter=1850 t=223.1s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=9.7/31.2GB (31%) swap=1.7/32.0GB (5%) cpu=8% browser_rss=0.82GB
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(…):  76%|███████▋  | 4.09G/5.36G [00:40<00:07, 159MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(…):  70%|███████   | 3.76G/5.36G [00:39<00:10, 157MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(…):  79%|███████▉  | 4.23G/5.36G [00:43<00:10, 108MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(…):  75%|███████▌  | 4.02G/5.36G [00:40<00:07, 177MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(…):  88%|████████▊ | 4.69G/5.36G [00:43<00:03, 198MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(…):  80%|████████  | 4.29G/5.36G [00:42<00:06, 170MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(…):  93%|█████████▎| 4.96G/5.36G [00:44<00:01, 257MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(…):  86%|████████▋ | 4.63G/5.36G [00:43<00:03, 204MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(…): 100%|██████████| 5.36G/5.36G [00:44<00:00, 344MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(…): 100%|██████████| 5.36G/5.36G [00:44<00:00, 342MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
-  [ComfyUI] 
-  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(…): 100%|██████████| 5.36G/5.36G [00:44<00:00, 120MB/s]
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(…): 100%|██████████| 5.36G/5.36G [00:45<00:00, 119MB/s]
   [ComfyUI] 
   [ComfyUI] tex_dec_next_dc_f16c32_fp16.json:   0%|          | 0.00/705 [00:00<?, ?B/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] tex_dec_next_dc_f16c32_fp16.json: 100%|██████████| 705/705 [00:00<00:00, 595kB/s]
+  [ComfyUI] tex_dec_next_dc_f16c32_fp16.json: 100%|██████████| 705/705 [00:00<00:00, 485kB/s]
   [ComfyUI] 
-  [capture-loop] iter=1900 t=228.9s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=8.6/31.2GB (28%) swap=1.7/32.0GB (5%) cpu=8% browser_rss=0.82GB
+  [capture-loop] iter=1950 t=234.6s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=7.6/31.2GB (24%) swap=0.5/32.0GB (2%) cpu=5% browser_rss=0.82GB
   [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(…):   0%|          | 0.00/948M [00:00<?, ?B/s]
-  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(…):   0%|          | 1.50M/948M [00:00<08:06, 1.95MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(…):   0%|          | 1.50M/948M [00:01<10:43, 1.47MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(…):   1%|          | 6.82M/948M [00:01<02:33, 6.12MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(…):   1%|          | 4.80M/948M [00:01<04:24, 3.57MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(…):   6%|▋         | 61.2M/948M [00:01<00:14, 60.1MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(…):   5%|▍         | 47.4M/948M [00:01<00:21, 41.4MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(…):   8%|▊         | 77.1M/948M [00:01<00:14, 61.0MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(…):   8%|▊         | 72.7M/948M [00:02<00:15, 56.1MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(…):  11%|█         | 105M/948M [00:02<00:11, 75.5MB/s] [SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(…):   9%|▉         | 87.3M/948M [00:02<00:15, 56.7MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(…):  13%|█▎        | 122M/948M [00:02<00:11, 73.2MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(…):  10%|█         | 97.5M/948M [00:02<00:16, 52.4MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(…):  18%|█▊        | 167M/948M [00:02<00:07, 104MB/s] [SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(…):  14%|█▍        | 137M/948M [00:02<00:09, 82.2MB/s] [SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(…):  20%|█▉        | 186M/948M [00:02<00:07, 95.8MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(…):  20%|█▉        | 187M/948M [00:03<00:08, 89.7MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(…):  23%|██▎       | 220M/948M [00:03<00:06, 107MB/s] [SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(…):  23%|██▎       | 218M/948M [00:03<00:07, 98.0MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(…):  26%|██▌       | 242M/948M [00:03<00:06, 102MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
-  [ComfyUI] 
-  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(…):  27%|██▋       | 256M/948M [00:03<00:07, 88.1MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(…):  27%|██▋       | 254M/948M [00:03<00:06, 109MB/s] [SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] [SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(…):  39%|███▉      | 368M/948M [00:05<00:08, 70.0MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(…):  46%|████▌     | 433M/948M [00:05<00:04, 105MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(…):  43%|████▎     | 404M/948M [00:05<00:06, 80.1MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(…):  50%|████▉     | 474M/948M [00:05<00:04, 112MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] 
-  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(…):  46%|████▌     | 438M/948M [00:05<00:05, 89.0MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(…):  52%|█████▏    | 495M/948M [00:06<00:04, 108MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [capture-loop] iter=2000 t=240.7s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=7.7/31.2GB (25%) swap=0.5/32.0GB (2%) cpu=5% browser_rss=0.82GB
   [ComfyUI] 
-  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(…):  49%|████▉     | 469M/948M [00:06<00:05, 95.0MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
-  [ComfyUI] 
-  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(…):  53%|█████▎    | 505M/948M [00:06<00:04, 106MB/s] [SubprocessWorker] callback 'report_progress' from call_id=4
-  [ComfyUI] 
-  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(…):  57%|█████▋    | 540M/948M [00:06<00:03, 114MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
-  [ComfyUI] 
-  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(…):  59%|█████▉    | 563M/948M [00:06<00:03, 107MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
-  [capture-loop] iter=1950 t=235.1s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=3 ram=8.6/31.2GB (28%) swap=1.7/32.0GB (5%) cpu=7% browser_rss=0.82GB
-  [ComfyUI] [SubprocessWorker] callback 'report_progress' from call_id=4
-  [ComfyUI] 
-  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(…):  66%|██████▌   | 624M/948M [00:08<00:05, 56.0MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
-  [ComfyUI] 
-  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(…):  81%|████████  | 769M/948M [00:08<00:01, 122MB/s] [SubprocessWorker] callback 'report_progress' from call_id=4
-  [ComfyUI] 
-  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(…): 100%|██████████| 948M/948M [00:10<00:00, 121MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
-  [ComfyUI] 
-  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(…): 100%|██████████| 948M/948M [00:10<00:00, 90.4MB/s]
-  [ComfyUI] [worker:ComfyUI-Pixal3D] [pixal3d] <<< download Pixal3D weights  (212.5s)
+  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(…):  56%|█████▌    | 531M/948M [00:06<00:03, 114MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
   [ComfyUI] [worker:ComfyUI-Pixal3D]
   [ComfyUI] === WATCHDOG TICK 4 ===
-  [ComfyUI] [worker:ComfyUI-Pixal3D] Thread 0x00007b4ebb4f2640 (most recent call first):
+  [ComfyUI] [worker:ComfyUI-Pixal3D] Thread 0x000072d51f7af640 (most recent call first):
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 324 in wait
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 607 in wait
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/tqdm/_monitor.py", line 60 in run
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 1016 in _bootstrap_inner
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 973 in _bootstrap
   [ComfyUI] 
-  [ComfyUI] Thread 0x00007b4d055d9640 (most recent call first):
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 324 in wait
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 607 in wait
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/tqdm/_monitor.py", line 60 in run
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 1016 in _bootstrap_inner
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 973 in _bootstrap
-  [ComfyUI] 
-  [ComfyUI] Thread 0x00007b4e47a2a640 (most recent call first):
+  [ComfyUI] Thread 0x000072d5209ca640 (most recent call first):
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/socket.py", line 293 in accept
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/multiprocessing/connection.py", line 609 in accept
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/multiprocessing/connection.py", line 463 in accept
@@ -704,155 +695,77 @@ Capturing execution frames: pixal3d_basic.json
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 1016 in _bootstrap_inner
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 973 in _bootstrap
   [ComfyUI] 
-  [ComfyUI] Thread 0x00007b4ff6446640 (most recent call first):
-  [ComfyUI]   File "/tmp/comfyui_pvenv_v79adoij/persistent_worker.py", line 106 in _vram_poller
+  [ComfyUI] Thread 0x000072d73d5cf640 (most recent call first):
+  [ComfyUI]   File "/tmp/comfyui_pvenv_gejqmaao/persistent_worker.py", line 106 in _vram_poller
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 953 in run
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 1016 in _bootstrap_inner
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 973 in _bootstrap
   [ComfyUI] 
-  [ComfyUI] Current thread 0x00007b4ff6c47640 (most recent call first):
-  [ComfyUI]   File "/tmp/comfyui_pvenv_v79adoij/persistent_worker.py", line 52 in _watchdog
+  [ComfyUI] Current thread 0x000072d73ddd0640 (most recent call first):
+  [ComfyUI]   File "/tmp/comfyui_pvenv_gejqmaao/persistent_worker.py", line 52 in _watchdog
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 953 in run
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 1016 in _bootstrap_inner
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 973 in _bootstrap
   [ComfyUI] 
-  [ComfyUI] Thread 0x00007b4ff721d740 (most recent call first):
-  [ComfyUI]   File "<frozen importlib._bootstrap_external>", line 147 in _path_stat
-  [ComfyUI]   File "<frozen importlib._bootstrap_external>", line 153 in _path_is_mode_type
-  [ComfyUI]   File "<frozen importlib._bootstrap_external>", line 161 in _path_isfile
-  [ComfyUI]   File "<frozen importlib._bootstrap_external>", line 1577 in find_spec
-  [ComfyUI]   File "<frozen importlib._bootstrap_external>", line 1411 in _get_spec
-  [ComfyUI]   File "<frozen importlib._bootstrap_external>", line 1439 in find_spec
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 945 in _find_spec
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 1002 in _find_and_load_unlocked
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 1027 in _find_and_load
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/_dynamo/guards.py", line 118 in <module>
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 241 in _call_with_frames_removed
-  [ComfyUI]   File "<frozen importlib._bootstrap_external>", line 883 in exec_module
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 688 in _load_unlocked
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 1006 in _find_and_load_unlocked
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 1027 in _find_and_load
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/_dynamo/variables/base.py", line 30 in <module>
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 241 in _call_with_frames_removed
-  [ComfyUI]   File "<frozen importlib._bootstrap_external>", line 883 in exec_module
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 688 in _load_unlocked
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 1006 in _find_and_load_unlocked
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 1027 in _find_and_load
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/_dynamo/variables/__init__.py", line 19 in <module>
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 241 in _call_with_frames_removed
-  [ComfyUI]   File "<frozen importlib._bootstrap_external>", line 883 in exec_module
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 688 in _load_unlocked
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 1006 in _find_and_load_unlocked
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 1027 in _find_and_load
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/_dynamo/trace_rules.py", line 59 in <module>
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 241 in _call_with_frames_removed
-  [ComfyUI]   File "<frozen importlib._bootstrap_external>", line 883 in exec_module
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 688 in _load_unlocked
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 1006 in _find_and_load_unlocked
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 1027 in _find_and_load
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 241 in _call_with_frames_removed
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 1078 in _handle_fromlist
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/_dynamo/symbolic_convert.py", line 60 in <module>
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 241 in _call_with_frames_removed
-  [ComfyUI]   File "<frozen importlib._bootstrap_external>", line 883 in exec_module
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 688 in _load_unlocked
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 1006 in _find_and_load_unlocked
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 1027 in _find_and_load
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/_dynamo/convert_frame.py", line 62 in <module>
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 241 in _call_with_frames_removed
-  [ComfyUI]   File "<frozen importlib._bootstrap_external>", line 883 in exec_module
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 688 in _load_unlocked
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 1006 in _find_and_load_unlocked
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 1027 in _find_and_load
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/_dynamo/aot_compile.py", line 15 in <module>
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 241 in _call_with_frames_removed
-  [ComfyUI]   File "<frozen importlib._bootstrap_external>", line 883 in exec_module
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 688 in _load_unlocked
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 1006 in _find_and_load_unlocked
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 1027 in _find_and_load
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 241 in _call_with_frames_removed
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 1078 in _handle_fromlist
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/_dynamo/__init__.py", line 13 in <module>
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 241 in _call_with_frames_removed
-  [ComfyUI]   File "<frozen importlib._bootstrap_external>", line 883 in exec_module
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 688 in _load_unlocked
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 1006 in _find_and_load_unlocked
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 1027 in _find_and_load
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 241 in _call_with_frames_removed
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 992 in _find_and_load_unlocked
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 1027 in _find_and_load
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/transformers/masking_utils.py", line 40 in <module>
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 241 in _call_with_frames_removed
-  [ComfyUI]   File "<frozen importlib._bootstrap_external>", line 883 in exec_module
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 688 in _load_unlocked
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 1006 in _find_and_load_unlocked
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 1027 in _find_and_load
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/transformers/generation/utils.py", line 44 in <module>
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 241 in _call_with_frames_removed
-  [ComfyUI]   File "<frozen importlib._bootstrap_external>", line 883 in exec_module
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 688 in _load_unlocked
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 1006 in _find_and_load_unlocked
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 1027 in _find_and_load
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 1050 in _gcd_import
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/importlib/__init__.py", line 126 in import_module
-  [capture-loop] iter=2000 t=241.1s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=8.7/31.2GB (28%) swap=1.7/32.0GB (5%) cpu=6% browser_rss=0.82GB
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/transformers/utils/import_utils.py", line 2458 in _get_module
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/transformers/utils/import_utils.py", line 2226 in __getattr__
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 1075 in _handle_fromlist
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/transformers/models/auto/auto_factory.py", line 43 in <module>
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 241 in _call_with_frames_removed
-  [ComfyUI]   File "<frozen importlib._bootstrap_external>", line 883 in exec_module
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 688 in _load_unlocked
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 1006 in _find_and_load_unlocked
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 1027 in _find_and_load
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/transformers/models/auto/modeling_auto.py", line 21 in <module>
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 241 in _call_with_frames_removed
-  [ComfyUI]   File "<frozen importlib._bootstrap_external>", line 883 in exec_module
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 688 in _load_unlocked
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 1006 in _find_and_load_unlocked
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 1027 in _find_and_load
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 1050 in _gcd_import
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/importlib/__init__.py", line 126 in import_module
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/transformers/utils/import_utils.py", line 2458 in _get_module
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/transformers/utils/import_utils.py", line 2226 in __getattr__
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 1075 in _handle_fromlist
-  [ComfyUI]   File "/workspaces/Pixal3D-1133/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/pixal3d/pipelines/rembg/BiRefNet.py", line 2 in <module>
-  [ComfyUI]   File "<frozen importlib._bootstrap>", line 241 in _call_with_frames_removed
-  [ComfyUI]   ...
+  [ComfyUI] Thread 0x000072d73e3a6740 (most recent call first):
+  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/huggingface_hub/file_download.py", line 558 in xet_get
+  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/huggingface_hub/file_download.py", line 1842 in _download_to_tmp_and_move
+  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/huggingface_hub/file_download.py", line 1427 in _hf_hub_download_to_local_dir
+  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/huggingface_hub/file_download.py", line 976 in hf_hub_download
+  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/huggingface_hub/utils/_validators.py", line 88 in _inner_fn
+  [ComfyUI]   File "/workspaces/Pixal3D-1248/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/stages.py", line 223 in _download_pixal3d_weights
+  [ComfyUI]   File "/workspaces/Pixal3D-1248/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/stages.py", line 488 in init_pipeline
+  [ComfyUI]   File "/workspaces/Pixal3D-1248/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/stages.py", line 738 in _run_cascade
+  [ComfyUI]   File "/workspaces/Pixal3D-1248/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/stages.py", line 1504 in generate_mesh_and_voxelgrid
+  [ComfyUI]   File "/workspaces/Pixal3D-1248/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/nodes_mesh.py", line 77 in execute
+  [ComfyUI]   File "/workspaces/Pixal3D-1248/ComfyUI/comfy_api/latest/_io.py", line 1833 in EXECUTE_NORMALIZED
+  [ComfyUI]   File "/tmp/comfyui_pvenv_gejqmaao/persistent_worker.py", line 1762 in main
+  [ComfyUI]   File "/tmp/comfyui_pvenv_gejqmaao/persistent_worker.py", line 1807 in <module>
   [ComfyUI] 
   [ComfyUI] [worker:ComfyUI-Pixal3D] === END ===
   [ComfyUI] 
-  [ComfyUI] Cloning into '/workspaces/Pixal3D-1133/ComfyUI/models/naf/source'...
+  [ComfyUI] 
+  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(…):  59%|█████▉    | 558M/948M [00:06<00:04, 93.5MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] [SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] 
+  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(…):  75%|███████▍  | 710M/948M [00:08<00:02, 98.1MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] 
+  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(…):  79%|███████▉  | 747M/948M [00:08<00:01, 104MB/s] [SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] [SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] 
+  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(…):  87%|████████▋ | 824M/948M [00:09<00:01, 118MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] 
+  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(…):  91%|█████████ | 865M/948M [00:09<00:00, 125MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] 
+  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(…):  99%|█████████▊| 935M/948M [00:09<00:00, 129MB/s][SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] [SubprocessWorker] callback 'report_progress' from call_id=4
+  [ComfyUI] 
+  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(…): 100%|██████████| 948M/948M [00:10<00:00, 93.3MB/s]
+  [ComfyUI] [worker:ComfyUI-Pixal3D] [pixal3d] <<< download Pixal3D weights  (212.3s)
+  [capture-loop] iter=2050 t=246.5s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=3 ram=7.6/31.2GB (24%) swap=0.5/32.0GB (2%) cpu=4% browser_rss=0.81GB
+  [ComfyUI] Cloning into '/workspaces/Pixal3D-1248/ComfyUI/models/naf/source'...
+  [capture-loop] iter=2100 t=252.5s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=3 ram=7.7/31.2GB (25%) swap=0.5/32.0GB (2%) cpu=4% browser_rss=0.81GB
   [ComfyUI] [worker:ComfyUI-Pixal3D] [ATTENTION] Using backend: flash_attn
   [ComfyUI] [worker:ComfyUI-Pixal3D] [SPARSE] Conv backend: flex_gemm; Attention backend: flash_attn
   [ComfyUI] [worker:ComfyUI-Pixal3D] [pixal3d] >>> from_pretrained: 8 cascade safetensors -> CPU ...
-  [capture-loop] iter=2050 t=246.9s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=3 ram=8.7/31.2GB (28%) swap=1.7/32.0GB (5%) cpu=6% browser_rss=0.82GB
-  [capture-loop] iter=2100 t=253.0s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=10.8/31.2GB (35%) swap=1.7/32.0GB (5%) cpu=6% browser_rss=0.82GB
-  [capture-loop] iter=2150 t=259.1s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=11.2/31.2GB (36%) swap=1.7/32.0GB (5%) cpu=6% browser_rss=0.82GB
-  [capture-loop] iter=2200 t=264.9s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=11.5/31.2GB (37%) swap=1.7/32.0GB (5%) cpu=7% browser_rss=0.82GB
-  [capture-loop] iter=2250 t=271.0s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=13.6/31.2GB (44%) swap=1.7/32.0GB (5%) cpu=7% browser_rss=0.82GB
-  [capture-loop] iter=2300 t=276.8s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=14.4/31.2GB (46%) swap=1.7/32.0GB (5%) cpu=6% browser_rss=0.82GB
-  [capture-loop] iter=2350 t=282.9s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=14.8/31.2GB (47%) swap=1.7/32.0GB (5%) cpu=7% browser_rss=0.82GB
-  [capture-loop] iter=2400 t=289.0s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=3 ram=17.8/31.2GB (57%) swap=1.7/32.0GB (5%) cpu=6% browser_rss=0.82GB
-  [capture-loop] iter=2450 t=294.8s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=5 ram=15.6/31.2GB (50%) swap=2.2/32.0GB (7%) cpu=6% browser_rss=0.82GB
+  [capture-loop] iter=2150 t=258.6s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=10.1/31.2GB (32%) swap=0.5/32.0GB (2%) cpu=5% browser_rss=0.81GB
+  [capture-loop] iter=2200 t=264.4s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=12.7/31.2GB (41%) swap=0.5/32.0GB (2%) cpu=5% browser_rss=0.81GB
+  [capture-loop] iter=2250 t=270.4s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=11.7/31.2GB (38%) swap=0.5/32.0GB (2%) cpu=5% browser_rss=0.82GB
+  [capture-loop] iter=2300 t=276.3s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=13.7/31.2GB (44%) swap=0.5/32.0GB (2%) cpu=4% browser_rss=0.81GB
+  [capture-loop] iter=2350 t=282.3s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=16.6/31.2GB (53%) swap=0.5/32.0GB (2%) cpu=5% browser_rss=0.82GB
+  [capture-loop] iter=2400 t=288.4s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=14.8/31.2GB (47%) swap=0.5/32.0GB (2%) cpu=5% browser_rss=0.81GB
+  [capture-loop] iter=2450 t=294.1s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=18.1/31.2GB (58%) swap=0.5/32.0GB (2%) cpu=5% browser_rss=0.82GB
+  [capture-loop] iter=2500 t=300.2s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=16.5/31.2GB (53%) swap=0.5/32.0GB (2%) cpu=5% browser_rss=0.81GB
   [ComfyUI] [worker:ComfyUI-Pixal3D]
   [ComfyUI] === WATCHDOG TICK 5 ===
-  [ComfyUI] [worker:ComfyUI-Pixal3D] Thread 0x00007b4ebb4f2640 (most recent call first):
+  [ComfyUI] [worker:ComfyUI-Pixal3D] Thread 0x000072d51f7af640 (most recent call first):
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 324 in wait
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 607 in wait
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/tqdm/_monitor.py", line 60 in run
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 1016 in _bootstrap_inner
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 973 in _bootstrap
   [ComfyUI] 
-  [capture-loop] iter=2500 t=300.9s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=3 ram=15.8/31.2GB (51%) swap=3.1/32.0GB (10%) cpu=6% browser_rss=0.70GB
-  [ComfyUI] Thread 0x00007b4d055d9640 (most recent call first):
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 324 in wait
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 607 in wait
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/tqdm/_monitor.py", line 60 in run
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 1016 in _bootstrap_inner
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 973 in _bootstrap
-  [ComfyUI] 
-  [ComfyUI] Thread 0x00007b4e47a2a640 (most recent call first):
+  [ComfyUI] Thread 0x000072d5209ca640 (most recent call first):
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/socket.py", line 293 in accept
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/multiprocessing/connection.py", line 609 in accept
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/multiprocessing/connection.py", line 463 in accept
@@ -861,163 +774,162 @@ Capturing execution frames: pixal3d_basic.json
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 1016 in _bootstrap_inner
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 973 in _bootstrap
   [ComfyUI] 
-  [ComfyUI] Thread 0x00007b4ff6446640 (most recent call first):
-  [ComfyUI]   File "/tmp/comfyui_pvenv_v79adoij/persistent_worker.py", line 106 in _vram_poller
+  [ComfyUI] Thread 0x000072d73d5cf640 (most recent call first):
+  [ComfyUI]   File "/tmp/comfyui_pvenv_gejqmaao/persistent_worker.py", line 106 in _vram_poller
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 953 in run
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 1016 in _bootstrap_inner
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 973 in _bootstrap
   [ComfyUI] 
-  [ComfyUI] Current thread 0x00007b4ff6c47640 (most recent call first):
-  [ComfyUI]   File "/tmp/comfyui_pvenv_v79adoij/persistent_worker.py", line 52 in _watchdog
+  [ComfyUI] Current thread 0x000072d73ddd0640 (most recent call first):
+  [ComfyUI]   File "/tmp/comfyui_pvenv_gejqmaao/persistent_worker.py", line 52 in _watchdog
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 953 in run
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 1016 in _bootstrap_inner
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/threading.py", line 973 in _bootstrap
   [ComfyUI] 
-  [ComfyUI] Thread 0x00007b4ff721d740 (most recent call first):
+  [ComfyUI] Thread 0x000072d73e3a6740 (most recent call first):
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/nn/init.py", line 575 in kaiming_uniform_
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/nn/modules/linear.py", line 124 in reset_parameters
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/nn/modules/linear.py", line 115 in __init__
-  [ComfyUI]   File "/workspaces/Pixal3D-1133/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/pixal3d/modules/sparse/linear.py", line 12 in __init__
-  [ComfyUI]   File "/workspaces/Pixal3D-1133/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/pixal3d/modules/sparse/transformer/blocks.py", line 17 in __init__
-  [ComfyUI]   File "/workspaces/Pixal3D-1133/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/pixal3d/modules/sparse/transformer/modulated.py", line 171 in __init__
-  [ComfyUI]   File "/workspaces/Pixal3D-1133/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/pixal3d/models/structured_latent_flow.py", line 82 in <listcomp>
-  [ComfyUI]   File "/workspaces/Pixal3D-1133/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/pixal3d/models/structured_latent_flow.py", line 81 in __init__
-  [ComfyUI]   File "/workspaces/Pixal3D-1133/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/pixal3d/utils/elastic_utils.py", line 192 in __init__
-  [ComfyUI]   File "/workspaces/Pixal3D-1133/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/pixal3d/models/__init__.py", line 65 in from_pretrained
-  [ComfyUI]   File "/workspaces/Pixal3D-1133/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/pixal3d/pipelines/base.py", line 45 in from_pretrained
-  [ComfyUI]   File "/workspaces/Pixal3D-1133/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/pixal3d/pipelines/pixal3d_image_to_3d.py", line 102 in from_pretrained
-  [ComfyUI]   File "/workspaces/Pixal3D-1133/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/stages.py", line 489 in init_pipeline
-  [ComfyUI]   File "/workspaces/Pixal3D-1133/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/stages.py", line 754 in _run_cascade
-  [ComfyUI]   File "/workspaces/Pixal3D-1133/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/stages.py", line 1520 in generate_mesh_and_voxelgrid
-  [ComfyUI]   File "/workspaces/Pixal3D-1133/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/nodes_mesh.py", line 77 in execute
-  [ComfyUI]   File "/workspaces/Pixal3D-1133/ComfyUI/comfy_api/latest/_io.py", line 1833 in EXECUTE_NORMALIZED
-  [ComfyUI]   File "/tmp/comfyui_pvenv_v79adoij/persistent_worker.py", line 1762 in main
-  [ComfyUI]   File "/tmp/comfyui_pvenv_v79adoij/persistent_worker.py", line 1807 in <module>
+  [ComfyUI]   File "/workspaces/Pixal3D-1248/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/pixal3d/modules/sparse/conv/conv_flex_gemm.py", line 26 in sparse_conv3d_init
+  [ComfyUI]   File "/workspaces/Pixal3D-1248/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/pixal3d/modules/sparse/conv/conv.py", line 16 in __init__
+  [ComfyUI]   File "/workspaces/Pixal3D-1248/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/pixal3d/models/sc_vaes/sparse_unet_vae.py", line 279 in __init__
+  [ComfyUI]   File "/workspaces/Pixal3D-1248/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/pixal3d/models/sc_vaes/sparse_unet_vae.py", line 443 in __init__
+  [ComfyUI]   File "/workspaces/Pixal3D-1248/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/pixal3d/models/__init__.py", line 65 in from_pretrained
+  [ComfyUI]   File "/workspaces/Pixal3D-1248/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/pixal3d/pipelines/base.py", line 45 in from_pretrained
+  [ComfyUI]   File "/workspaces/Pixal3D-1248/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/pixal3d/pipelines/pixal3d_image_to_3d.py", line 102 in from_pretrained
+  [ComfyUI]   File "/workspaces/Pixal3D-1248/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/stages.py", line 500 in init_pipeline
+  [ComfyUI]   File "/workspaces/Pixal3D-1248/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/stages.py", line 738 in _run_cascade
+  [ComfyUI]   File "/workspaces/Pixal3D-1248/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/stages.py", line 1504 in generate_mesh_and_voxelgrid
+  [ComfyUI]   File "/workspaces/Pixal3D-1248/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/nodes_mesh.py", line 77 in execute
+  [ComfyUI]   File "/workspaces/Pixal3D-1248/ComfyUI/comfy_api/latest/_io.py", line 1833 in EXECUTE_NORMALIZED
+  [ComfyUI]   File "/tmp/comfyui_pvenv_gejqmaao/persistent_worker.py", line 1762 in main
+  [ComfyUI]   File "/tmp/comfyui_pvenv_gejqmaao/persistent_worker.py", line 1807 in <module>
   [ComfyUI] 
   [ComfyUI] [worker:ComfyUI-Pixal3D] === END ===
   [ComfyUI] 
-  [capture-loop] iter=2550 t=307.1s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=3 ram=16.9/31.2GB (54%) swap=4.7/32.0GB (15%) cpu=6% browser_rss=0.70GB
-  [capture-loop] iter=2600 t=312.9s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=14.5/31.2GB (46%) swap=6.5/32.0GB (20%) cpu=6% browser_rss=0.70GB
-  [ComfyUI] [worker:ComfyUI-Pixal3D] [pixal3d] <<< from_pretrained: 8 cascade safetensors -> CPU  (70.5s)
+  [capture-loop] iter=2550 t=306.3s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=16.7/31.2GB (54%) swap=1.8/32.0GB (6%) cpu=6% browser_rss=0.72GB
+  [capture-loop] iter=2600 t=312.2s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=17.1/31.2GB (55%) swap=4.3/32.0GB (14%) cpu=5% browser_rss=0.70GB
+  [capture-loop] iter=2650 t=318.2s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=14.7/31.2GB (47%) swap=5.9/32.0GB (18%) cpu=5% browser_rss=0.70GB
+  [ComfyUI] [worker:ComfyUI-Pixal3D] [pixal3d] <<< from_pretrained: 8 cascade safetensors -> CPU  (67.3s)
   [ComfyUI] [worker:ComfyUI-Pixal3D] [pixal3d] >>> build DinoV3 cond 'ss' ...
-  [capture-loop] iter=2650 t=319.1s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=13.8/31.2GB (44%) swap=7.3/32.0GB (23%) cpu=5% browser_rss=0.39GB
-  [capture-loop] iter=2700 t=325.1s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=3 ram=13.8/31.2GB (44%) swap=7.7/32.0GB (24%) cpu=7% browser_rss=0.33GB
+  [capture-loop] iter=2700 t=324.2s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=13.1/31.2GB (42%) swap=7.7/32.0GB (24%) cpu=6% browser_rss=0.58GB
+  [capture-loop] iter=2750 t=330.3s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=3 ram=13.0/31.2GB (42%) swap=8.1/32.0GB (25%) cpu=6% browser_rss=0.54GB
   [ComfyUI] 
   [ComfyUI] Loading weights:   0%|          | 0/415 [00:00<?, ?it/s]
-  [ComfyUI] Loading weights:  79%|███████▉  | 329/415 [00:00<00:00, 3284.82it/s]
-  [ComfyUI] Loading weights: 100%|██████████| 415/415 [00:00<00:00, 3062.34it/s]
-  [ComfyUI] [worker:ComfyUI-Pixal3D] [pixal3d] <<< build DinoV3 cond 'ss'  (13.0s)
+  [ComfyUI] Loading weights:  77%|███████▋  | 321/415 [00:00<00:00, 3197.05it/s]
+  [ComfyUI] Loading weights: 100%|██████████| 415/415 [00:00<00:00, 3141.09it/s]
+  [ComfyUI] [worker:ComfyUI-Pixal3D] [pixal3d] <<< build DinoV3 cond 'ss'  (14.4s)
   [ComfyUI] [worker:ComfyUI-Pixal3D] [pixal3d] >>> build DinoV3 cond 'shape_512' ...
+  [capture-loop] iter=2800 t=336.4s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=12.1/31.2GB (39%) swap=8.7/32.0GB (27%) cpu=5% browser_rss=0.54GB
   [ComfyUI] 
   [ComfyUI] Loading weights:   0%|          | 0/415 [00:00<?, ?it/s]
-  [ComfyUI] Loading weights:  78%|███████▊  | 322/415 [00:00<00:00, 3180.93it/s]
-  [ComfyUI] Loading weights: 100%|██████████| 415/415 [00:00<00:00, 3127.00it/s]
-  [ComfyUI] [worker:ComfyUI-Pixal3D] [pixal3d] <<< build DinoV3 cond 'shape_512'  (0.7s)
+  [ComfyUI] Loading weights:  80%|████████  | 333/415 [00:00<00:00, 3323.13it/s]
+  [ComfyUI] Loading weights: 100%|██████████| 415/415 [00:00<00:00, 3290.04it/s]
+  [ComfyUI] [worker:ComfyUI-Pixal3D] [pixal3d] <<< build DinoV3 cond 'shape_512'  (1.4s)
   [ComfyUI] [worker:ComfyUI-Pixal3D] [pixal3d] >>> build DinoV3 cond 'shape_1024' ...
   [ComfyUI] 
   [ComfyUI] Loading weights:   0%|          | 0/415 [00:00<?, ?it/s]
-  [ComfyUI] Loading weights:  76%|███████▌  | 315/415 [00:00<00:00, 3148.71it/s]
-  [ComfyUI] Loading weights: 100%|██████████| 415/415 [00:00<00:00, 3089.97it/s]
+  [ComfyUI] Loading weights:  81%|████████  | 335/415 [00:00<00:00, 3348.11it/s]
+  [ComfyUI] Loading weights: 100%|██████████| 415/415 [00:00<00:00, 3214.36it/s]
   [ComfyUI] [worker:ComfyUI-Pixal3D] [pixal3d] <<< build DinoV3 cond 'shape_1024'  (0.6s)
   [ComfyUI] [worker:ComfyUI-Pixal3D] [pixal3d] >>> build DinoV3 cond 'tex_1024' ...
-  [capture-loop] iter=2750 t=331.2s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=12.7/31.2GB (41%) swap=8.3/32.0GB (26%) cpu=8% browser_rss=0.32GB
   [ComfyUI] 
   [ComfyUI] Loading weights:   0%|          | 0/415 [00:00<?, ?it/s]
-  [ComfyUI] Loading weights:  73%|███████▎  | 304/415 [00:00<00:00, 3006.52it/s]
-  [ComfyUI] Loading weights: 100%|██████████| 415/415 [00:00<00:00, 2840.86it/s]
-  [ComfyUI] [worker:ComfyUI-Pixal3D] [pixal3d] <<< build DinoV3 cond 'tex_1024'  (0.7s)
+  [ComfyUI] Loading weights:  76%|███████▌  | 315/415 [00:00<00:00, 3147.83it/s]
+  [ComfyUI] Loading weights: 100%|██████████| 415/415 [00:00<00:00, 3095.53it/s]
+  [ComfyUI] [worker:ComfyUI-Pixal3D] [pixal3d] <<< build DinoV3 cond 'tex_1024'  (0.6s)
   [ComfyUI] [worker:ComfyUI-Pixal3D] [pixal3d] >>> ModelPatcher wrap: 13 models ...
   [ComfyUI] [worker:ComfyUI-Pixal3D] WARNING: No comfy kitchen, using old apply_rope functions.
-  [ComfyUI] [worker:ComfyUI-Pixal3D] [pixal3d] <<< ModelPatcher wrap: 13 models  (0.7s)
+  [ComfyUI] [worker:ComfyUI-Pixal3D] [pixal3d] <<< ModelPatcher wrap: 13 models  (0.8s)
   [ComfyUI] [worker:ComfyUI-Pixal3D] [pixal3d] >>> NAF: build singleton + attach to 3 cond models ...
   [ComfyUI] [worker:ComfyUI-Pixal3D] [pixal3d] >>> NAF model build + ckpt load ...
-  [ComfyUI] [worker:ComfyUI-Pixal3D] [pixal3d] <<< NAF model build + ckpt load  (2.3s)
-  [ComfyUI] [worker:ComfyUI-Pixal3D] [pixal3d] <<< NAF: build singleton + attach to 3 cond models  (2.3s)
-  [ComfyUI] [worker:ComfyUI-Pixal3D] [pixal3d] <<< init_pipeline TOTAL  (308.4s)
+  [ComfyUI] [worker:ComfyUI-Pixal3D] [pixal3d] <<< NAF model build + ckpt load  (1.0s)
+  [ComfyUI] [worker:ComfyUI-Pixal3D] [pixal3d] <<< NAF: build singleton + attach to 3 cond models  (1.0s)
+  [ComfyUI] [worker:ComfyUI-Pixal3D] [pixal3d] <<< init_pipeline TOTAL  (307.6s)
   [ComfyUI] [SubprocessWorker] callback 'request_vram_budget' from call_id=4
-  [ComfyUI] [comfy-env] VRAM request: 2.42GB, free before eviction: 21.86GB
-  [ComfyUI] [comfy-env] VRAM after eviction: 21.86GB
-  [ComfyUI] [worker:ComfyUI-Pixal3D] [VRAM] +427MB (now 1685MB) reserved=1714MB peak=1685MB
-  [ComfyUI] [worker:ComfyUI-Pixal3D] [VRAM] -225MB (now 1461MB) reserved=2476MB peak=2417MB
+  [ComfyUI] [comfy-env] VRAM request: 2.42GB, free before eviction: 22.56GB
+  [ComfyUI] [comfy-env] VRAM after eviction: 22.56GB
+  [ComfyUI] [worker:ComfyUI-Pixal3D] [VRAM] +608MB (now 608MB) reserved=622MB peak=608MB
+  [ComfyUI] [worker:ComfyUI-Pixal3D] [VRAM] +461MB (now 1070MB) reserved=1244MB peak=1199MB
+  [capture-loop] iter=2850 t=342.2s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=3 ram=13.3/31.2GB (43%) swap=8.7/32.0GB (27%) cpu=6% browser_rss=0.40GB
   [ComfyUI] [SubprocessWorker] callback 'request_vram_budget' from call_id=4
-  [ComfyUI] [comfy-env] VRAM request: 2.72GB, free before eviction: 22.95GB
-  [ComfyUI] [comfy-env] VRAM after eviction: 22.95GB
-  [capture-loop] iter=2800 t=337.3s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=3 ram=14.1/31.2GB (45%) swap=8.4/32.0GB (26%) cpu=6% browser_rss=0.32GB
-  [ComfyUI] [worker:ComfyUI-Pixal3D] [VRAM] +238MB (now 1699MB) reserved=1736MB peak=2417MB
-  [ComfyUI] [worker:ComfyUI-Pixal3D] [VRAM] +336MB (now 2036MB) reserved=2076MB peak=2417MB
-  [ComfyUI] [worker:ComfyUI-Pixal3D] [VRAM] +336MB (now 2372MB) reserved=2416MB peak=2417MB
-  [ComfyUI] [worker:ComfyUI-Pixal3D] [VRAM] +336MB (now 2708MB) reserved=2736MB peak=2708MB
-  [ComfyUI] [worker:ComfyUI-Pixal3D] [VRAM] +342MB (now 3050MB) reserved=3076MB peak=3050MB
-  [ComfyUI] [worker:ComfyUI-Pixal3D] [VRAM] +312MB (now 3362MB) reserved=3376MB peak=3362MB
-  [capture-loop] iter=2850 t=343.1s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=15.8/31.2GB (51%) swap=8.4/32.0GB (26%) cpu=5% browser_rss=0.32GB
-  [ComfyUI] [worker:ComfyUI-Pixal3D] [VRAM] +336MB (now 3698MB) reserved=3716MB peak=3698MB
+  [ComfyUI] [comfy-env] VRAM request: 2.72GB, free before eviction: 22.40GB
+  [ComfyUI] [comfy-env] VRAM after eviction: 22.40GB
+  [ComfyUI] [worker:ComfyUI-Pixal3D] [VRAM] -976MB (now 95MB) reserved=124MB peak=1199MB
+  [ComfyUI] [worker:ComfyUI-Pixal3D] [VRAM] +312MB (now 407MB) reserved=444MB peak=1199MB
+  [ComfyUI] [worker:ComfyUI-Pixal3D] [VRAM] +360MB (now 767MB) reserved=804MB peak=1199MB
+  [ComfyUI] [worker:ComfyUI-Pixal3D] [VRAM] +336MB (now 1103MB) reserved=1144MB peak=1199MB
+  [ComfyUI] [worker:ComfyUI-Pixal3D] [VRAM] +360MB (now 1463MB) reserved=1484MB peak=1463MB
+  [ComfyUI] [worker:ComfyUI-Pixal3D] [VRAM] +328MB (now 1792MB) reserved=1804MB peak=1792MB
+  [capture-loop] iter=2900 t=348.3s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=15.2/31.2GB (49%) swap=8.9/32.0GB (28%) cpu=3% browser_rss=0.39GB
+  [ComfyUI] [worker:ComfyUI-Pixal3D] [VRAM] +307MB (now 2100MB) reserved=2124MB peak=2100MB
+  [ComfyUI] [worker:ComfyUI-Pixal3D] [VRAM] +336MB (now 2436MB) reserved=2444MB peak=2436MB
   [ComfyUI] 
-  [ComfyUI] Sampling sparse structure (proj):   0%|          | 0/12 [00:00<?, ?it/s][worker:ComfyUI-Pixal3D] [VRAM] +233MB (now 3931MB) reserved=4098MB peak=3968MB
+  [ComfyUI] Sampling sparse structure (proj):   0%|          | 0/12 [00:00<?, ?it/s][worker:ComfyUI-Pixal3D] [VRAM] +275MB (now 2711MB) reserved=2846MB peak=2711MB
   [ComfyUI] 
-  [ComfyUI] Sampling sparse structure (proj):   8%|▊         | 1/12 [00:00<00:09,  1.15it/s]
-  [ComfyUI] Sampling sparse structure (proj):  17%|█▋        | 2/12 [00:01<00:06,  1.56it/s]
-  [ComfyUI] Sampling sparse structure (proj):  25%|██▌       | 3/12 [00:01<00:05,  1.59it/s]
-  [ComfyUI] Sampling sparse structure (proj):  33%|███▎      | 4/12 [00:02<00:05,  1.59it/s]
-  [ComfyUI] Sampling sparse structure (proj):  42%|████▏     | 5/12 [00:03<00:04,  1.60it/s]
-  [ComfyUI] Sampling sparse structure (proj):  50%|█████     | 6/12 [00:03<00:03,  1.60it/s]
-  [capture-loop] iter=2900 t=349.2s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=16.2/31.2GB (52%) swap=8.4/32.0GB (26%) cpu=6% browser_rss=0.32GB
-  [ComfyUI] Sampling sparse structure (proj):  58%|█████▊    | 7/12 [00:04<00:03,  1.60it/s]
-  [ComfyUI] Sampling sparse structure (proj):  67%|██████▋   | 8/12 [00:05<00:02,  1.61it/s]
-  [ComfyUI] Sampling sparse structure (proj):  75%|███████▌  | 9/12 [00:05<00:01,  1.61it/s]
-  [ComfyUI] Sampling sparse structure (proj):  83%|████████▎ | 10/12 [00:06<00:01,  1.61it/s]
-  [ComfyUI] Sampling sparse structure (proj):  92%|█████████▏| 11/12 [00:06<00:00,  1.90it/s]
-  [ComfyUI] Sampling sparse structure (proj): 100%|██████████| 12/12 [00:06<00:00,  2.17it/s]
-  [ComfyUI] Sampling sparse structure (proj): 100%|██████████| 12/12 [00:06<00:00,  1.73it/s]
-  [ComfyUI] [worker:ComfyUI-Pixal3D] [VRAM] -241MB (now 3691MB) reserved=4102MB peak=4006MB
-  [ComfyUI] [worker:ComfyUI-Pixal3D] [VRAM] -1935MB (now 1756MB) reserved=4102MB peak=4006MB
+  [ComfyUI] Sampling sparse structure (proj):   8%|▊         | 1/12 [00:00<00:08,  1.29it/s]
+  [ComfyUI] Sampling sparse structure (proj):  17%|█▋        | 2/12 [00:01<00:06,  1.65it/s]
+  [ComfyUI] Sampling sparse structure (proj):  25%|██▌       | 3/12 [00:01<00:05,  1.64it/s]
+  [ComfyUI] Sampling sparse structure (proj):  33%|███▎      | 4/12 [00:02<00:04,  1.62it/s]
+  [ComfyUI] Sampling sparse structure (proj):  42%|████▏     | 5/12 [00:03<00:04,  1.62it/s]
+  [capture-loop] iter=2950 t=354.3s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=3 ram=15.8/31.2GB (51%) swap=8.9/32.0GB (28%) cpu=4% browser_rss=0.40GB
+  [ComfyUI] Sampling sparse structure (proj):  50%|█████     | 6/12 [00:03<00:03,  1.62it/s]
+  [ComfyUI] Sampling sparse structure (proj):  58%|█████▊    | 7/12 [00:04<00:03,  1.62it/s]
+  [ComfyUI] Sampling sparse structure (proj):  67%|██████▋   | 8/12 [00:04<00:02,  1.62it/s]
+  [ComfyUI] Sampling sparse structure (proj):  75%|███████▌  | 9/12 [00:05<00:01,  1.62it/s]
+  [ComfyUI] Sampling sparse structure (proj):  83%|████████▎ | 10/12 [00:06<00:01,  1.62it/s]
+  [ComfyUI] Sampling sparse structure (proj):  92%|█████████▏| 11/12 [00:06<00:00,  1.91it/s]
+  [ComfyUI] Sampling sparse structure (proj): 100%|██████████| 12/12 [00:06<00:00,  2.18it/s]
+  [ComfyUI] Sampling sparse structure (proj): 100%|██████████| 12/12 [00:06<00:00,  1.76it/s]
+  [ComfyUI] [worker:ComfyUI-Pixal3D] [VRAM] -411MB (now 2301MB) reserved=2850MB peak=2784MB
+  [ComfyUI] [worker:ComfyUI-Pixal3D] [VRAM] -2028MB (now 273MB) reserved=2850MB peak=2784MB
   [ComfyUI] [SubprocessWorker] callback 'request_vram_budget' from call_id=4
-  [ComfyUI] [comfy-env] VRAM request: 0.15GB, free before eviction: 22.67GB
-  [ComfyUI] [comfy-env] VRAM after eviction: 22.67GB
+  [ComfyUI] [comfy-env] VRAM request: 0.15GB, free before eviction: 22.39GB
+  [ComfyUI] [comfy-env] VRAM after eviction: 22.39GB
   [ComfyUI] [SubprocessWorker] callback 'request_vram_budget' from call_id=4
-  [ComfyUI] [comfy-env] VRAM request: 2.42GB, free before eviction: 22.73GB
-  [ComfyUI] [comfy-env] VRAM after eviction: 22.73GB
-  [ComfyUI] [worker:ComfyUI-Pixal3D] [VRAM] -503MB (now 1253MB) reserved=1276MB peak=4006MB
-  [ComfyUI] [worker:ComfyUI-Pixal3D] [pixal3d] !!! Pixal3DGenerateMesh.execute FAILED after 327.7s: RuntimeError: Can't run CUTLASS FNA; NATTEN was not built with libnatten.
+  [ComfyUI] [comfy-env] VRAM request: 2.42GB, free before eviction: 22.41GB
+  [ComfyUI] [comfy-env] VRAM after eviction: 22.41GB
+  [ComfyUI] [worker:ComfyUI-Pixal3D] [VRAM] +248MB (now 521MB) reserved=544MB peak=2784MB
+  [ComfyUI] [worker:ComfyUI-Pixal3D] [pixal3d] !!! Pixal3DGenerateMesh.execute FAILED after 327.6s: RuntimeError: Can't run CUTLASS FNA; NATTEN was not built with libnatten.
   [ComfyUI] [SubprocessWorker] got response: error
   [ComfyUI] !!! Exception during processing !!! Can't run CUTLASS FNA; NATTEN was not built with libnatten.
   [ComfyUI] 
   [ComfyUI] Worker traceback:
   [ComfyUI] Traceback (most recent call last):
-  [ComfyUI]   File "/tmp/comfyui_pvenv_v79adoij/persistent_worker.py", line 1762, in main
+  [ComfyUI]   File "/tmp/comfyui_pvenv_gejqmaao/persistent_worker.py", line 1762, in main
   [ComfyUI]     result = method(**inputs)
-  [ComfyUI]   File "/workspaces/Pixal3D-1133/ComfyUI/comfy_api/latest/_io.py", line 1833, in EXECUTE_NORMALIZED
+  [ComfyUI]   File "/workspaces/Pixal3D-1248/ComfyUI/comfy_api/latest/_io.py", line 1833, in EXECUTE_NORMALIZED
   [ComfyUI]     to_return = cls.execute(*args, **kwargs)
-  [ComfyUI]   File "/workspaces/Pixal3D-1133/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/nodes_mesh.py", line 77, in execute
+  [ComfyUI]   File "/workspaces/Pixal3D-1248/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/nodes_mesh.py", line 77, in execute
   [ComfyUI]     tri, voxelgrid = generate_mesh_and_voxelgrid(
-  [ComfyUI]   File "/workspaces/Pixal3D-1133/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/stages.py", line 1520, in generate_mesh_and_voxelgrid
+  [ComfyUI]   File "/workspaces/Pixal3D-1248/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/stages.py", line 1504, in generate_mesh_and_voxelgrid
   [ComfyUI]     pipeline, mw, _res = _run_cascade(
-  [ComfyUI]   File "/workspaces/Pixal3D-1133/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/stages.py", line 758, in _run_cascade
+  [ComfyUI]   File "/workspaces/Pixal3D-1248/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/stages.py", line 742, in _run_cascade
   [ComfyUI]     mesh_list, (shape_slat, tex_slat, res) = pipeline.run(
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context
   [ComfyUI]     return func(*args, **kwargs)
-  [ComfyUI]   File "/workspaces/Pixal3D-1133/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/pixal3d/pipelines/pixal3d_image_to_3d.py", line 689, in run
+  [ComfyUI]   File "/workspaces/Pixal3D-1248/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/pixal3d/pipelines/pixal3d_image_to_3d.py", line 689, in run
+  [capture-loop] iter=3000 t=360.1s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=17.3/31.2GB (56%) swap=8.9/32.0GB (28%) cpu=5% browser_rss=0.39GB
   [ComfyUI]     cond_shape_lr = self.get_proj_cond_shape(
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context
   [ComfyUI]     return func(*args, **kwargs)
-  [ComfyUI]   File "/workspaces/Pixal3D-1133/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/pixal3d/pipelines/pixal3d_image_to_3d.py", line 271, in get_proj_cond_shape
+  [ComfyUI]   File "/workspaces/Pixal3D-1248/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/pixal3d/pipelines/pixal3d_image_to_3d.py", line 271, in get_proj_cond_shape
   [ComfyUI]     z_global, z_proj = image_cond_model(
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1779, in _wrapped_call_impl
+  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1776, in _wrapped_call_impl
   [ComfyUI]     return self._call_impl(*args, **kwargs)
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1790, in _call_impl
+  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1787, in _call_impl
   [ComfyUI]     return forward_call(*args, **kwargs)
-  [ComfyUI]   File "/workspaces/Pixal3D-1133/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/pixal3d/trainers/flow_matching/mixins/image_conditioned_proj.py", line 542, in forward
+  [ComfyUI]   File "/workspaces/Pixal3D-1248/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/pixal3d/trainers/flow_matching/mixins/image_conditioned_proj.py", line 542, in forward
   [ComfyUI]     hr_features = self.naf_model(
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1779, in _wrapped_call_impl
+  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1776, in _wrapped_call_impl
   [ComfyUI]     return self._call_impl(*args, **kwargs)
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1790, in _call_impl
+  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1787, in _call_impl
   [ComfyUI]     return forward_call(*args, **kwargs)
-  [ComfyUI]   File "/workspaces/Pixal3D-1133/ComfyUI/models/naf/source/src/model/naf.py", line 115, in forward
+  [ComfyUI]   File "/workspaces/Pixal3D-1248/ComfyUI/models/naf/source/src/model/naf.py", line 115, in forward
   [ComfyUI]     out = self.upsampler(queries, keys, values, image)
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1779, in _wrapped_call_impl
+  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1776, in _wrapped_call_impl
   [ComfyUI]     return self._call_impl(*args, **kwargs)
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1790, in _call_impl
+  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1787, in _call_impl
   [ComfyUI]     return forward_call(*args, **kwargs)
-  [ComfyUI]   File "/workspaces/Pixal3D-1133/ComfyUI/models/naf/source/src/layers/attentions.py", line 72, in forward
+  [ComfyUI]   File "/workspaces/Pixal3D-1248/ComfyUI/models/naf/source/src/layers/attentions.py", line 72, in forward
   [ComfyUI]     out = na2d(q, k, v, kernel_size=self.kernel_size, dilation=dilation, stride=1, backend="cutlass-fna")
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/natten/functional.py", line 833, in na2d
   [ComfyUI]     return neighborhood_attention_generic(
@@ -1032,57 +944,65 @@ Capturing execution frames: pixal3d_basic.json
   [ComfyUI] RuntimeError: Can't run CUTLASS FNA; NATTEN was not built with libnatten.
   [ComfyUI] 
   [ComfyUI] Traceback (most recent call last):
-  [ComfyUI]   File "/workspaces/Pixal3D-1133/ComfyUI/execution.py", line 535, in execute
+  [ComfyUI]   File "/workspaces/Pixal3D-1248/ComfyUI/execution.py", line 535, in execute
   [ComfyUI]     output_data, output_ui, has_subgraph, has_pending_tasks = await get_output_data(prompt_id, unique_id, obj, input_data_all, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)
-  [ComfyUI]   File "/workspaces/Pixal3D-1133/ComfyUI/execution.py", line 335, in get_output_data
+  [ComfyUI]                                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  [ComfyUI]   File "/workspaces/Pixal3D-1248/ComfyUI/execution.py", line 335, in get_output_data
   [ComfyUI]     return_values = await _async_map_node_over_list(prompt_id, unique_id, obj, input_data_all, obj.FUNCTION, allow_interrupt=True, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)
-  [ComfyUI]   File "/workspaces/Pixal3D-1133/ComfyUI/execution.py", line 309, in _async_map_node_over_list
+  [ComfyUI]                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  [ComfyUI]   File "/workspaces/Pixal3D-1248/ComfyUI/execution.py", line 309, in _async_map_node_over_list
   [ComfyUI]     await process_inputs(input_dict, i)
-  [ComfyUI]   File "/workspaces/Pixal3D-1133/ComfyUI/execution.py", line 297, in process_inputs
+  [ComfyUI]   File "/workspaces/Pixal3D-1248/ComfyUI/execution.py", line 297, in process_inputs
   [ComfyUI]     result = f(**inputs)
-  [ComfyUI]   File "/workspaces/Pixal3D-1133/.venv/lib/python3.10/site-packages/comfy_env/isolation/metadata.py", line 556, in proxy
+  [ComfyUI]   File "/workspaces/Pixal3D-1248/.venv/lib/python3.13/site-packages/comfy_env/isolation/metadata.py", line 556, in proxy
   [ComfyUI]     result = worker.call_method(
-  [ComfyUI]   File "/workspaces/Pixal3D-1133/.venv/lib/python3.10/site-packages/comfy_env/isolation/workers/subprocess.py", line 674, in call_method
+  [ComfyUI]         module_name=mod,
+  [ComfyUI]     ...<4 lines>...
+  [ComfyUI]         timeout=600.0,
+  [ComfyUI]     )
+  [ComfyUI]   File "/workspaces/Pixal3D-1248/.venv/lib/python3.13/site-packages/comfy_env/isolation/workers/subprocess.py", line 674, in call_method
   [ComfyUI]     raise WorkerError(
+  [ComfyUI]     ...<2 lines>...
+  [ComfyUI]     )
   [ComfyUI] comfy_env.isolation.workers.base.WorkerError: Can't run CUTLASS FNA; NATTEN was not built with libnatten.
   [ComfyUI] 
   [ComfyUI] Worker traceback:
   [ComfyUI] Traceback (most recent call last):
-  [ComfyUI]   File "/tmp/comfyui_pvenv_v79adoij/persistent_worker.py", line 1762, in main
+  [ComfyUI]   File "/tmp/comfyui_pvenv_gejqmaao/persistent_worker.py", line 1762, in main
   [ComfyUI]     result = method(**inputs)
-  [ComfyUI]   File "/workspaces/Pixal3D-1133/ComfyUI/comfy_api/latest/_io.py", line 1833, in EXECUTE_NORMALIZED
+  [ComfyUI]   File "/workspaces/Pixal3D-1248/ComfyUI/comfy_api/latest/_io.py", line 1833, in EXECUTE_NORMALIZED
   [ComfyUI]     to_return = cls.execute(*args, **kwargs)
-  [ComfyUI]   File "/workspaces/Pixal3D-1133/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/nodes_mesh.py", line 77, in execute
+  [ComfyUI]   File "/workspaces/Pixal3D-1248/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/nodes_mesh.py", line 77, in execute
   [ComfyUI]     tri, voxelgrid = generate_mesh_and_voxelgrid(
-  [ComfyUI]   File "/workspaces/Pixal3D-1133/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/stages.py", line 1520, in generate_mesh_and_voxelgrid
+  [ComfyUI]   File "/workspaces/Pixal3D-1248/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/stages.py", line 1504, in generate_mesh_and_voxelgrid
   [ComfyUI]     pipeline, mw, _res = _run_cascade(
-  [ComfyUI]   File "/workspaces/Pixal3D-1133/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/stages.py", line 758, in _run_cascade
+  [ComfyUI]   File "/workspaces/Pixal3D-1248/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/stages.py", line 742, in _run_cascade
   [ComfyUI]     mesh_list, (shape_slat, tex_slat, res) = pipeline.run(
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context
   [ComfyUI]     return func(*args, **kwargs)
-  [ComfyUI]   File "/workspaces/Pixal3D-1133/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/pixal3d/pipelines/pixal3d_image_to_3d.py", line 689, in run
+  [ComfyUI]   File "/workspaces/Pixal3D-1248/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/pixal3d/pipelines/pixal3d_image_to_3d.py", line 689, in run
   [ComfyUI]     cond_shape_lr = self.get_proj_cond_shape(
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context
   [ComfyUI]     return func(*args, **kwargs)
-  [ComfyUI]   File "/workspaces/Pixal3D-1133/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/pixal3d/pipelines/pixal3d_image_to_3d.py", line 271, in get_proj_cond_shape
+  [ComfyUI]   File "/workspaces/Pixal3D-1248/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/pixal3d/pipelines/pixal3d_image_to_3d.py", line 271, in get_proj_cond_shape
   [ComfyUI]     z_global, z_proj = image_cond_model(
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1779, in _wrapped_call_impl
+  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1776, in _wrapped_call_impl
   [ComfyUI]     return self._call_impl(*args, **kwargs)
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1790, in _call_impl
+  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1787, in _call_impl
   [ComfyUI]     return forward_call(*args, **kwargs)
-  [ComfyUI]   File "/workspaces/Pixal3D-1133/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/pixal3d/trainers/flow_matching/mixins/image_conditioned_proj.py", line 542, in forward
+  [ComfyUI]   File "/workspaces/Pixal3D-1248/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/pixal3d/trainers/flow_matching/mixins/image_conditioned_proj.py", line 542, in forward
   [ComfyUI]     hr_features = self.naf_model(
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1779, in _wrapped_call_impl
+  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1776, in _wrapped_call_impl
   [ComfyUI]     return self._call_impl(*args, **kwargs)
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1790, in _call_impl
+  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1787, in _call_impl
   [ComfyUI]     return forward_call(*args, **kwargs)
-  [ComfyUI]   File "/workspaces/Pixal3D-1133/ComfyUI/models/naf/source/src/model/naf.py", line 115, in forward
+  [ComfyUI]   File "/workspaces/Pixal3D-1248/ComfyUI/models/naf/source/src/model/naf.py", line 115, in forward
   [ComfyUI]     out = self.upsampler(queries, keys, values, image)
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1779, in _wrapped_call_impl
+  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1776, in _wrapped_call_impl
   [ComfyUI]     return self._call_impl(*args, **kwargs)
-  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1790, in _call_impl
+  [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1787, in _call_impl
   [ComfyUI]     return forward_call(*args, **kwargs)
-  [ComfyUI]   File "/workspaces/Pixal3D-1133/ComfyUI/models/naf/source/src/layers/attentions.py", line 72, in forward
+  [ComfyUI]   File "/workspaces/Pixal3D-1248/ComfyUI/models/naf/source/src/layers/attentions.py", line 72, in forward
   [ComfyUI]     out = na2d(q, k, v, kernel_size=self.kernel_size, dilation=dilation, stride=1, backend="cutlass-fna")
   [ComfyUI]   File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/natten/functional.py", line 833, in na2d
   [ComfyUI]     return neighborhood_attention_generic(
@@ -1097,10 +1017,10 @@ Capturing execution frames: pixal3d_basic.json
   [ComfyUI] RuntimeError: Can't run CUTLASS FNA; NATTEN was not built with libnatten.
   [ComfyUI] 
   [ComfyUI] 
-  [ComfyUI] Prompt executed in 353.83 seconds
-  Execution complete (t=354.7s)
-  Execution error: {'prompt_id': '12533a32-4460-48db-8bc8-758afdf1b3e5', 'node_id': '20', 'node_type': 'Pixal3DGenerateMesh', 'executed': ['1', '3', '7', '8', '9', '4'], 'exception_message': 'Can\'t run CUTLASS FNA; NATTEN was not built with libnatten.\n\nWorker traceback:\nTraceback (most recent call last):\n  File "/tmp/comfyui_pvenv_v79adoij/persistent_worker.py", line 1762, in main\n    result = method(**inputs)\n  File "/workspaces/Pixal3D-1133/ComfyUI/comfy_api/latest/_io.py", line 1833, in EXECUTE_NORMALIZED\n    to_return = cls.execute(*args, **kwargs)\n  File "/workspaces/Pixal3D-1133/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/nodes_mesh.py", line 77, in execute\n    tri, voxelgrid = generate_mesh_and_voxelgrid(\n  File "/workspaces/Pixal3D-1133/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/stages.py", line 1520, in generate_mesh_and_voxelgrid\n    pipeline, mw, _res = _run_cascade(\n  File "/workspaces/Pixal3D-1133/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/stages.py", line 758, in _run_cascade\n    mesh_list, (shape_slat, tex_slat, res) = pipeline.run(\n  File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context\n    return func(*args, **kwargs)\n  File "/workspaces/Pixal3D-1133/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/pixal3d/pipelines/pixal3d_image_to_3d.py", line 689, in run\n    cond_shape_lr = self.get_proj_cond_shape(\n  File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context\n    return func(*args, **kwargs)\n  File "/workspaces/Pixal3D-1133/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/pixal3d/pipelines/pixal3d_image_to_3d.py", line 271, in get_proj_cond_shape\n    z_global, z_proj = image_cond_model(\n  File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1779, in _wrapped_call_impl\n    return self._call_impl(*args, **kwargs)\n  File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1790, in _call_impl\n    return forward_call(*args, **kwargs)\n  File "/workspaces/Pixal3D-1133/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/pixal3d/trainers/flow_matching/mixins/image_conditioned_proj.py", line 542, in forward\n    hr_features = self.naf_model(\n  File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1779, in _wrapped_call_impl\n    return self._call_impl(*args, **kwargs)\n  File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1790, in _call_impl\n    return forward_call(*args, **kwargs)\n  File "/workspaces/Pixal3D-1133/ComfyUI/models/naf/source/src/model/naf.py", line 115, in forward\n    out = self.upsampler(queries, keys, values, image)\n  File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1779, in _wrapped_call_impl\n    return self._call_impl(*args, **kwargs)\n  File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1790, in _call_impl\n    return forward_call(*args, **kwargs)\n  File "/workspaces/Pixal3D-1133/ComfyUI/models/naf/source/src/layers/attentions.py", line 72, in forward\n    out = na2d(q, k, v, kernel_size=self.kernel_size, dilation=dilation, stride=1, backend="cutlass-fna")\n  File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/natten/functional.py", line 833, in na2d\n    return neighborhood_attention_generic(\n  File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/natten/functional.py", line 430, in neighborhood_attention_generic\n    outputs = cutlass_fna_generic(\n  File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/natten/backends/fna.py", line 244, in cutlass_fna_generic\n    assert can_run_cutlass_fna(query, key, value, raise_error=True)\n  File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/natten/backends/configs/checks.py", line 471, in can_run_cutlass_fna\n    target_fn("Can\'t run CUTLASS FNA; NATTEN was not built with libnatten.")\n  File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/natten/utils/checks.py", line 43, in log_or_raise_error\n    raise exception(msg)\nRuntimeError: Can\'t run CUTLASS FNA; NATTEN was not built with libnatten.\n\n', 'exception_type': 'comfy_env.isolation.workers.base.WorkerError', 'traceback': ['  File "/workspaces/Pixal3D-1133/ComfyUI/execution.py", line 535, in execute\n    output_data, output_ui, has_subgraph, has_pending_tasks = await get_output_data(prompt_id, unique_id, obj, input_data_all, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)\n', '  File "/workspaces/Pixal3D-1133/ComfyUI/execution.py", line 335, in get_output_data\n    return_values = await _async_map_node_over_list(prompt_id, unique_id, obj, input_data_all, obj.FUNCTION, allow_interrupt=True, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)\n', '  File "/workspaces/Pixal3D-1133/ComfyUI/execution.py", line 309, in _async_map_node_over_list\n    await process_inputs(input_dict, i)\n', '  File "/workspaces/Pixal3D-1133/ComfyUI/execution.py", line 297, in process_inputs\n    result = f(**inputs)\n', '  File "/workspaces/Pixal3D-1133/.venv/lib/python3.10/site-packages/comfy_env/isolation/metadata.py", line 556, in proxy\n    result = worker.call_method(\n', '  File "/workspaces/Pixal3D-1133/.venv/lib/python3.10/site-packages/comfy_env/isolation/workers/subprocess.py", line 674, in call_method\n    raise WorkerError(\n'], 'current_inputs': {'seed': [42], 'max_num_tokens': [49152], 'ss_steps': [12], 'ss_guidance': [7.5], 'ss_rescale': [0.7], 'ss_rescale_t': [5], 'shape_steps': [12], 'shape_guidance': [7.5], 'shape_rescale': [0.5], 'shape_rescale_t': [3], 'tex_steps': [12], 'tex_guidance': [1], 'tex_rescale': [0], 'tex_rescale_t': [3], 'pipeline': ["{'pipeline_type': '1024_cascade', 'attn_backend': 'auto'}"], 'image': ['tensor([[[[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]],\n\n         [[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]],\n\n         [[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]],\n\n         ...,\n\n         [[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]],\n\n         [[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]],\n\n         [[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]]]])'], 'camera': ["{'camera_angle_x': 0.6063169576026082, 'distance': 1.5984636545181274, 'mesh_scale': 1.0}"]}, 'current_outputs': ['8', '1', '22', '20', '16', '23', '24', '3', '7', '9', '4'], 'timestamp': 1778758973517}
+  [ComfyUI] Prompt executed in 359.72 seconds
+  Execution complete (t=363.3s)
+  Execution error: {'prompt_id': '45d48e50-bd71-45a1-a7a8-027ac60cffba', 'node_id': '20', 'node_type': 'Pixal3DGenerateMesh', 'executed': ['1', '7', '8', '25', '27', '3', '26', '9'], 'exception_message': 'Can\'t run CUTLASS FNA; NATTEN was not built with libnatten.\n\nWorker traceback:\nTraceback (most recent call last):\n  File "/tmp/comfyui_pvenv_gejqmaao/persistent_worker.py", line 1762, in main\n    result = method(**inputs)\n  File "/workspaces/Pixal3D-1248/ComfyUI/comfy_api/latest/_io.py", line 1833, in EXECUTE_NORMALIZED\n    to_return = cls.execute(*args, **kwargs)\n  File "/workspaces/Pixal3D-1248/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/nodes_mesh.py", line 77, in execute\n    tri, voxelgrid = generate_mesh_and_voxelgrid(\n  File "/workspaces/Pixal3D-1248/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/stages.py", line 1504, in generate_mesh_and_voxelgrid\n    pipeline, mw, _res = _run_cascade(\n  File "/workspaces/Pixal3D-1248/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/stages.py", line 742, in _run_cascade\n    mesh_list, (shape_slat, tex_slat, res) = pipeline.run(\n  File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context\n    return func(*args, **kwargs)\n  File "/workspaces/Pixal3D-1248/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/pixal3d/pipelines/pixal3d_image_to_3d.py", line 689, in run\n    cond_shape_lr = self.get_proj_cond_shape(\n  File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context\n    return func(*args, **kwargs)\n  File "/workspaces/Pixal3D-1248/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/pixal3d/pipelines/pixal3d_image_to_3d.py", line 271, in get_proj_cond_shape\n    z_global, z_proj = image_cond_model(\n  File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1776, in _wrapped_call_impl\n    return self._call_impl(*args, **kwargs)\n  File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1787, in _call_impl\n    return forward_call(*args, **kwargs)\n  File "/workspaces/Pixal3D-1248/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/pixal3d/trainers/flow_matching/mixins/image_conditioned_proj.py", line 542, in forward\n    hr_features = self.naf_model(\n  File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1776, in _wrapped_call_impl\n    return self._call_impl(*args, **kwargs)\n  File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1787, in _call_impl\n    return forward_call(*args, **kwargs)\n  File "/workspaces/Pixal3D-1248/ComfyUI/models/naf/source/src/model/naf.py", line 115, in forward\n    out = self.upsampler(queries, keys, values, image)\n  File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1776, in _wrapped_call_impl\n    return self._call_impl(*args, **kwargs)\n  File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1787, in _call_impl\n    return forward_call(*args, **kwargs)\n  File "/workspaces/Pixal3D-1248/ComfyUI/models/naf/source/src/layers/attentions.py", line 72, in forward\n    out = na2d(q, k, v, kernel_size=self.kernel_size, dilation=dilation, stride=1, backend="cutlass-fna")\n  File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/natten/functional.py", line 833, in na2d\n    return neighborhood_attention_generic(\n  File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/natten/functional.py", line 430, in neighborhood_attention_generic\n    outputs = cutlass_fna_generic(\n  File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/natten/backends/fna.py", line 244, in cutlass_fna_generic\n    assert can_run_cutlass_fna(query, key, value, raise_error=True)\n  File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/natten/backends/configs/checks.py", line 471, in can_run_cutlass_fna\n    target_fn("Can\'t run CUTLASS FNA; NATTEN was not built with libnatten.")\n  File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/natten/utils/checks.py", line 43, in log_or_raise_error\n    raise exception(msg)\nRuntimeError: Can\'t run CUTLASS FNA; NATTEN was not built with libnatten.\n\n', 'exception_type': 'comfy_env.isolation.workers.base.WorkerError', 'traceback': ['  File "/workspaces/Pixal3D-1248/ComfyUI/execution.py", line 535, in execute\n    output_data, output_ui, has_subgraph, has_pending_tasks = await get_output_data(prompt_id, unique_id, obj, input_data_all, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)\n                                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n', '  File "/workspaces/Pixal3D-1248/ComfyUI/execution.py", line 335, in get_output_data\n    return_values = await _async_map_node_over_list(prompt_id, unique_id, obj, input_data_all, obj.FUNCTION, allow_interrupt=True, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n', '  File "/workspaces/Pixal3D-1248/ComfyUI/execution.py", line 309, in _async_map_node_over_list\n    await process_inputs(input_dict, i)\n', '  File "/workspaces/Pixal3D-1248/ComfyUI/execution.py", line 297, in process_inputs\n    result = f(**inputs)\n', '  File "/workspaces/Pixal3D-1248/.venv/lib/python3.13/site-packages/comfy_env/isolation/metadata.py", line 556, in proxy\n    result = worker.call_method(\n        module_name=mod,\n    ...<4 lines>...\n        timeout=600.0,\n    )\n', '  File "/workspaces/Pixal3D-1248/.venv/lib/python3.13/site-packages/comfy_env/isolation/workers/subprocess.py", line 674, in call_method\n    raise WorkerError(\n    ...<2 lines>...\n    )\n'], 'current_inputs': {'seed': [42], 'max_num_tokens': [49152], 'ss_steps': [12], 'ss_guidance': [7.5], 'ss_rescale': [0.7], 'ss_rescale_t': [5], 'shape_steps': [12], 'shape_guidance': [7.5], 'shape_rescale': [0.5], 'shape_rescale_t': [3], 'tex_steps': [12], 'tex_guidance': [1], 'tex_rescale': [0], 'tex_rescale_t': [3], 'pipeline': ["{'pipeline_type': '1024_cascade', 'attn_backend': 'auto'}"], 'image': ['tensor([[[[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]],\n\n         [[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]],\n\n         [[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]],\n\n         ...,\n\n         [[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]],\n\n         [[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]],\n\n         [[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]]]])'], 'camera': ["{'camera_angle_x': 0.6282877712073682, 'distance': 1.5389223018437987, 'mesh_scale': 1.0}"]}, 'current_outputs': ['1', '7', '8', '22', '25', '20', '27', '23', '16', '3', '26', '24', '9'], 'timestamp': 1778849971952}
     Status: FAILED
-    Error: Workflow execution failed: {'prompt_id': '12533a32-4460-48db-8bc8-758afdf1b3e5', 'node_id': '20', 'node_type': 'Pixal3DGenerateMesh', 'executed': ['1', '3', '7', '8', '9', '4'], 'exception_message': 'Can\'t run CUTLASS FNA; NATTEN was not built with libnatten.\n\nWorker traceback:\nTraceback (most recent call last):\n  File "/tmp/comfyui_pvenv_v79adoij/persistent_worker.py", line 1762, in main\n    result = method(**inputs)\n  File "/workspaces/Pixal3D-1133/ComfyUI/comfy_api/latest/_io.py", line 1833, in EXECUTE_NORMALIZED\n    to_return = cls.execute(*args, **kwargs)\n  File "/workspaces/Pixal3D-1133/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/nodes_mesh.py", line 77, in execute\n    tri, voxelgrid = generate_mesh_and_voxelgrid(\n  File "/workspaces/Pixal3D-1133/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/stages.py", line 1520, in generate_mesh_and_voxelgrid\n    pipeline, mw, _res = _run_cascade(\n  File "/workspaces/Pixal3D-1133/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/stages.py", line 758, in _run_cascade\n    mesh_list, (shape_slat, tex_slat, res) = pipeline.run(\n  File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context\n    return func(*args, **kwargs)\n  File "/workspaces/Pixal3D-1133/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/pixal3d/pipelines/pixal3d_image_to_3d.py", line 689, in run\n    cond_shape_lr = self.get_proj_cond_shape(\n  File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context\n    return func(*args, **kwargs)\n  File "/workspaces/Pixal3D-1133/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/pixal3d/pipelines/pixal3d_image_to_3d.py", line 271, in get_proj_cond_shape\n    z_global, z_proj = image_cond_model(\n  File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1779, in _wrapped_call_impl\n    return self._call_impl(*args, **kwargs)\n  File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1790, in _call_impl\n    return forward_call(*args, **kwargs)\n  File "/workspaces/Pixal3D-1133/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/pixal3d/trainers/flow_matching/mixins/image_conditioned_proj.py", line 542, in forward\n    hr_features = self.naf_model(\n  File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1779, in _wrapped_call_impl\n    return self._call_impl(*args, **kwargs)\n  File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1790, in _call_impl\n    return forward_call(*args, **kwargs)\n  File "/workspaces/Pixal3D-1133/ComfyUI/models/naf/source/src/model/naf.py", line 115, in forward\n    out = self.upsampler(queries, keys, values, image)\n  File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1779, in _wrapped_call_impl\n    return self._call_impl(*args, **kwargs)\n  File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1790, in _call_impl\n    return forward_call(*args, **kwargs)\n  File "/workspaces/Pixal3D-1133/ComfyUI/models/naf/source/src/layers/attentions.py", line 72, in forward\n    out = na2d(q, k, v, kernel_size=self.kernel_size, dilation=dilation, stride=1, backend="cutlass-fna")\n  File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/natten/functional.py", line 833, in na2d\n    return neighborhood_attention_generic(\n  File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/natten/functional.py", line 430, in neighborhood_attention_generic\n    outputs = cutlass_fna_generic(\n  File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/natten/backends/fna.py", line 244, in cutlass_fna_generic\n    assert can_run_cutlass_fna(query, key, value, raise_error=True)\n  File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/natten/backends/configs/checks.py", line 471, in can_run_cutlass_fna\n    target_fn("Can\'t run CUTLASS FNA; NATTEN was not built with libnatten.")\n  File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/natten/utils/checks.py", line 43, in log_or_raise_error\n    raise exception(msg)\nRuntimeError: Can\'t run CUTLASS FNA; NATTEN was not built with libnatten.\n\n', 'exception_type': 'comfy_env.isolation.workers.base.WorkerError', 'traceback': ['  File "/workspaces/Pixal3D-1133/ComfyUI/execution.py", line 535, in execute\n    output_data, output_ui, has_subgraph, has_pending_tasks = await get_output_data(prompt_id, unique_id, obj, input_data_all, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)\n', '  File "/workspaces/Pixal3D-1133/ComfyUI/execution.py", line 335, in get_output_data\n    return_values = await _async_map_node_over_list(prompt_id, unique_id, obj, input_data_all, obj.FUNCTION, allow_interrupt=True, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)\n', '  File "/workspaces/Pixal3D-1133/ComfyUI/execution.py", line 309, in _async_map_node_over_list\n    await process_inputs(input_dict, i)\n', '  File "/workspaces/Pixal3D-1133/ComfyUI/execution.py", line 297, in process_inputs\n    result = f(**inputs)\n', '  File "/workspaces/Pixal3D-1133/.venv/lib/python3.10/site-packages/comfy_env/isolation/metadata.py", line 556, in proxy\n    result = worker.call_method(\n', '  File "/workspaces/Pixal3D-1133/.venv/lib/python3.10/site-packages/comfy_env/isolation/workers/subprocess.py", line 674, in call_method\n    raise WorkerError(\n'], 'current_inputs': {'seed': [42], 'max_num_tokens': [49152], 'ss_steps': [12], 'ss_guidance': [7.5], 'ss_rescale': [0.7], 'ss_rescale_t': [5], 'shape_steps': [12], 'shape_guidance': [7.5], 'shape_rescale': [0.5], 'shape_rescale_t': [3], 'tex_steps': [12], 'tex_guidance': [1], 'tex_rescale': [0], 'tex_rescale_t': [3], 'pipeline': ["{'pipeline_type': '1024_cascade', 'attn_backend': 'auto'}"], 'image': ['tensor([[[[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]],\n\n         [[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]],\n\n         [[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]],\n\n         ...,\n\n         [[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]],\n\n         [[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]],\n\n         [[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]]]])'], 'camera': ["{'camera_angle_x': 0.6063169576026082, 'distance': 1.5984636545181274, 'mesh_scale': 1.0}"]}, 'current_outputs': ['8', '1', '22', '20', '16', '23', '24', '3', '7', '9', '4'], 'timestamp': 1778758973517}
+    Error: Workflow execution failed: {'prompt_id': '45d48e50-bd71-45a1-a7a8-027ac60cffba', 'node_id': '20', 'node_type': 'Pixal3DGenerateMesh', 'executed': ['1', '7', '8', '25', '27', '3', '26', '9'], 'exception_message': 'Can\'t run CUTLASS FNA; NATTEN was not built with libnatten.\n\nWorker traceback:\nTraceback (most recent call last):\n  File "/tmp/comfyui_pvenv_gejqmaao/persistent_worker.py", line 1762, in main\n    result = method(**inputs)\n  File "/workspaces/Pixal3D-1248/ComfyUI/comfy_api/latest/_io.py", line 1833, in EXECUTE_NORMALIZED\n    to_return = cls.execute(*args, **kwargs)\n  File "/workspaces/Pixal3D-1248/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/nodes_mesh.py", line 77, in execute\n    tri, voxelgrid = generate_mesh_and_voxelgrid(\n  File "/workspaces/Pixal3D-1248/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/stages.py", line 1504, in generate_mesh_and_voxelgrid\n    pipeline, mw, _res = _run_cascade(\n  File "/workspaces/Pixal3D-1248/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/stages.py", line 742, in _run_cascade\n    mesh_list, (shape_slat, tex_slat, res) = pipeline.run(\n  File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context\n    return func(*args, **kwargs)\n  File "/workspaces/Pixal3D-1248/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/pixal3d/pipelines/pixal3d_image_to_3d.py", line 689, in run\n    cond_shape_lr = self.get_proj_cond_shape(\n  File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context\n    return func(*args, **kwargs)\n  File "/workspaces/Pixal3D-1248/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/pixal3d/pipelines/pixal3d_image_to_3d.py", line 271, in get_proj_cond_shape\n    z_global, z_proj = image_cond_model(\n  File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1776, in _wrapped_call_impl\n    return self._call_impl(*args, **kwargs)\n  File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1787, in _call_impl\n    return forward_call(*args, **kwargs)\n  File "/workspaces/Pixal3D-1248/ComfyUI/custom_nodes/ComfyUI-Pixal3D/nodes/pixal3d/trainers/flow_matching/mixins/image_conditioned_proj.py", line 542, in forward\n    hr_features = self.naf_model(\n  File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1776, in _wrapped_call_impl\n    return self._call_impl(*args, **kwargs)\n  File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1787, in _call_impl\n    return forward_call(*args, **kwargs)\n  File "/workspaces/Pixal3D-1248/ComfyUI/models/naf/source/src/model/naf.py", line 115, in forward\n    out = self.upsampler(queries, keys, values, image)\n  File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1776, in _wrapped_call_impl\n    return self._call_impl(*args, **kwargs)\n  File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1787, in _call_impl\n    return forward_call(*args, **kwargs)\n  File "/workspaces/Pixal3D-1248/ComfyUI/models/naf/source/src/layers/attentions.py", line 72, in forward\n    out = na2d(q, k, v, kernel_size=self.kernel_size, dilation=dilation, stride=1, backend="cutlass-fna")\n  File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/natten/functional.py", line 833, in na2d\n    return neighborhood_attention_generic(\n  File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/natten/functional.py", line 430, in neighborhood_attention_generic\n    outputs = cutlass_fna_generic(\n  File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/natten/backends/fna.py", line 244, in cutlass_fna_generic\n    assert can_run_cutlass_fna(query, key, value, raise_error=True)\n  File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/natten/backends/configs/checks.py", line 471, in can_run_cutlass_fna\n    target_fn("Can\'t run CUTLASS FNA; NATTEN was not built with libnatten.")\n  File "/root/.ce/.pixi/envs/pixal3d-nodes/lib/python3.10/site-packages/natten/utils/checks.py", line 43, in log_or_raise_error\n    raise exception(msg)\nRuntimeError: Can\'t run CUTLASS FNA; NATTEN was not built with libnatten.\n\n', 'exception_type': 'comfy_env.isolation.workers.base.WorkerError', 'traceback': ['  File "/workspaces/Pixal3D-1248/ComfyUI/execution.py", line 535, in execute\n    output_data, output_ui, has_subgraph, has_pending_tasks = await get_output_data(prompt_id, unique_id, obj, input_data_all, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)\n                                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n', '  File "/workspaces/Pixal3D-1248/ComfyUI/execution.py", line 335, in get_output_data\n    return_values = await _async_map_node_over_list(prompt_id, unique_id, obj, input_data_all, obj.FUNCTION, allow_interrupt=True, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n', '  File "/workspaces/Pixal3D-1248/ComfyUI/execution.py", line 309, in _async_map_node_over_list\n    await process_inputs(input_dict, i)\n', '  File "/workspaces/Pixal3D-1248/ComfyUI/execution.py", line 297, in process_inputs\n    result = f(**inputs)\n', '  File "/workspaces/Pixal3D-1248/.venv/lib/python3.13/site-packages/comfy_env/isolation/metadata.py", line 556, in proxy\n    result = worker.call_method(\n        module_name=mod,\n    ...<4 lines>...\n        timeout=600.0,\n    )\n', '  File "/workspaces/Pixal3D-1248/.venv/lib/python3.13/site-packages/comfy_env/isolation/workers/subprocess.py", line 674, in call_method\n    raise WorkerError(\n    ...<2 lines>...\n    )\n'], 'current_inputs': {'seed': [42], 'max_num_tokens': [49152], 'ss_steps': [12], 'ss_guidance': [7.5], 'ss_rescale': [0.7], 'ss_rescale_t': [5], 'shape_steps': [12], 'shape_guidance': [7.5], 'shape_rescale': [0.5], 'shape_rescale_t': [3], 'tex_steps': [12], 'tex_guidance': [1], 'tex_rescale': [0], 'tex_rescale_t': [3], 'pipeline': ["{'pipeline_type': '1024_cascade', 'attn_backend': 'auto'}"], 'image': ['tensor([[[[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]],\n\n         [[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]],\n\n         [[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]],\n\n         ...,\n\n         [[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]],\n\n         [[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]],\n\n         [[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]]]])'], 'camera': ["{'camera_angle_x': 0.6282877712073682, 'distance': 1.5389223018437987, 'mesh_scale': 1.0}"]}, 'current_outputs': ['1', '7', '8', '22', '25', '20', '27', '23', '16', '3', '26', '24', '9'], 'timestamp': 1778849971952}
     Details: Workflow: /node/ComfyUI-Pixal3D/workflows/pixal3d_basic.json
 Node error: Pixal3DGenerateMesh
