@@ -1,7 +1,7 @@
 python = "3.10"
 
 [cuda]
-packages = ["flex_gemm_ap", "cumesh_vb", "o_voxel_vb_ap", "flash-attn", "sageattention", "drtk"]
+packages = ["flex_gemm_ap", "cumesh_vb", "o_voxel_vb_ap", "flash-attn", "sageattention", "drtk", "natten"]
 
 [dependencies]
 av = "*"
