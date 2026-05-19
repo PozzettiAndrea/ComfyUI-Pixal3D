@@ -1,0 +1,1623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PozzettiAndrea/ComfyUI-Pixal3D - Test Results</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0f1923;
+            color: #e6edf3;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        header {
+            background: #162033;
+            padding: 1.25rem 2rem;
+            border-bottom: 1px solid #243656;
+        }
+
+        body.in-iframe header {
+            display: none;
+        }
+
+        body.in-iframe .container {
+            padding-top: 1.25rem;
+        }
+
+        body.in-iframe .summary-meta {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        h1 a {
+            color: #e6edf3;
+            text-decoration: none;
+        }
+
+        h1 a:hover { color: #58a6ff; }
+
+        .meta-chips {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .meta-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.2rem 0.6rem;
+            background: #1c2d44;
+            border: 1px solid #243656;
+            border-radius: 2rem;
+            font-size: 0.75rem;
+            color: #8ba3c1;
+        }
+
+        a.meta-chip {
+            text-decoration: none;
+            transition: background 0.15s, border-color 0.15s, color 0.15s;
+        }
+
+        a.meta-chip:hover {
+            background: #25395a;
+            border-color: #3a5587;
+            color: #cfe1f7;
+        }
+
+        .meta-chip svg {
+            width: 12px;
+            height: 12px;
+            fill: currentColor;
+            flex-shrink: 0;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Summary Section */
+        .summary {
+            background: #162033;
+            border: 1px solid #243656;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .progress-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .progress-bar {
+            background: #1c2d44;
+            border-radius: 6px;
+            height: 10px;
+            overflow: hidden;
+            flex: 1;
+        }
+
+        .progress-fill {
+            background: #3fb950;
+            height: 100%;
+            border-radius: 6px;
+            transition: width 0.3s ease;
+        }
+
+        .progress-fill.has-failures {
+            background: linear-gradient(90deg, #3fb950 0%, #3fb950 0.0%, #f85149 0.0%, #f85149 100%);
+            width: 100% !important;
+            border-radius: 6px;
+        }
+
+        .progress-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #8ba3c1;
+            white-space: nowrap;
+            min-width: 3.5rem;
+            text-align: right;
+        }
+
+        .stats {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .stat-badge {
+            padding: 0.35rem 0.75rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+
+        .stat-pass {
+            background: rgba(63, 185, 80, 0.15);
+            color: #3fb950;
+        }
+
+        .stat-fail {
+            background: rgba(248, 81, 73, 0.15);
+            color: #f85149;
+        }
+
+        .stat-total {
+            color: #8ba3c1;
+            font-size: 0.85rem;
+        }
+
+        /* Failed Section */
+        .failed-section {
+            background: rgba(248, 81, 73, 0.08);
+            border: 1px solid rgba(248, 81, 73, 0.3);
+            border-radius: 8px;
+            padding: 1.25rem;
+            margin-bottom: 2rem;
+        }
+
+        .failed-section h2 {
+            color: #f85149;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .failed-item {
+            background: #162033;
+            border: 1px solid #243656;
+            border-radius: 6px;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .failed-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .failed-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .failed-name {
+            font-weight: 600;
+            color: #f85149;
+        }
+
+        .failed-duration {
+            color: #8ba3c1;
+            font-size: 0.8rem;
+        }
+
+        .failed-error {
+            background: #0f1923;
+            border: 1px solid #243656;
+            padding: 0.75rem;
+            border-radius: 6px;
+            font-family: 'SFMono-Regular', 'Menlo', 'Monaco', monospace;
+            font-size: 0.8rem;
+            color: #d29922;
+            margin-bottom: 0.5rem;
+        }
+
+        .log-link {
+            color: #58a6ff;
+            text-decoration: none;
+            font-size: 0.8rem;
+        }
+
+        .log-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Workflow Grid */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.25rem;
+        }
+
+        .section-title {
+            font-size: 0.8rem;
+            color: #8ba3c1;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .view-controls {
+            display: flex;
+            gap: 0;
+            align-items: center;
+            border: 1px solid #243656;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .view-btn {
+            background: #1c2d44;
+            color: #8ba3c1;
+            border: none;
+            border-right: 1px solid #243656;
+            padding: 0.3rem 0.75rem;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 500;
+            transition: all 0.15s;
+        }
+
+        .view-btn:last-child {
+            border-right: none;
+        }
+
+        .view-btn:hover {
+            background: #243656;
+            color: #e6edf3;
+        }
+
+        .view-btn.active {
+            background: #58a6ff;
+            color: #fff;
+        }
+
+        .workflow-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+
+        .workflow-grid.view-list {
+            grid-template-columns: 1fr;
+            gap: 0;
+        }
+
+        .workflow-grid.view-list .workflow-card {
+            border-radius: 0;
+            border-bottom: 1px solid #243656;
+        }
+
+        .workflow-grid.view-list .workflow-card:first-child {
+            border-radius: 8px 8px 0 0;
+        }
+
+        .workflow-grid.view-list .workflow-card:last-child {
+            border-radius: 0 0 8px 8px;
+            border-bottom: none;
+        }
+
+        .workflow-grid.view-list .workflow-card:only-child {
+            border-radius: 8px;
+        }
+
+        .workflow-grid.view-list .workflow-screenshot {
+            width: 100%;
+            height: auto;
+            aspect-ratio: auto;
+        }
+
+        .workflow-grid.view-list .workflow-info {
+            border-top: 1px solid #243656;
+            padding: 0.75rem 1rem;
+        }
+
+        .workflow-grid.view-list .workflow-name {
+            max-width: none;
+            font-size: 0.9rem;
+        }
+
+        .workflow-card {
+            background: #162033;
+            border: 1px solid #243656;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.15s, border-color 0.15s;
+        }
+
+        .workflow-card:hover {
+            transform: translateY(-1px);
+            border-color: #4a6282;
+        }
+
+        .workflow-card.clickable {
+            cursor: pointer;
+        }
+
+        .workflow-card.failed {
+            border-color: #f85149;
+        }
+
+        .workflow-card.failed:hover {
+            border-color: #f85149;
+        }
+
+        .workflow-screenshot {
+            width: 100%;
+            aspect-ratio: 16/10;
+            object-fit: cover;
+            background: #0f1923;
+            display: block;
+        }
+
+        .workflow-screenshot.placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4a6282;
+            font-size: 0.8rem;
+        }
+
+        .workflow-info {
+            padding: 0.75rem 1rem;
+            border-top: 1px solid #243656;
+        }
+
+        .workflow-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .workflow-name {
+            font-weight: 500;
+            font-size: 0.85rem;
+            color: #e6edf3;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 65%;
+        }
+
+        .workflow-badge {
+            padding: 0.15rem 0.5rem;
+            border-radius: 2rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            flex-shrink: 0;
+        }
+
+        .workflow-badge.pass {
+            background: rgba(63, 185, 80, 0.15);
+            color: #3fb950;
+        }
+
+        .workflow-badge.fail {
+            background: rgba(248, 81, 73, 0.15);
+            color: #f85149;
+        }
+
+        .workflow-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75rem;
+            color: #4a6282;
+        }
+
+        /* Lightbox */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(1, 4, 9, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox-content {
+            display: flex;
+            flex-direction: column;
+            max-width: 1200px;
+            width: 100%;
+            margin: auto;
+        }
+
+        .lightbox-content img {
+            max-width: 100%;
+            max-height: 60vh;
+            object-fit: contain;
+            border-radius: 8px;
+            border: 1px solid #243656;
+            align-self: center;
+            cursor: zoom-in;
+        }
+
+        .img-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1002;
+            background: rgba(1, 4, 9, 0.95);
+            overflow: auto;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .img-overlay.active {
+            display: flex;
+        }
+
+        .img-overlay.zoomed {
+            align-items: flex-start;
+            justify-content: flex-start;
+        }
+
+        .img-overlay img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            cursor: zoom-in;
+        }
+
+        .img-overlay.zoomed img {
+            max-width: none;
+            max-height: none;
+            cursor: zoom-out;
+        }
+
+        .lightbox-close {
+            position: fixed;
+            top: 1rem;
+            right: 1.5rem;
+            font-size: 2rem;
+            color: #e6edf3;
+            cursor: pointer;
+            opacity: 0.6;
+            background: none;
+            border: none;
+            z-index: 1001;
+        }
+
+        .lightbox-close:hover {
+            opacity: 1;
+        }
+
+        .lightbox-nav {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(22, 32, 51, 0.8);
+            border: 1px solid #243656;
+            color: #e6edf3;
+            font-size: 2.5rem;
+            width: 48px;
+            height: 64px;
+            border-radius: 8px;
+            cursor: pointer;
+            opacity: 0.6;
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.15s;
+            padding: 0;
+            line-height: 1;
+        }
+
+        .lightbox-nav:hover {
+            opacity: 1;
+        }
+
+        .lightbox-nav-left { left: 1rem; }
+        .lightbox-nav-right { right: 1rem; }
+
+        .lightbox-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.25rem;
+            background: #162033;
+            border: 1px solid #243656;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+
+        .lightbox-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #e6edf3;
+        }
+
+        .lightbox-hardware {
+            display: block;
+            font-size: 0.75rem;
+            color: #8ba3c1;
+            margin-top: 0.25rem;
+        }
+
+        .lightbox-meta {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .lightbox-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 2rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .lightbox-badge.pass {
+            background: rgba(63, 185, 80, 0.15);
+            color: #3fb950;
+        }
+
+        .lightbox-badge.fail {
+            background: rgba(248, 81, 73, 0.15);
+            color: #f85149;
+        }
+
+        .lightbox-duration {
+            color: #8ba3c1;
+            font-size: 0.85rem;
+        }
+
+        .lightbox-log {
+            background: #0f1923;
+            border: 1px solid #243656;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: 'SFMono-Regular', 'Menlo', 'Monaco', monospace;
+            font-size: 0.8rem;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            word-break: break-all;
+            color: #8ba3c1;
+        }
+
+        .lightbox-log::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .lightbox-log::-webkit-scrollbar-track {
+            background: #162033;
+            border-radius: 4px;
+        }
+
+        .lightbox-log::-webkit-scrollbar-thumb {
+            background: #243656;
+            border-radius: 4px;
+        }
+
+        .lightbox-log::-webkit-scrollbar-thumb:hover {
+            background: #4a6282;
+        }
+
+        /* Resource Graph */
+        .resource-graph {
+            display: none;
+            margin-top: 1rem;
+            background: #162033;
+            border: 1px solid #243656;
+            border-radius: 8px;
+            padding: 1rem;
+        }
+
+        .resource-graph.active {
+            display: block;
+        }
+
+        .resource-graph-title {
+            font-size: 0.8rem;
+            color: #8ba3c1;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .resource-graph canvas {
+            width: 100%;
+            height: 120px;
+            cursor: crosshair;
+        }
+
+        .resource-legend {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
+            font-size: 0.75rem;
+            color: #8ba3c1;
+        }
+
+        .resource-legend span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .resource-legend .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .resource-legend .ram { background: #3fb950; }
+        .resource-legend .gpu { background: #d29922; }
+
+        /* Video Player */
+        .video-player {
+            display: none;
+            margin-top: 1rem;
+            background: #162033;
+            border: 1px solid #243656;
+            border-radius: 8px;
+            padding: 1rem;
+        }
+
+        .video-player.active {
+            display: block;
+        }
+
+        .video-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .video-play-btn {
+            background: #58a6ff;
+            color: #fff;
+            border: none;
+            padding: 0.4rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .video-play-btn:hover {
+            background: #79b8ff;
+        }
+
+        .video-frame-counter {
+            color: #8ba3c1;
+            font-size: 0.8rem;
+        }
+
+        .video-slider-container {
+            padding: 15px 0;
+        }
+
+        /* noUiSlider customization */
+        #video-slider {
+            height: 6px;
+            background: #1c2d44;
+            border: none;
+            box-shadow: none;
+        }
+
+        #video-slider .noUi-connect {
+            background: #58a6ff;
+        }
+
+        #video-slider .noUi-handle {
+            width: 16px;
+            height: 16px;
+            background: #58a6ff;
+            border: none;
+            border-radius: 50%;
+            box-shadow: none;
+            top: -5px;
+            right: -8px;
+            cursor: pointer;
+        }
+
+        #video-slider .noUi-handle:before,
+        #video-slider .noUi-handle:after {
+            display: none;
+        }
+
+        /* Pips (tick marks) */
+        .noUi-pips {
+            color: #4a6282;
+        }
+
+        .noUi-marker {
+            background: #243656;
+            width: 2px;
+        }
+
+        .noUi-marker-large {
+            height: 12px;
+        }
+
+        .noUi-value {
+            display: none;
+        }
+
+        /* Models Section */
+        .models-section {
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .models-total {
+            font-size: 0.8rem;
+            color: #8ba3c1;
+        }
+
+        .models-folder {
+            background: #162033;
+            border: 1px solid #243656;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            overflow: hidden;
+        }
+
+        .models-folder-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            user-select: none;
+            list-style: none;
+        }
+
+        .models-folder-header::-webkit-details-marker {
+            display: none;
+        }
+
+        .models-folder-header::before {
+            content: '\25B6';
+            font-size: 0.6rem;
+            color: #4a6282;
+            margin-right: 0.5rem;
+            transition: transform 0.15s;
+        }
+
+        .models-folder[open] > .models-folder-header::before {
+            transform: rotate(90deg);
+        }
+
+        .models-folder-name {
+            font-family: 'SFMono-Regular', 'Menlo', 'Monaco', monospace;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #58a6ff;
+        }
+
+        .models-folder-meta {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .models-folder-size {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #8ba3c1;
+        }
+
+        .models-source-link {
+            font-size: 0.75rem;
+            color: #3fb950;
+            text-decoration: none;
+            padding: 0.15rem 0.5rem;
+            background: rgba(63, 185, 80, 0.1);
+            border: 1px solid rgba(63, 185, 80, 0.2);
+            border-radius: 2rem;
+        }
+
+        .models-source-link:hover {
+            background: rgba(63, 185, 80, 0.2);
+            text-decoration: none;
+        }
+
+        .models-file-list {
+            border-top: 1px solid #243656;
+            padding: 0.25rem 0;
+        }
+
+        .models-file {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.35rem 1rem 0.35rem 2rem;
+            font-size: 0.8rem;
+        }
+
+        .models-file:hover {
+            background: rgba(88, 166, 255, 0.05);
+        }
+
+        .models-file-path {
+            font-family: 'SFMono-Regular', 'Menlo', 'Monaco', monospace;
+            color: #8ba3c1;
+            word-break: break-all;
+        }
+
+        .models-file-size {
+            color: #4a6282;
+            white-space: nowrap;
+            margin-left: 1rem;
+            flex-shrink: 0;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 2.5rem;
+            color: #4a6282;
+            font-size: 0.8rem;
+        }
+
+        footer a {
+            color: #58a6ff;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .workflow-grid {
+                grid-template-columns: 1fr !important;
+            }
+
+            .workflow-grid.view-list .workflow-card {
+                grid-template-columns: 1fr;
+            }
+
+            .workflow-grid.view-list .workflow-screenshot {
+                width: 100%;
+                height: auto;
+                aspect-ratio: 16/10;
+            }
+
+            .stats {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+        }
+    </style>
+    <link href="https://cdn.jsdelivr.net/npm/nouislider@15/dist/nouislider.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/nouislider@15/dist/nouislider.min.js"></script>
+</head>
+<body>
+    <header>
+        <h1><a href="https://github.com/PozzettiAndrea/PozzettiAndrea/ComfyUI-Pixal3D">PozzettiAndrea/ComfyUI-Pixal3D</a> Test Results</h1>
+        <div class="meta-chips">
+            <span class="meta-chip"><svg viewBox="0 0 16 16"><path d="M8 0a8 8 0 110 16A8 8 0 018 0zm.5 4.5a.5.5 0 00-1 0v3.793L5.854 9.854a.5.5 0 10.708.708l1.853-1.854a.5.5 0 00.085-.094V4.5z"/></svg> 2026-05-19 19:01 UTC</span> <a class="meta-chip" href="https://github.com/PozzettiAndrea/comfy-gpu-ci/actions/runs/26108963122" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 16 16"><path d="M8 0a8 8 0 100 16A8 8 0 008 0zM6.5 4.5l5 3.5-5 3.5v-7z"/></svg> Test run</a> <span class="meta-chip"><svg viewBox="0 0 16 16"><path d="M2.5 4a.5.5 0 100 1 .5.5 0 000-1zM4 4.5a.5.5 0 01.5-.5h7a.5.5 0 010 1h-7a.5.5 0 01-.5-.5zM2.5 7a.5.5 0 100 1 .5.5 0 000-1zM4 7.5a.5.5 0 01.5-.5h7a.5.5 0 010 1h-7A.5.5 0 014 7.5zM2.5 10a.5.5 0 100 1 .5.5 0 000-1zM4 10.5a.5.5 0 01.5-.5h7a.5.5 0 010 1h-7a.5.5 0 01-.5-.5z"/></svg> Windows-11-10.0.26100-SP0</span> <span class="meta-chip"><svg viewBox="0 0 16 16"><path d="M5 0a.5.5 0 01.5.5V2h1V.5a.5.5 0 011 0V2h1V.5a.5.5 0 011 0V2h.5A2.5 2.5 0 0112.5 4.5H14v1h-1.5v1H14v1h-1.5v1H14v1h-1.5A2.5 2.5 0 0110 12h-.5v1.5a.5.5 0 01-1 0V12h-1v1.5a.5.5 0 01-1 0V12H6v1.5a.5.5 0 01-1 0V12h-.5A2.5 2.5 0 012 9.5H.5v-1H2v-1H.5v-1H2v-1H.5v-1H2A2.5 2.5 0 014.5 2V.5A.5.5 0 015 0zm-.5 4A1.5 1.5 0 003 5.5v4A1.5 1.5 0 004.5 11h6a1.5 1.5 0 001.5-1.5v-4A1.5 1.5 0 0010.5 4h-6z"/></svg> AMD64 Family 23 Model 113 Stepping 0, AuthenticAMD</span>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="summary">
+            <div class="progress-wrapper">
+                <div class="progress-bar">
+                    <div class="progress-fill has-failures" style="width: 0.0%"></div>
+                </div>
+                <span class="progress-label">0.0%</span>
+            </div>
+            <div class="stats">
+                <span class="stat-badge stat-pass">0 passed</span>
+                <span class="stat-badge stat-fail">1 failed</span>
+                <span class="stat-total">0/1 tests</span>
+            </div>
+        </div>
+
+        <div class="section-header">
+            <h2 class="section-title">Workflows</h2>
+            <div class="view-controls">
+                <button class="view-btn active" onclick="setView('grid')">Grid</button>
+                <button class="view-btn" onclick="setView('list')">List</button>
+            </div>
+        </div>
+        <div class="workflow-grid" id="workflow-grid">
+            
+            <div class="workflow-card clickable failed" onclick="openLightboxByName('pixal3d_basic')">
+                <div class="workflow-screenshot placeholder">No screenshot</div>
+                <div class="workflow-info">
+                    <div class="workflow-header">
+                        <span class="workflow-name" title="pixal3d_basic">pixal3d_basic</span>
+                        <span class="workflow-badge fail">fail</span>
+                    </div>
+                    <div class="workflow-meta">
+                        <span>249.82s</span>
+                    </div>
+                </div>
+            </div>
+        
+        </div>
+
+        
+        <div class="failed-section">
+            <h2>Failed Tests</h2>
+            
+            <div class="failed-item">
+                <div class="failed-header">
+                    <span class="failed-name">pixal3d_basic</span>
+                    <span class="failed-duration">249.82s</span>
+                </div>
+                <div class="failed-error">Workflow execution failed: {&#x27;prompt_id&#x27;: &#x27;a4b309bf-605a-46ca-b791-15148506c67f&#x27;, &#x27;node_id&#x27;: &#x27;20&#x27;, &#x27;node_type&#x27;: &#x27;Pixal3DGenerateMesh&#x27;, &#x27;executed&#x27;: [&#x27;27&#x27;, &#x27;26&#x27;, &#x27;9&#x27;, &#x27;7&#x27;, &#x27;8&#x27;, &#x27;25&#x27;, &#x27;1&#x27;, &#x27;3&#x27;], &#x27;exception_message&#x27;: &quot;&#x27;flash_attn&#x27;\n&quot;, &#x27;exception_type&#x27;: &#x27;KeyError&#x27;, &#x27;traceback&#x27;: [&#x27;  File &quot;C:\\workspaces\\Pixal3D-2052\\ComfyUI\\execution.py&quot;, line 535, in execute\n    output_data, output_ui, has_subgraph, has_pending_tasks = await get_output_data(prompt_id, unique_id, obj, input_data_all, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)\n                                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n&#x27;, &#x27;  File &quot;C:\\workspaces\\Pixal3D-2052\\ComfyUI\\execution.py&quot;, line 335, in get_output_data\n    return_values = await _async_map_node_over_list(prompt_id, unique_id, obj, input_data_all, obj.FUNCTION, allow_interrupt=True, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n&#x27;, &#x27;  File &quot;C:\\workspaces\\Pixal3D-2052\\ComfyUI\\execution.py&quot;, line 309, in _async_map_node_over_list\n    await process_inputs(input_dict, i)\n&#x27;, &#x27;  File &quot;C:\\workspaces\\Pixal3D-2052\\ComfyUI\\execution.py&quot;, line 297, in process_inputs\n    result = f(**inputs)\n             ^^^^^^^^^^^\n&#x27;, &#x27;  File &quot;C:\\workspaces\\Pixal3D-2052\\ComfyUI\\comfy_api\\internal\\__init__.py&quot;, line 149, in wrapped_func\n    return method(locked_class, **inputs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n&#x27;, &#x27;  File &quot;C:\\workspaces\\Pixal3D-2052\\ComfyUI\\comfy_api\\latest\\_io.py&quot;, line 1833, in EXECUTE_NORMALIZED\n    to_return = cls.execute(*args, **kwargs)\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n&#x27;, &#x27;  File &quot;C:\\workspaces\\Pixal3D-2052\\ComfyUI\\custom_nodes\\ComfyUI-Pixal3D\\nodes\\nodes_mesh.py&quot;, line 77, in execute\n    tri, voxelgrid = generate_mesh_and_voxelgrid(\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n&#x27;, &#x27;  File &quot;C:\\workspaces\\Pixal3D-2052\\ComfyUI\\custom_nodes\\ComfyUI-Pixal3D\\nodes\\stages.py&quot;, line 1504, in generate_mesh_and_voxelgrid\n    pipeline, mw, _res = _run_cascade(\n                         ^^^^^^^^^^^^^\n&#x27;, &#x27;  File &quot;C:\\workspaces\\Pixal3D-2052\\ComfyUI\\custom_nodes\\ComfyUI-Pixal3D\\nodes\\stages.py&quot;, line 738, in _run_cascade\n    pipeline = init_pipeline(attn_backend=attn_backend)\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n&#x27;, &#x27;  File &quot;C:\\workspaces\\Pixal3D-2052\\ComfyUI\\custom_nodes\\ComfyUI-Pixal3D\\nodes\\stages.py&quot;, line 491, in init_pipeline\n    _patch_naf_to_local_model()\n&#x27;, &#x27;  File &quot;C:\\workspaces\\Pixal3D-2052\\ComfyUI\\custom_nodes\\ComfyUI-Pixal3D\\nodes\\stages.py&quot;, line 269, in _patch_naf_to_local_model\n    from .pixal3d.trainers.flow_matching.mixins.image_conditioned_proj import (\n&#x27;, &#x27;  File &quot;C:\\workspaces\\Pixal3D-2052\\ComfyUI\\custom_nodes\\ComfyUI-Pixal3D\\nodes\\pixal3d\\trainers\\flow_matching\\mixins\\image_conditioned_proj.py&quot;, line 14, in &lt;module&gt;\n    from transformers import DINOv3ViTModel\n&#x27;, &#x27;  File &quot;&lt;frozen importlib._bootstrap&gt;&quot;, line 1229, in _handle_fromlist\n&#x27;, &#x27;  File &quot;C:\\workspaces\\Pixal3D-2052\\.venv\\Lib\\site-packages\\transformers\\utils\\import_utils.py&quot;, line 2226, in __getattr__\n    module = self._get_module(self._class_to_module[name])\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n&#x27;, &#x27;  File &quot;C:\\workspaces\\Pixal3D-2052\\.venv\\Lib\\site-packages\\transformers\\utils\\import_utils.py&quot;, line 2460, in _get_module\n    raise e\n&#x27;, &#x27;  File &quot;C:\\workspaces\\Pixal3D-2052\\.venv\\Lib\\site-packages\\transformers\\utils\\import_utils.py&quot;, line 2458, in _get_module\n    return importlib.import_module(&quot;.&quot; + module_name, self.__name__)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n&#x27;, &#x27;  File &quot;C:\\Users\\ContainerUser\\AppData\\Roaming\\uv\\python\\cpython-3.11-windows-x86_64-none\\Lib\\importlib\\__init__.py&quot;, line 126, in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n&#x27;, &#x27;  File &quot;C:\\workspaces\\Pixal3D-2052\\.venv\\Lib\\site-packages\\transformers\\models\\dinov3_vit\\modeling_dinov3_vit.py&quot;, line 30, in &lt;module&gt;\n    from ...activations import ACT2FN\n&#x27;, &#x27;  File &quot;C:\\workspaces\\Pixal3D-2052\\.venv\\Lib\\site-packages\\transformers\\activations.py&quot;, line 22, in &lt;module&gt;\n    from .integrations.hub_kernels import use_kernel_forward_from_hub\n&#x27;, &#x27;  File &quot;C:\\workspaces\\Pixal3D-2052\\.venv\\Lib\\site-packages\\transformers\\integrations\\hub_kernels.py&quot;, line 25, in &lt;module&gt;\n    from .flash_attention import flash_attention_forward\n&#x27;, &#x27;  File &quot;C:\\workspaces\\Pixal3D-2052\\.venv\\Lib\\site-packages\\transformers\\integrations\\flash_attention.py&quot;, line 9, in &lt;module&gt;\n    _use_top_left_mask = flash_attn_supports_top_left_mask()\n                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n&#x27;, &#x27;  File &quot;C:\\workspaces\\Pixal3D-2052\\.venv\\Lib\\site-packages\\transformers\\modeling_flash_attention_utils.py&quot;, line 43, in flash_attn_supports_top_left_mask\n    if is_flash_attn_2_available() or is_flash_attn_3_available() or is_flash_attn_4_available():\n       ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n&#x27;, &#x27;  File &quot;C:\\workspaces\\Pixal3D-2052\\.venv\\Lib\\site-packages\\transformers\\utils\\import_utils.py&quot;, line 965, in is_flash_attn_2_available\n    pkg.replace(&quot;_&quot;, &quot;-&quot;) for pkg in PACKAGE_DISTRIBUTION_MAPPING[&quot;flash_attn&quot;]\n                                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^\n&#x27;], &#x27;current_inputs&#x27;: {&#x27;seed&#x27;: [42], &#x27;max_num_tokens&#x27;: [49152], &#x27;ss_steps&#x27;: [12], &#x27;ss_guidance&#x27;: [7.5], &#x27;ss_rescale&#x27;: [0.7], &#x27;ss_rescale_t&#x27;: [5], &#x27;shape_steps&#x27;: [12], &#x27;shape_guidance&#x27;: [7.5], &#x27;shape_rescale&#x27;: [0.5], &#x27;shape_rescale_t&#x27;: [3], &#x27;tex_steps&#x27;: [12], &#x27;tex_guidance&#x27;: [1], &#x27;tex_rescale&#x27;: [0], &#x27;tex_rescale_t&#x27;: [3], &#x27;pipeline&#x27;: [&quot;{&#x27;pipeline_type&#x27;: &#x27;1024_cascade&#x27;, &#x27;attn_backend&#x27;: &#x27;auto&#x27;}&quot;], &#x27;image&#x27;: [&#x27;tensor([[[[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]],\n\n         [[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]],\n\n         [[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]],\n\n         ...,\n\n         [[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]],\n\n         [[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]],\n\n         [[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]]]])&#x27;], &#x27;camera&#x27;: [&quot;{&#x27;camera_angle_x&#x27;: 0.6282833104125424, &#x27;distance&#x27;: 1.538933981542112, &#x27;mesh_scale&#x27;: 1.0}&quot;]}, &#x27;current_outputs&#x27;: [&#x27;27&#x27;, &#x27;26&#x27;, &#x27;9&#x27;, &#x27;7&#x27;, &#x27;20&#x27;, &#x27;8&#x27;, &#x27;16&#x27;, &#x27;1&#x27;, &#x27;25&#x27;, &#x27;23&#x27;, &#x27;22&#x27;, &#x27;3&#x27;, &#x27;24&#x27;], &#x27;timestamp&#x27;: 1779217290362}
+
+Details:
+Workflow: C:\ComfyUI-Pixal3D\workflows\pixal3d_basic.json
+Node error: Pixal3DGenerateMesh</div>
+            </div>
+        
+        </div>
+    
+
+        
+        <div class="models-section">
+            <div class="section-header">
+                <h2 class="section-title">Downloaded Models</h2>
+                <span class="models-total">36 files &middot; 23.6 GB</span>
+            </div>
+            
+            <details class="models-folder" open>
+                <summary class="models-folder-header">
+                    <span class="models-folder-name">models/moge2/</span>
+                    <span class="models-folder-meta">
+                        
+                        <span class="models-folder-size">1.2 GB</span>
+                    </span>
+                </summary>
+                <div class="models-file-list">
+                    <div class="models-file"><span class="models-file-path">moge-2-vitl-normal.pt</span><span class="models-file-size">1.2 GB</span></div>
+<div class="models-file"><span class="models-file-path">.cache\huggingface\CACHEDIR.TAG</span><span class="models-file-size">195.0 B</span></div>
+<div class="models-file"><span class="models-file-path">.cache\huggingface\download\model.pt.metadata</span><span class="models-file-size">127.0 B</span></div>
+<div class="models-file"><span class="models-file-path">.cache\huggingface\.gitignore</span><span class="models-file-size">1.0 B</span></div>
+                </div>
+            </details>
+        
+            <details class="models-folder" open>
+                <summary class="models-folder-header">
+                    <span class="models-folder-name">models/pixal3d/</span>
+                    <span class="models-folder-meta">
+                        
+                        <span class="models-folder-size">22.4 GB</span>
+                    </span>
+                </summary>
+                <div class="models-file-list">
+                    <div class="models-file"><span class="models-file-path">ckpts\slat_flow_imgshape2tex_dit_1_3B_1024_bf16.safetensors</span><span class="models-file-size">5.2 GB</span></div>
+<div class="models-file"><span class="models-file-path">ckpts\slat_flow_img2shape_dit_1_3B_1024_bf16.safetensors</span><span class="models-file-size">5.2 GB</span></div>
+<div class="models-file"><span class="models-file-path">ckpts\slat_flow_img2shape_dit_1_3B_512_bf16.safetensors</span><span class="models-file-size">5.2 GB</span></div>
+<div class="models-file"><span class="models-file-path">ckpts\ss_flow_img_dit_1_3B_64_bf16.safetensors</span><span class="models-file-size">5.0 GB</span></div>
+<div class="models-file"><span class="models-file-path">ckpts\shape_dec_next_dc_f16c32_fp16.safetensors</span><span class="models-file-size">904.6 MB</span></div>
+<div class="models-file"><span class="models-file-path">ckpts\tex_dec_next_dc_f16c32_fp16.safetensors</span><span class="models-file-size">904.5 MB</span></div>
+<div class="models-file"><span class="models-file-path">ckpts\ss_dec_conv3d_16l8_fp16.safetensors</span><span class="models-file-size">140.8 MB</span></div>
+<div class="models-file"><span class="models-file-path">pipeline.json</span><span class="models-file-size">4.0 KB</span></div>
+<div class="models-file"><span class="models-file-path">ckpts\tex_dec_next_dc_f16c32_fp16.json</span><span class="models-file-size">705.0 B</span></div>
+<div class="models-file"><span class="models-file-path">ckpts\shape_dec_next_dc_f16c32_fp16.json</span><span class="models-file-size">678.0 B</span></div>
+<div class="models-file"><span class="models-file-path">ckpts\slat_flow_img2shape_dit_1_3B_1024_bf16.json</span><span class="models-file-size">535.0 B</span></div>
+<div class="models-file"><span class="models-file-path">ckpts\slat_flow_img2shape_dit_1_3B_512_bf16.json</span><span class="models-file-size">535.0 B</span></div>
+<div class="models-file"><span class="models-file-path">ckpts\slat_flow_imgshape2tex_dit_1_3B_1024_bf16.json</span><span class="models-file-size">535.0 B</span></div>
+<div class="models-file"><span class="models-file-path">ckpts\ss_flow_img_dit_1_3B_64_bf16.json</span><span class="models-file-size">503.0 B</span></div>
+<div class="models-file"><span class="models-file-path">ckpts\ss_dec_conv3d_16l8_fp16.json</span><span class="models-file-size">245.0 B</span></div>
+<div class="models-file"><span class="models-file-path">.cache\huggingface\CACHEDIR.TAG</span><span class="models-file-size">195.0 B</span></div>
+<div class="models-file"><span class="models-file-path">.cache\huggingface\download\ckpts\slat_flow_img2shape_dit_1_3B_1024_bf16.safetensors.metadata</span><span class="models-file-size">128.0 B</span></div>
+<div class="models-file"><span class="models-file-path">.cache\huggingface\download\ckpts\slat_flow_img2shape_dit_1_3B_512_bf16.safetensors.metadata</span><span class="models-file-size">128.0 B</span></div>
+<div class="models-file"><span class="models-file-path">.cache\huggingface\download\ckpts\slat_flow_imgshape2tex_dit_1_3B_1024_bf16.safetensors.metadata</span><span class="models-file-size">128.0 B</span></div>
+<div class="models-file"><span class="models-file-path">.cache\huggingface\download\ckpts\ss_dec_conv3d_16l8_fp16.safetensors.metadata</span><span class="models-file-size">128.0 B</span></div>
+<div class="models-file"><span class="models-file-path">.cache\huggingface\download\ckpts\ss_flow_img_dit_1_3B_64_bf16.safetensors.metadata</span><span class="models-file-size">128.0 B</span></div>
+<div class="models-file"><span class="models-file-path">.cache\huggingface\download\ckpts\shape_dec_next_dc_f16c32_fp16.safetensors.metadata</span><span class="models-file-size">127.0 B</span></div>
+<div class="models-file"><span class="models-file-path">.cache\huggingface\download\ckpts\tex_dec_next_dc_f16c32_fp16.safetensors.metadata</span><span class="models-file-size">126.0 B</span></div>
+<div class="models-file"><span class="models-file-path">.cache\huggingface\download\pipeline.json.metadata</span><span class="models-file-size">104.0 B</span></div>
+<div class="models-file"><span class="models-file-path">.cache\huggingface\download\ckpts\slat_flow_img2shape_dit_1_3B_1024_bf16.json.metadata</span><span class="models-file-size">104.0 B</span></div>
+<div class="models-file"><span class="models-file-path">.cache\huggingface\download\ckpts\slat_flow_img2shape_dit_1_3B_512_bf16.json.metadata</span><span class="models-file-size">104.0 B</span></div>
+<div class="models-file"><span class="models-file-path">.cache\huggingface\download\ckpts\slat_flow_imgshape2tex_dit_1_3B_1024_bf16.json.metadata</span><span class="models-file-size">104.0 B</span></div>
+<div class="models-file"><span class="models-file-path">.cache\huggingface\download\ckpts\ss_dec_conv3d_16l8_fp16.json.metadata</span><span class="models-file-size">104.0 B</span></div>
+<div class="models-file"><span class="models-file-path">.cache\huggingface\download\ckpts\tex_dec_next_dc_f16c32_fp16.json.metadata</span><span class="models-file-size">104.0 B</span></div>
+<div class="models-file"><span class="models-file-path">.cache\huggingface\download\ckpts\shape_dec_next_dc_f16c32_fp16.json.metadata</span><span class="models-file-size">103.0 B</span></div>
+<div class="models-file"><span class="models-file-path">.cache\huggingface\download\ckpts\ss_flow_img_dit_1_3B_64_bf16.json.metadata</span><span class="models-file-size">103.0 B</span></div>
+<div class="models-file"><span class="models-file-path">.cache\huggingface\.gitignore</span><span class="models-file-size">1.0 B</span></div>
+                </div>
+            </details>
+        
+        </div>
+    
+    </div>
+
+    <div class="lightbox" id="lightbox">
+        <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+        <button class="lightbox-nav lightbox-nav-left" onclick="navigateLightbox(-1)">&#8249;</button>
+        <button class="lightbox-nav lightbox-nav-right" onclick="navigateLightbox(1)">&#8250;</button>
+        <div class="lightbox-content">
+            <img id="lightbox-img" src="" alt="">
+            <video id="lightbox-video" controls preload="metadata" style="display:none; max-width:90vw; max-height:80vh; background:#000;"></video>
+            <div class="video-player" id="video-player">
+                <div class="video-slider-container">
+                    <div id="video-slider"></div>
+                </div>
+                <div class="video-controls">
+                    <span class="video-frame-counter" id="video-frame-counter">0.0s / 0.0s</span>
+                </div>
+            </div>
+            <div class="resource-graph" id="resource-graph">
+                <div class="resource-graph-title">Resource Usage</div>
+                <canvas id="resource-canvas"></canvas>
+                <div class="resource-legend">
+                    <span><span class="dot ram"></span> RAM (GB)</span>
+                    <span id="gpu-legend" style="display:none"><span class="dot gpu"></span> VRAM (GB)</span>
+                </div>
+            </div>
+            <div class="lightbox-info">
+                <div>
+                    <span class="lightbox-title" id="lightbox-title"></span>
+                    <span class="lightbox-hardware" id="lightbox-hardware"></span>
+                </div>
+                <div class="lightbox-meta">
+                    <span class="lightbox-badge" id="lightbox-badge"></span>
+                    <span class="lightbox-duration" id="lightbox-duration"></span>
+                </div>
+            </div>
+            <pre class="lightbox-log" id="lightbox-log"></pre>
+        </div>
+    </div>
+
+    <div class="img-overlay" id="img-overlay">
+        <img id="img-overlay-content" src="" alt="">
+    </div>
+
+    <footer>
+        Generated by <a href="https://github.com/PozzettiAndrea/comfy-test">comfy-test</a>
+    </footer>
+
+    <script>
+        function setView(mode) {
+            const grid = document.getElementById('workflow-grid');
+            grid.className = mode === 'list' ? 'workflow-grid view-list' : 'workflow-grid';
+            document.querySelectorAll('.view-controls .view-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.textContent.trim().toLowerCase() === mode);
+            });
+        }
+
+        const workflowData = {"pixal3d_basic": {"src": "", "title": "pixal3d_basic", "status": "fail", "duration": "249.82", "log": "Capturing execution frames: pixal3d_basic.json\n  Frame 1 saved (frame_000.jpg, t=0.0s)\n  Validating workflow...\n  [ComfyUI] === /validate endpoint called ===\n  [ComfyUI] Received JSON with keys: ['prompt']\n  [ComfyUI] Prompt has 13 nodes\n  [ComfyUI]   Node 1: LoadImage\n  [ComfyUI]     Inputs: {\"image\": \"pixal3d_test.png\"}\n  Queuing workflow for execution...\n  [ComfyUI]   Node 3: Pixal3DPreprocessImage\n  [ComfyUI]     Inputs: {\"image\": [\"1\", 0], \"mask\": [\"9\", 0]}\n  [ComfyUI]   Node 7: Pixal3DLoadPipeline\n  [ComfyUI]     Inputs: {\"pipeline_type\": \"1024_cascade\", \"attn_backend\": \"auto\"}\n  [ComfyUI]   Node 8: MaskPreview\n  [ComfyUI]     Inputs: {\"mask\": [\"9\", 0]}\n  [ComfyUI]   Node 9: InvertMask\n  [ComfyUI]     Inputs: {\"mask\": [\"1\", 1]}\n  [ComfyUI]   Node 16: Preview3D\n  [ComfyUI]     Inputs: {\"model_file\": [\"23\", 0], \"image\": \"\"}\n  [ComfyUI]   Node 20: Pixal3DGenerateMesh\n  [ComfyUI]     Inputs: {\"seed\": 42, \"max_num_tokens\": 49152, \"ss_steps\": 12, \"ss_guidance\": 7.5, \"ss_rescale\": 0.7, \"ss_rescale_t\": 5, \"shape_steps\": 12, \"shape_guidance\": 7.5, \"shape_rescale\": 0.5, \"shape_rescale_t\": 3, \"t\n  [ComfyUI]   Node 22: Pixal3DRasterizePBR\n  [ComfyUI]     Inputs: {\"texture_size\": 2048, \"double_sided\": false, \"bake_mode\": \"pbr\", \"debug_dump\": false, \"trimesh\": [\"24\", 0], \"voxelgrid\": [\"20\", 1], \"original_mesh\": [\"20\", 0]}\n  [ComfyUI]   Node 23: Pixal3DExportGLB\n  [ComfyUI]     Inputs: {\"filename_prefix\": \"pixal3d\", \"trimesh\": [\"22\", 0]}\n  [ComfyUI]   Node 24: Pixal3DProcessMesh\n  [ComfyUI]     Inputs: {\"target_face_count\": 200000, \"remesh\": true, \"remesh_resolution\": 512, \"remesh_band\": 1, \"remove_inner_faces\": true, \"fill_holes\": true, \"fill_holes_perimeter\": 0.03, \"floater_threshold\": 0.001, \"wel\n  [ComfyUI]   Node 25: DownloadAndLoadMoGe2Model\n  [ComfyUI]     Inputs: {\"model\": \"moge-2-vitl-normal.pt\", \"precision\": \"auto\", \"attention\": \"auto\"}\n  [ComfyUI]   Node 26: MoGe2Inference\n  [ComfyUI]     Inputs: {\"resolution_level\": 9, \"num_tokens\": 0, \"fov_x_deg\": 0, \"force_projection\": true, \"apply_mask\": true, \"moge_model\": [\"25\", 0], \"images\": [\"3\", 0]}\n  [ComfyUI]   Node 27: Pixal3DCameraFromFOV\n  [ComfyUI]     Inputs: {\"fov_x_deg\": [\"26\", 6], \"mesh_scale\": 1, \"extend_pixel\": 0, \"image_resolution\": 512}\n  [ComfyUI] Generated prompt_id: 7170b3fd-77b4-46ec-ab37-a30fee041656\n  [ComfyUI] Calling execution.validate_prompt()...\n  [ComfyUI] Validation result: valid=True\n  [ComfyUI] === Validation PASSED ===\n  [ComfyUI] got prompt\n  [ComfyUI] [pixal3d] >>> Pixal3DPreprocessImage.execute ...\n  [ComfyUI] [pixal3d] <<< Pixal3DPreprocessImage.execute  (0.0s)\n  [ComfyUI] [comfy-env] Running DownloadAndLoadMoGe2Model: model: 'moge-2-vitl-normal.pt', precision: 'auto', attention: 'auto'\n  [ComfyUI] [comfy-env] SubprocessWorker: C:\\Users\\ContainerUser\\AppData\\Local\\Programs\\comfy-env\\envs\\moge2-nodes\\.pixi\\envs\\default\\python.exe\n  [ComfyUI] [VRAM] Before DownloadAndLoadMoGe2Model: 1130 / 8150 MB\n  [ComfyUI] [comfy-env] env_vars: {'COMFYUI_BASE': 'C:\\\\workspaces\\\\Pixal3D-2052\\\\ComfyUI'}\n  [ComfyUI] [SubprocessWorker] call_method: nodes.load_model.DownloadAndLoadMoGe2Model.EXECUTE_NORMALIZED\n  [ComfyUI] [SubprocessWorker] acquired lock, ensuring started...\n  [ComfyUI] [ComfyUI-MoGe2] python: C:\\Users\\ContainerUser\\AppData\\Local\\Programs\\comfy-env\\envs\\moge2-nodes\\.pixi\\envs\\default\\python.exe\n  [ComfyUI] [comfy-env] default: Library/bin has 236 DLLs\n  [ComfyUI] [ComfyUI-MoGe2] sys_path sent to worker: ['C:\\\\workspaces\\\\Pixal3D-2052\\\\ComfyUI', 'C:\\\\workspaces\\\\Pixal3D-2052\\\\ComfyUI\\\\custom_nodes\\\\ComfyUI-MoGe2', 'C:\\\\Users\\\\ContainerUser\\\\AppData\\\\Local\\\\Programs\\\\comfy-env\\\\envs\\\\moge2-nodes\\\\.pixi\\\\envs\\\\default\\\\Lib\\\\site-packages', 'C:\\\\workspaces\\\\Pixal3D-2052\\\\ComfyUI\\\\custom_nodes\\\\ComfyUI-MoGe2']\n  [ComfyUI] [SubprocessWorker] is_pixi=True, python=C:\\Users\\ContainerUser\\AppData\\Local\\Programs\\comfy-env\\envs\\moge2-nodes\\.pixi\\envs\\default\\python.exe\n  [ComfyUI] [SubprocessWorker] launching cmd=['C:\\\\Users\\\\ContainerUser\\\\.pixi\\\\bin\\\\pixi.exe', 'run', '--as-is', '--manifest-path', 'C:\\\\Users\\\\ContainerUser\\\\AppData\\\\Local\\\\Programs\\\\comfy-env\\\\envs\\\\moge2-nodes\\\\pixi.toml', '-e', 'default', 'python', 'C:\\\\Users\\\\ContainerUser\\\\AppData\\\\Local\\\\Temp\\\\comfyui_pvenv_yoxfx0cl\\\\persistent_worker.py', 'tcp://127.0.0.1:52361']...\n  Node executed (1 total), capturing...\n  Frame 2 saved (frame_001.jpg, t=0.6s)\n  [capture-node] freeze=3ms shot=97ms unfreeze=3ms saved=True\n  [ComfyUI] [worker:ComfyUI-MoGe2] ERROR: Failed to import comfy_kitchen, Error: No module named 'comfy_kitchen', fp8 and fp4 support will not be available.\n  [ComfyUI] [SubprocessWorker] worker started/confirmed\n  [ComfyUI] [SubprocessWorker] serializing kwargs to shm...\n  [ComfyUI] [SubprocessWorker] created 0 shm blocks\n  [ComfyUI] [SubprocessWorker] sending request via socket...\n  [ComfyUI] [SubprocessWorker] call_id=1 sending call_method\n  [ComfyUI] Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.\n  [ComfyUI] [worker:ComfyUI-MoGe2] WARNING: Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.\n  [ComfyUI] \n  Frame 3 saved (frame_002.jpg, t=5.0s)\n  [capture-periodic] freeze=2ms shot=97ms unfreeze=5ms saved=True\n  [capture-loop] iter=50 t=6.2s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=3 ram=6.7/23.9GB (28%) swap=0.2/14.5GB (2%) cpu=13% browser_rss=0.73GB\n  [ComfyUI] model.pt:   0%|          | 0.00/1.32G [00:00<?, ?B/s]\n  [ComfyUI] model.pt:   5%|\u258c         | 67.1M/1.32G [00:03<01:10, 17.9MB/s][SubprocessWorker] callback 'report_progress' from call_id=1\n  Frame 4 saved (frame_003.jpg, t=9.3s)\n  [capture-periodic] freeze=3ms shot=100ms unfreeze=4ms saved=True\n  Frame 5 saved (frame_004.jpg, t=11.4s)\n  [capture-periodic] freeze=3ms shot=108ms unfreeze=4ms saved=True\n  [capture-loop] iter=100 t=12.5s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=7.3/23.9GB (31%) swap=0.2/14.5GB (2%) cpu=20% browser_rss=0.74GB\n  [ComfyUI] \n  [ComfyUI] model.pt:  10%|\u2588         | 134M/1.32G [00:11<01:43, 11.5MB/s] [SubprocessWorker] callback 'report_progress' from call_id=1\n  Frame 6 saved (frame_005.jpg, t=15.9s)\n  [capture-periodic] freeze=13ms shot=116ms unfreeze=6ms saved=True\n  [ComfyUI] \n  [ComfyUI] model.pt:  20%|\u2588\u2588        | 268M/1.32G [00:11<00:35, 29.9MB/s][SubprocessWorker] callback 'report_progress' from call_id=1\n  [ComfyUI] \n  [ComfyUI] model.pt:  35%|\u2588\u2588\u2588\u258c      | 469M/1.32G [00:11<00:13, 63.6MB/s][SubprocessWorker] callback 'report_progress' from call_id=1\n  [ComfyUI] \n  [ComfyUI] model.pt:  56%|\u2588\u2588\u2588\u2588\u2588\u258c    | 738M/1.32G [00:12<00:04, 125MB/s] [SubprocessWorker] callback 'report_progress' from call_id=1\n  [ComfyUI] \n  [ComfyUI] model.pt:  71%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588   | 939M/1.32G [00:12<00:02, 179MB/s][SubprocessWorker] callback 'report_progress' from call_id=1\n  [ComfyUI] \n  [ComfyUI] model.pt:  91%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588 | 1.21G/1.32G [00:12<00:00, 270MB/s][SubprocessWorker] callback 'report_progress' from call_id=1\n  [ComfyUI] \n  [ComfyUI] model.pt: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1.32G/1.32G [00:12<00:00, 317MB/s][SubprocessWorker] callback 'report_progress' from call_id=1\n  [ComfyUI] \n  [ComfyUI] model.pt: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1.32G/1.32G [00:12<00:00, 105MB/s]\n  [ComfyUI] [SubprocessWorker] got response: ok\n  [ComfyUI] [comfy-env] DownloadAndLoadMoGe2Model done (17.22s): result: NodeOutput\n  [ComfyUI] [VRAM] After DownloadAndLoadMoGe2Model: 1130 / 8150 MB\n  [ComfyUI] [comfy-env] Running MoGe2Inference: resolution_level: 9, num_tokens: 0, fov_x_deg: 0.0, force_projection: True, apply_mask: True, moge_model: dict, images: torch.float32 [1,428,428,3] cpu\n  [ComfyUI] [VRAM] Before MoGe2Inference: 1130 / 8150 MB\n  [ComfyUI] [SubprocessWorker] call_method: nodes.nodes_inference.MoGe2Inference.EXECUTE_NORMALIZED\n  [ComfyUI] [SubprocessWorker] acquired lock, ensuring started...\n  [ComfyUI] [ComfyUI-MoGe2] Health check: ping (timeout=5.0s)...\n  [ComfyUI] [ComfyUI-MoGe2] Health check: ok\n  [ComfyUI] [SubprocessWorker] worker started/confirmed\n  [ComfyUI] [comfy-env] PRE-SERIALIZE 'images' shape: torch.Size([1, 428, 428, 3])\n  [ComfyUI] [SubprocessWorker] serializing kwargs to shm...\n  [ComfyUI] [SubprocessWorker] created 0 shm blocks\n  [ComfyUI] [SubprocessWorker] sending request via socket...\n  [ComfyUI] [SubprocessWorker] call_id=2 sending call_method\n  [ComfyUI] [worker:ComfyUI-MoGe2] [comfy-env] _from_shm got dict with keys: ['__type__', 'strategy', 'manager_path', 'storage_key', 'storage_size']\n  [ComfyUI] [worker:ComfyUI-MoGe2] [comfy-env] DESERIALIZE TensorRef: tensor_size=[1, 428, 428, 3]\n  [ComfyUI] [worker:ComfyUI-MoGe2] [comfy-env] DESERIALIZED tensor shape: torch.Size([1, 428, 428, 3])\n  Frame 7 saved (frame_006.jpg, t=18.1s)\n  [capture-periodic] freeze=2ms shot=89ms unfreeze=6ms saved=True\n  [ComfyUI] [worker:ComfyUI-MoGe2] WARNING: No comfy kitchen, using old apply_rope functions.\n  [capture-loop] iter=150 t=18.5s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=3 ram=7.0/23.9GB (29%) swap=0.2/14.5GB (2%) cpu=23% browser_rss=0.74GB\n  Frame 8 saved (frame_007.jpg, t=20.3s)\n  [capture-periodic] freeze=2ms shot=99ms unfreeze=6ms saved=True\n  [capture-loop] iter=200 t=24.2s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=3 ram=7.1/23.9GB (30%) swap=0.2/14.5GB (2%) cpu=12% browser_rss=0.67GB\n  [capture-loop] iter=250 t=29.9s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=8.6/23.9GB (36%) swap=0.2/14.5GB (2%) cpu=18% browser_rss=0.67GB\n  [ComfyUI] [SubprocessWorker] callback 'request_vram_budget' from call_id=2\n  [ComfyUI] [comfy-env] VRAM request: 0.66GB, free before eviction: 7.36GB\n  [ComfyUI] [comfy-env] VRAM after eviction: 7.36GB\n  [ComfyUI] [worker:ComfyUI-MoGe2] [VRAM] +312MB (now 312MB) reserved=320MB peak=312MB\n  [ComfyUI] [worker:ComfyUI-MoGe2] [VRAM] +334MB (now 646MB) reserved=1664MB peak=785MB\n  [ComfyUI] [SubprocessWorker] callback 'report_progress' from call_id=2\n  [ComfyUI] [SubprocessWorker] got response: ok\n  [ComfyUI] [comfy-env] Created 1 model patchers: ['MoGeWrapper_1']\n  [ComfyUI] [comfy-env] MoGe2Inference done (16.13s): result: NodeOutput\n  [ComfyUI] [VRAM] After MoGe2Inference: 1130 / 8150 MB\n  [ComfyUI] [VRAM] Loaded: SubprocessModel (631 MB)\n  [ComfyUI] [pixal3d] >>> Pixal3DCameraFromFOV.execute ...\n  [ComfyUI] [Pixal3DCameraFromFOV] fov_x_deg=36.00, camera_angle_x=0.6283, distance=1.5389, mesh_scale=1.0000\n  [ComfyUI] [pixal3d] <<< Pixal3DCameraFromFOV.execute  (0.0s)\n  [ComfyUI] [pixal3d] >>> Pixal3DLoadPipeline.execute ...\n  [ComfyUI] [pixal3d] <<< Pixal3DLoadPipeline.execute  (0.0s)\n  [ComfyUI] [pixal3d] >>> Pixal3DGenerateMesh.execute ...\n  [ComfyUI] [pixal3d] >>> init_pipeline TOTAL ...\n  [ComfyUI] [pixal3d] >>> download Pixal3D weights ...\n  [ComfyUI] [pixal3d] Ensuring weights present in C:\\workspaces\\Pixal3D-2052\\ComfyUI\\models\\pixal3d\n  [ComfyUI]   downloading pipeline.json\n  [ComfyUI] HTTP Request: HEAD https://huggingface.co/TencentARC/Pixal3D/resolve/main/pipeline.json \"HTTP/1.1 307 Temporary Redirect\"\n  [ComfyUI] Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.\n  [ComfyUI] Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.\n  [ComfyUI] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/TencentARC/Pixal3D/7bde14f95a5ce8fc19af0877e2fa048ae8dd1966/pipeline.json \"HTTP/1.1 200 OK\"\n  [ComfyUI] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/TencentARC/Pixal3D/7bde14f95a5ce8fc19af0877e2fa048ae8dd1966/pipeline.json \"HTTP/1.1 200 OK\"\n  [ComfyUI] \n  [ComfyUI] pipeline.json: 0.00B [00:00, ?B/s]\n  [ComfyUI] pipeline.json: 4.07kB [00:00, 4.28MB/s]\n  [ComfyUI]   downloading ckpts/shape_dec_next_dc_f16c32_fp16.json\n  [ComfyUI] HTTP Request: HEAD https://huggingface.co/TencentARC/Pixal3D/resolve/main/ckpts/shape_dec_next_dc_f16c32_fp16.json \"HTTP/1.1 307 Temporary Redirect\"\n  [ComfyUI] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/TencentARC/Pixal3D/7bde14f95a5ce8fc19af0877e2fa048ae8dd1966/ckpts%2Fshape_dec_next_dc_f16c32_fp16.json \"HTTP/1.1 200 OK\"\n  [ComfyUI] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/TencentARC/Pixal3D/7bde14f95a5ce8fc19af0877e2fa048ae8dd1966/ckpts%2Fshape_dec_next_dc_f16c32_fp16.json \"HTTP/1.1 200 OK\"\n  [ComfyUI] \n  [ComfyUI] shape_dec_next_dc_f16c32_fp16.json:   0%|          | 0.00/678 [00:00<?, ?B/s]\n  [ComfyUI] shape_dec_next_dc_f16c32_fp16.json: 100%|##########| 678/678 [00:00<00:00, 1.30MB/s]\n  [ComfyUI]   downloading ckpts/shape_dec_next_dc_f16c32_fp16.safetensors\n  [ComfyUI] HTTP Request: HEAD https://huggingface.co/TencentARC/Pixal3D/resolve/main/ckpts/shape_dec_next_dc_f16c32_fp16.safetensors \"HTTP/1.1 302 Found\"\n  [ComfyUI] HTTP Request: GET https://huggingface.co/api/models/TencentARC/Pixal3D/xet-read-token/7bde14f95a5ce8fc19af0877e2fa048ae8dd1966 \"HTTP/1.1 200 OK\"\n  [ComfyUI] \n  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(\ufffd):   0%|          | 0.00/948M [00:00<?, ?B/s]\n  Frame 9 saved (frame_008.jpg, t=35.5s)\n  [capture-periodic] freeze=3ms shot=101ms unfreeze=4ms saved=True\n  [capture-loop] iter=300 t=35.9s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=8.1/23.9GB (34%) swap=0.2/14.5GB (2%) cpu=31% browser_rss=0.68GB\n  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(\ufffd):   0%|          | 419k/948M [00:01<47:22, 334kB/s]\n  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(\ufffd):   8%|7         | 73.4M/948M [00:02<00:22, 39.0MB/s]\n  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(\ufffd):  12%|#2        | 114M/948M [00:02<00:14, 58.7MB/s]\n  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(\ufffd):  14%|#4        | 134M/948M [00:02<00:12, 62.8MB/s]\n  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(\ufffd):  16%|#5        | 150M/948M [00:03<00:12, 62.8MB/s]\n  Frame 10 saved (frame_009.jpg, t=37.6s)\n  [capture-periodic] freeze=3ms shot=100ms unfreeze=7ms saved=True\n  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(\ufffd):  17%|#7        | 162M/948M [00:03<00:13, 59.0MB/s]\n  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(\ufffd):  20%|#9        | 185M/948M [00:04<00:16, 45.3MB/s]\n  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(\ufffd):  35%|###4      | 331M/948M [00:05<00:08, 69.2MB/s]\n  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(\ufffd):  41%|####      | 386M/948M [00:06<00:06, 86.1MB/s]\n  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(\ufffd):  42%|####2     | 403M/948M [00:06<00:06, 83.3MB/s]\n  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(\ufffd):  48%|####8     | 459M/948M [00:06<00:05, 91.6MB/s]\n  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(\ufffd):  50%|####9     | 471M/948M [00:07<00:06, 72.1MB/s]\n  [capture-loop] iter=350 t=41.8s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=8.5/23.9GB (36%) swap=0.2/14.5GB (2%) cpu=19% browser_rss=0.68GB\n  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(\ufffd):  57%|#####6    | 537M/948M [00:07<00:03, 105MB/s]\n  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(\ufffd):  74%|#######3  | 699M/948M [00:10<00:03, 76.6MB/s]\n  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(\ufffd):  81%|########  | 768M/948M [00:10<00:01, 94.9MB/s]\n  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(\ufffd):  91%|#########1| 866M/948M [00:10<00:00, 116MB/s]\n  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(\ufffd): 100%|##########| 948M/948M [00:10<00:00, 144MB/s]\n  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(\ufffd): 100%|##########| 948M/948M [00:10<00:00, 86.2MB/s]\n  [ComfyUI]   downloading ckpts/slat_flow_img2shape_dit_1_3B_1024_bf16.json\n  [ComfyUI] HTTP Request: HEAD https://huggingface.co/TencentARC/Pixal3D/resolve/main/ckpts/slat_flow_img2shape_dit_1_3B_1024_bf16.json \"HTTP/1.1 307 Temporary Redirect\"\n  [ComfyUI] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/TencentARC/Pixal3D/7bde14f95a5ce8fc19af0877e2fa048ae8dd1966/ckpts%2Fslat_flow_img2shape_dit_1_3B_1024_bf16.json \"HTTP/1.1 200 OK\"\n  [ComfyUI] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/TencentARC/Pixal3D/7bde14f95a5ce8fc19af0877e2fa048ae8dd1966/ckpts%2Fslat_flow_img2shape_dit_1_3B_1024_bf16.json \"HTTP/1.1 200 OK\"\n  [ComfyUI] \n  [ComfyUI] (\ufffd)t_flow_img2shape_dit_1_3B_1024_bf16.json:   0%|          | 0.00/535 [00:00<?, ?B/s]\n  [ComfyUI] (\ufffd)t_flow_img2shape_dit_1_3B_1024_bf16.json: 100%|##########| 535/535 [00:00<00:00, 1.06MB/s]\n  [ComfyUI]   downloading ckpts/slat_flow_img2shape_dit_1_3B_1024_bf16.safetensors\n  [ComfyUI] HTTP Request: HEAD https://huggingface.co/TencentARC/Pixal3D/resolve/main/ckpts/slat_flow_img2shape_dit_1_3B_1024_bf16.safetensors \"HTTP/1.1 302 Found\"\n  [ComfyUI] \n  [capture-loop] iter=400 t=47.7s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=8.7/23.9GB (36%) swap=0.2/14.5GB (2%) cpu=17% browser_rss=0.68GB\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(\ufffd):   0%|          | 0.00/5.55G [00:00<?, ?B/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(\ufffd):   1%|1         | 67.1M/5.55G [00:03<05:06, 17.9MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(\ufffd):   4%|3         | 201M/5.55G [00:06<02:24, 37.1MB/s]\n  [capture-loop] iter=450 t=53.7s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=5 ram=9.1/23.9GB (38%) swap=0.2/14.5GB (2%) cpu=23% browser_rss=0.67GB\n  [capture-loop] iter=500 t=59.8s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=9.6/23.9GB (40%) swap=0.2/14.5GB (2%) cpu=28% browser_rss=0.66GB\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(\ufffd):   5%|4         | 268M/5.55G [00:06<01:39, 52.9MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(\ufffd):   6%|6         | 335M/5.55G [00:16<05:35, 15.5MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(\ufffd):  10%|9         | 536M/5.55G [00:17<02:17, 36.5MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(\ufffd):  13%|#3        | 737M/5.55G [00:17<01:14, 64.6MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(\ufffd):  16%|#5        | 872M/5.55G [00:17<00:53, 88.1MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(\ufffd):  17%|#6        | 939M/5.55G [00:17<00:46, 100MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(\ufffd):  19%|#9        | 1.07G/5.55G [00:18<00:32, 138MB/s]\n  [capture-loop] iter=550 t=65.9s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=9.6/23.9GB (40%) swap=0.2/14.5GB (2%) cpu=32% browser_rss=0.66GB\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(\ufffd):  21%|##        | 1.14G/5.55G [00:18<00:35, 125MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(\ufffd):  23%|##2       | 1.27G/5.55G [00:21<00:56, 76.1MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(\ufffd):  25%|##5       | 1.41G/5.55G [00:22<00:38, 107MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(\ufffd):  27%|##6       | 1.48G/5.55G [00:24<00:57, 71.3MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(\ufffd):  29%|##9       | 1.61G/5.55G [00:24<00:38, 103MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(\ufffd):  31%|###1      | 1.74G/5.55G [00:24<00:26, 142MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(\ufffd):  33%|###2      | 1.81G/5.55G [00:25<00:23, 156MB/s]\n  [capture-loop] iter=600 t=72.1s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=9.6/23.9GB (40%) swap=0.2/14.5GB (2%) cpu=32% browser_rss=0.66GB\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(\ufffd):  34%|###3      | 1.88G/5.55G [00:25<00:27, 134MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(\ufffd):  35%|###5      | 1.94G/5.55G [00:27<00:39, 91.1MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(\ufffd):  37%|###7      | 2.08G/5.55G [00:27<00:25, 137MB/s]\n  [capture-loop] iter=650 t=78.4s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=9.7/23.9GB (41%) swap=0.2/14.5GB (2%) cpu=33% browser_rss=0.66GB\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(\ufffd):  39%|###8      | 2.15G/5.55G [00:32<01:18, 43.1MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(\ufffd):  40%|###9      | 2.21G/5.55G [00:34<01:19, 41.8MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(\ufffd):  41%|####1     | 2.28G/5.55G [00:35<01:04, 50.8MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(\ufffd):  42%|####2     | 2.35G/5.55G [00:35<00:52, 61.0MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(\ufffd):  44%|####3     | 2.41G/5.55G [00:35<00:40, 77.7MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(\ufffd):  45%|####4     | 2.48G/5.55G [00:36<00:34, 88.2MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(\ufffd):  46%|####5     | 2.55G/5.55G [00:36<00:30, 97.9MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(\ufffd):  47%|####7     | 2.62G/5.55G [00:37<00:24, 120MB/s]\n  [capture-loop] iter=700 t=84.5s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=7 ram=9.8/23.9GB (41%) swap=0.2/14.5GB (2%) cpu=29% browser_rss=0.66GB\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(\ufffd):  48%|####8     | 2.68G/5.55G [00:37<00:26, 109MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(\ufffd):  52%|#####1    | 2.88G/5.55G [00:39<00:20, 133MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(\ufffd):  56%|#####5    | 3.08G/5.55G [00:39<00:11, 211MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(\ufffd):  59%|#####9    | 3.29G/5.55G [00:39<00:07, 296MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(\ufffd):  62%|######1   | 3.42G/5.55G [00:39<00:06, 336MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(\ufffd):  65%|######5   | 3.62G/5.55G [00:40<00:04, 428MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(\ufffd):  69%|######8   | 3.82G/5.55G [00:40<00:03, 509MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(\ufffd):  73%|#######2  | 4.02G/5.55G [00:40<00:02, 580MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(\ufffd):  76%|#######6  | 4.22G/5.55G [00:40<00:02, 637MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(\ufffd):  80%|#######9  | 4.43G/5.55G [00:41<00:01, 681MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(\ufffd):  82%|########2 | 4.56G/5.55G [00:41<00:01, 642MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(\ufffd):  85%|########4 | 4.69G/5.55G [00:44<00:05, 149MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(\ufffd):  88%|########8 | 4.90G/5.55G [00:44<00:03, 208MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(\ufffd):  89%|########9 | 4.96G/5.55G [00:44<00:02, 215MB/s]\n  [capture-loop] iter=750 t=90.7s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=8.8/23.9GB (37%) swap=0.2/14.5GB (2%) cpu=27% browser_rss=0.66GB\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(\ufffd):  92%|#########1| 5.10G/5.55G [00:45<00:01, 259MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(\ufffd):  93%|#########3| 5.16G/5.55G [00:45<00:01, 223MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(\ufffd):  97%|#########6| 5.36G/5.55G [00:45<00:00, 322MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(\ufffd): 100%|##########| 5.55G/5.55G [00:45<00:00, 440MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(\ufffd): 100%|##########| 5.55G/5.55G [00:45<00:00, 121MB/s]\n  [ComfyUI]   downloading ckpts/slat_flow_img2shape_dit_1_3B_512_bf16.json\n  [ComfyUI] HTTP Request: HEAD https://huggingface.co/TencentARC/Pixal3D/resolve/main/ckpts/slat_flow_img2shape_dit_1_3B_512_bf16.json \"HTTP/1.1 307 Temporary Redirect\"\n  [ComfyUI] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/TencentARC/Pixal3D/7bde14f95a5ce8fc19af0877e2fa048ae8dd1966/ckpts%2Fslat_flow_img2shape_dit_1_3B_512_bf16.json \"HTTP/1.1 200 OK\"\n  [ComfyUI] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/TencentARC/Pixal3D/7bde14f95a5ce8fc19af0877e2fa048ae8dd1966/ckpts%2Fslat_flow_img2shape_dit_1_3B_512_bf16.json \"HTTP/1.1 200 OK\"\n  [ComfyUI] \n  [ComfyUI] (\ufffd)at_flow_img2shape_dit_1_3B_512_bf16.json:   0%|          | 0.00/535 [00:00<?, ?B/s]\n  [ComfyUI] (\ufffd)at_flow_img2shape_dit_1_3B_512_bf16.json: 100%|##########| 535/535 [00:00<00:00, 1.03MB/s]\n  [ComfyUI]   downloading ckpts/slat_flow_img2shape_dit_1_3B_512_bf16.safetensors\n  [ComfyUI] HTTP Request: HEAD https://huggingface.co/TencentARC/Pixal3D/resolve/main/ckpts/slat_flow_img2shape_dit_1_3B_512_bf16.safetensors \"HTTP/1.1 302 Found\"\n  [ComfyUI] \n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(\ufffd):   0%|          | 0.00/5.55G [00:00<?, ?B/s]\n  [capture-loop] iter=800 t=96.5s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=8.9/23.9GB (37%) swap=0.2/14.5GB (2%) cpu=18% browser_rss=0.66GB\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(\ufffd):   0%|          | 30.7k/5.55G [00:00<25:15:46, 61.0kB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(\ufffd):   4%|3         | 201M/5.55G [00:05<02:15, 39.4MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(\ufffd):   5%|4         | 268M/5.55G [00:05<01:37, 54.4MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(\ufffd):   6%|6         | 335M/5.55G [00:08<02:19, 37.5MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(\ufffd):   7%|7         | 402M/5.55G [00:08<01:40, 51.1MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(\ufffd):  10%|9         | 537M/5.55G [00:09<00:56, 89.0MB/s]\n  [capture-loop] iter=850 t=102.7s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=9.0/23.9GB (38%) swap=0.2/14.5GB (2%) cpu=25% browser_rss=0.65GB\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(\ufffd):  12%|#2        | 671M/5.55G [00:10<00:58, 83.6MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(\ufffd):  15%|#4        | 805M/5.55G [00:13<01:05, 72.9MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(\ufffd):  18%|#8        | 1.01G/5.55G [00:16<01:09, 65.2MB/s]\n  [capture-loop] iter=900 t=108.9s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=9.2/23.9GB (39%) swap=0.2/14.5GB (2%) cpu=34% browser_rss=0.66GB\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(\ufffd):  19%|#9        | 1.07G/5.55G [00:16<00:59, 75.0MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(\ufffd):  21%|##        | 1.14G/5.55G [00:18<01:06, 66.2MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(\ufffd):  22%|##1       | 1.21G/5.55G [00:20<01:23, 52.1MB/s]\n  [capture-loop] iter=950 t=115.1s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=9.7/23.9GB (40%) swap=0.2/14.5GB (2%) cpu=36% browser_rss=0.66GB\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(\ufffd):  23%|##2       | 1.27G/5.55G [00:22<01:36, 44.2MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(\ufffd):  24%|##4       | 1.34G/5.55G [00:23<01:26, 48.4MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(\ufffd):  27%|##6       | 1.48G/5.55G [00:24<00:51, 78.5MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(\ufffd):  29%|##9       | 1.61G/5.55G [00:25<00:45, 87.3MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(\ufffd):  31%|###1      | 1.74G/5.55G [00:25<00:30, 123MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(\ufffd):  33%|###2      | 1.81G/5.55G [00:28<00:57, 64.9MB/s]\n  [capture-loop] iter=1000 t=121.3s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=5 ram=9.7/23.9GB (41%) swap=0.2/14.5GB (2%) cpu=33% browser_rss=0.66GB\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(\ufffd):  34%|###3      | 1.88G/5.55G [00:28<00:47, 78.0MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(\ufffd):  36%|###6      | 2.01G/5.55G [00:31<00:55, 63.3MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(\ufffd):  40%|###9      | 2.21G/5.55G [00:31<00:30, 109MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(\ufffd):  44%|####3     | 2.41G/5.55G [00:32<00:19, 165MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(\ufffd):  47%|####7     | 2.62G/5.55G [00:32<00:12, 231MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(\ufffd):  51%|#####     | 2.82G/5.55G [00:32<00:08, 305MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(\ufffd):  53%|#####3    | 2.95G/5.55G [00:32<00:07, 341MB/s]\n  [capture-loop] iter=1050 t=127.4s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=5 ram=9.4/23.9GB (40%) swap=0.2/14.5GB (2%) cpu=32% browser_rss=0.66GB\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(\ufffd):  57%|#####6    | 3.15G/5.55G [00:33<00:05, 425MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(\ufffd):  59%|#####9    | 3.29G/5.55G [00:39<00:28, 78.1MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(\ufffd):  60%|######    | 3.35G/5.55G [00:40<00:32, 67.6MB/s]\n  [capture-loop] iter=1100 t=133.6s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=9.9/23.9GB (42%) swap=0.2/14.5GB (2%) cpu=40% browser_rss=0.66GB\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(\ufffd):  62%|######1   | 3.42G/5.55G [00:41<00:31, 67.5MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(\ufffd):  64%|######4   | 3.55G/5.55G [00:42<00:20, 95.4MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(\ufffd):  68%|######7   | 3.76G/5.55G [00:42<00:11, 151MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(\ufffd):  69%|######8   | 3.82G/5.55G [00:42<00:11, 148MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(\ufffd):  71%|#######1  | 3.96G/5.55G [00:43<00:09, 173MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(\ufffd):  75%|#######4  | 4.16G/5.55G [00:43<00:05, 254MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(\ufffd):  79%|#######8  | 4.36G/5.55G [00:43<00:03, 340MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(\ufffd):  80%|#######9  | 4.43G/5.55G [00:44<00:04, 277MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(\ufffd):  81%|########1 | 4.49G/5.55G [00:44<00:03, 275MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(\ufffd):  82%|########2 | 4.56G/5.55G [00:44<00:03, 274MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(\ufffd):  87%|########7 | 4.83G/5.55G [00:45<00:01, 453MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(\ufffd):  91%|######### | 5.03G/5.55G [00:45<00:00, 534MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(\ufffd):  94%|#########4| 5.23G/5.55G [00:45<00:00, 609MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(\ufffd):  99%|#########9| 5.50G/5.55G [00:45<00:00, 727MB/s]\n  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(\ufffd): 100%|##########| 5.55G/5.55G [00:45<00:00, 121MB/s]\n  [ComfyUI]   downloading ckpts/slat_flow_imgshape2tex_dit_1_3B_1024_bf16.json\n  [ComfyUI] HTTP Request: HEAD https://huggingface.co/TencentARC/Pixal3D/resolve/main/ckpts/slat_flow_imgshape2tex_dit_1_3B_1024_bf16.json \"HTTP/1.1 307 Temporary Redirect\"\n  [ComfyUI] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/TencentARC/Pixal3D/7bde14f95a5ce8fc19af0877e2fa048ae8dd1966/ckpts%2Fslat_flow_imgshape2tex_dit_1_3B_1024_bf16.json \"HTTP/1.1 200 OK\"\n  [ComfyUI] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/TencentARC/Pixal3D/7bde14f95a5ce8fc19af0877e2fa048ae8dd1966/ckpts%2Fslat_flow_imgshape2tex_dit_1_3B_1024_bf16.json \"HTTP/1.1 200 OK\"\n  [ComfyUI] \n  [ComfyUI] (\ufffd)low_imgshape2tex_dit_1_3B_1024_bf16.json:   0%|          | 0.00/535 [00:00<?, ?B/s]\n  [ComfyUI] (\ufffd)low_imgshape2tex_dit_1_3B_1024_bf16.json: 100%|##########| 535/535 [00:00<00:00, 1.03MB/s]\n  [ComfyUI]   downloading ckpts/slat_flow_imgshape2tex_dit_1_3B_1024_bf16.safetensors\n  [ComfyUI] HTTP Request: HEAD https://huggingface.co/TencentARC/Pixal3D/resolve/main/ckpts/slat_flow_imgshape2tex_dit_1_3B_1024_bf16.safetensors \"HTTP/1.1 302 Found\"\n  [ComfyUI] \n  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(\ufffd):   0%|          | 0.00/5.55G [00:00<?, ?B/s]\n  [capture-loop] iter=1150 t=139.9s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=8.5/23.9GB (36%) swap=0.2/14.5GB (2%) cpu=29% browser_rss=0.66GB\n  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(\ufffd):   0%|          | 30.7k/5.55G [00:00<25:13:26, 61.1kB/s]\n  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(\ufffd):   2%|2         | 134M/5.55G [00:03<02:25, 37.3MB/s]\n  [capture-loop] iter=1200 t=145.9s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=8.9/23.9GB (37%) swap=0.2/14.5GB (2%) cpu=32% browser_rss=0.66GB\n  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(\ufffd):   5%|4         | 268M/5.55G [00:04<01:21, 64.8MB/s]\n  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(\ufffd):   6%|6         | 335M/5.55G [00:09<02:34, 33.8MB/s]\n  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(\ufffd):   7%|7         | 403M/5.55G [00:09<01:52, 45.6MB/s]\n  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(\ufffd):  10%|9         | 537M/5.55G [00:10<01:25, 58.9MB/s]\n  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(\ufffd):  12%|#2        | 671M/5.55G [00:11<00:53, 90.9MB/s]\n  [capture-loop] iter=1250 t=152.3s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=5 ram=9.1/23.9GB (38%) swap=0.2/14.5GB (2%) cpu=38% browser_rss=0.66GB\n  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(\ufffd):  15%|#4        | 805M/5.55G [00:13<01:05, 72.7MB/s]\n  [capture-loop] iter=1300 t=158.8s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=5 ram=9.5/23.9GB (40%) swap=0.2/14.5GB (2%) cpu=40% browser_rss=0.66GB\n  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(\ufffd):  18%|#8        | 1.02G/5.55G [00:20<01:42, 44.2MB/s]\n  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(\ufffd):  21%|##        | 1.14G/5.55G [00:21<01:16, 57.7MB/s]\n  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(\ufffd):  22%|##1       | 1.21G/5.55G [00:23<01:27, 49.6MB/s]\n  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(\ufffd):  23%|##2       | 1.27G/5.55G [00:24<01:24, 50.3MB/s]\n  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(\ufffd):  25%|##5       | 1.41G/5.55G [00:24<00:55, 75.1MB/s]\n  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(\ufffd):  27%|##6       | 1.48G/5.55G [00:25<00:46, 88.2MB/s]\n  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(\ufffd):  28%|##7       | 1.54G/5.55G [00:26<00:52, 76.9MB/s]\n  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(\ufffd):  30%|###       | 1.68G/5.55G [00:26<00:33, 116MB/s]\n  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(\ufffd):  33%|###2      | 1.81G/5.55G [00:27<00:25, 146MB/s]\n  [capture-loop] iter=1350 t=165.2s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=5 ram=9.6/23.9GB (40%) swap=0.2/14.5GB (2%) cpu=42% browser_rss=0.66GB\n  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(\ufffd):  35%|###5      | 1.94G/5.55G [00:27<00:18, 194MB/s]\n  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(\ufffd):  36%|###6      | 2.01G/5.55G [00:28<00:30, 117MB/s]\n  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(\ufffd):  40%|###9      | 2.21G/5.55G [00:29<00:17, 192MB/s]\n  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(\ufffd):  42%|####2     | 2.35G/5.55G [00:29<00:13, 238MB/s]\n  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(\ufffd):  44%|####3     | 2.41G/5.55G [00:30<00:23, 135MB/s]\n  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(\ufffd):  45%|####4     | 2.48G/5.55G [00:32<00:29, 103MB/s]\n  [capture-loop] iter=1400 t=171.7s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=9.6/23.9GB (40%) swap=0.2/14.5GB (2%) cpu=40% browser_rss=0.66GB\n  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(\ufffd):  46%|####5     | 2.55G/5.55G [00:33<00:37, 79.8MB/s]\n  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(\ufffd):  47%|####7     | 2.62G/5.55G [00:34<00:38, 76.2MB/s]\n  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(\ufffd):  48%|####8     | 2.68G/5.55G [00:35<00:33, 85.8MB/s]\n  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(\ufffd):  50%|####9     | 2.75G/5.55G [00:35<00:26, 105MB/s]\n  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(\ufffd):  51%|#####     | 2.82G/5.55G [00:35<00:24, 112MB/s]\n  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(\ufffd):  52%|#####1    | 2.88G/5.55G [00:36<00:22, 117MB/s]\n  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(\ufffd):  53%|#####3    | 2.95G/5.55G [00:36<00:21, 122MB/s]\n  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(\ufffd):  54%|#####4    | 3.02G/5.55G [00:37<00:20, 125MB/s]\n  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(\ufffd):  56%|#####5    | 3.08G/5.55G [00:37<00:16, 148MB/s]\n  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(\ufffd):  57%|#####6    | 3.15G/5.55G [00:38<00:16, 144MB/s]\n  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(\ufffd):  58%|#####8    | 3.22G/5.55G [00:38<00:16, 141MB/s]\n  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(\ufffd):  59%|#####9    | 3.29G/5.55G [00:39<00:16, 139MB/s]\n  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(\ufffd):  60%|######    | 3.35G/5.55G [00:39<00:13, 162MB/s]\n  [capture-loop] iter=1450 t=178.0s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=9.7/23.9GB (41%) swap=0.2/14.5GB (2%) cpu=41% browser_rss=0.66GB\n  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(\ufffd):  62%|######1   | 3.42G/5.55G [00:39<00:13, 153MB/s]\n  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(\ufffd):  63%|######2   | 3.49G/5.55G [00:40<00:14, 147MB/s]\n  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(\ufffd):  64%|######4   | 3.55G/5.55G [00:40<00:13, 143MB/s]\n  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(\ufffd):  65%|######5   | 3.62G/5.55G [00:42<00:24, 78.5MB/s]\n  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(\ufffd):  66%|######6   | 3.69G/5.55G [00:42<00:18, 99.7MB/s]\n  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(\ufffd):  70%|#######   | 3.89G/5.55G [00:43<00:08, 196MB/s]\n  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(\ufffd):  74%|#######3  | 4.09G/5.55G [00:43<00:04, 296MB/s]\n  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(\ufffd):  76%|#######6  | 4.22G/5.55G [00:43<00:03, 342MB/s]\n  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(\ufffd):  80%|#######9  | 4.43G/5.55G [00:43<00:02, 441MB/s]\n  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(\ufffd):  81%|########  | 4.49G/5.55G [00:44<00:02, 400MB/s]\n  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(\ufffd):  82%|########2 | 4.56G/5.55G [00:44<00:02, 367MB/s]\n  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(\ufffd):  86%|########5 | 4.76G/5.55G [00:44<00:01, 483MB/s]\n  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(\ufffd):  89%|########9 | 4.96G/5.55G [00:44<00:01, 570MB/s]\n  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(\ufffd):  92%|#########1| 5.10G/5.55G [00:45<00:00, 554MB/s]\n  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(\ufffd):  94%|#########4| 5.23G/5.55G [00:45<00:00, 553MB/s]\n  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(\ufffd):  99%|#########9| 5.50G/5.55G [00:45<00:00, 697MB/s]\n  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(\ufffd): 100%|##########| 5.55G/5.55G [00:45<00:00, 121MB/s]\n  [ComfyUI]   downloading ckpts/ss_dec_conv3d_16l8_fp16.json\n  [ComfyUI] HTTP Request: HEAD https://huggingface.co/TencentARC/Pixal3D/resolve/main/ckpts/ss_dec_conv3d_16l8_fp16.json \"HTTP/1.1 307 Temporary Redirect\"\n  [ComfyUI] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/TencentARC/Pixal3D/7bde14f95a5ce8fc19af0877e2fa048ae8dd1966/ckpts%2Fss_dec_conv3d_16l8_fp16.json \"HTTP/1.1 200 OK\"\n  [ComfyUI] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/TencentARC/Pixal3D/7bde14f95a5ce8fc19af0877e2fa048ae8dd1966/ckpts%2Fss_dec_conv3d_16l8_fp16.json \"HTTP/1.1 200 OK\"\n  [ComfyUI] \n  [ComfyUI] ss_dec_conv3d_16l8_fp16.json:   0%|          | 0.00/245 [00:00<?, ?B/s]\n  [ComfyUI] ss_dec_conv3d_16l8_fp16.json: 100%|##########| 245/245 [00:00<?, ?B/s]\n  [ComfyUI]   downloading ckpts/ss_dec_conv3d_16l8_fp16.safetensors\n  [ComfyUI] HTTP Request: HEAD https://huggingface.co/TencentARC/Pixal3D/resolve/main/ckpts/ss_dec_conv3d_16l8_fp16.safetensors \"HTTP/1.1 302 Found\"\n  [ComfyUI] \n  [capture-loop] iter=1500 t=184.1s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=3 ram=8.3/23.9GB (35%) swap=0.2/14.5GB (2%) cpu=32% browser_rss=0.66GB\n  [ComfyUI] ckpts/ss_dec_conv3d_16l8_fp16.safetensor(\ufffd):   0%|          | 0.00/148M [00:00<?, ?B/s]\n  [ComfyUI] ckpts/ss_dec_conv3d_16l8_fp16.safetensor(\ufffd): 100%|##########| 148M/148M [00:02<00:00, 66.9MB/s]\n  [ComfyUI] ckpts/ss_dec_conv3d_16l8_fp16.safetensor(\ufffd): 100%|##########| 148M/148M [00:02<00:00, 66.8MB/s]\n  [ComfyUI]   downloading ckpts/ss_flow_img_dit_1_3B_64_bf16.json\n  [ComfyUI] HTTP Request: HEAD https://huggingface.co/TencentARC/Pixal3D/resolve/main/ckpts/ss_flow_img_dit_1_3B_64_bf16.json \"HTTP/1.1 307 Temporary Redirect\"\n  [ComfyUI] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/TencentARC/Pixal3D/7bde14f95a5ce8fc19af0877e2fa048ae8dd1966/ckpts%2Fss_flow_img_dit_1_3B_64_bf16.json \"HTTP/1.1 200 OK\"\n  [ComfyUI] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/TencentARC/Pixal3D/7bde14f95a5ce8fc19af0877e2fa048ae8dd1966/ckpts%2Fss_flow_img_dit_1_3B_64_bf16.json \"HTTP/1.1 200 OK\"\n  [ComfyUI] \n  [ComfyUI] ss_flow_img_dit_1_3B_64_bf16.json:   0%|          | 0.00/503 [00:00<?, ?B/s]\n  [ComfyUI] ss_flow_img_dit_1_3B_64_bf16.json: 100%|##########| 503/503 [00:00<00:00, 959kB/s]\n  [ComfyUI]   downloading ckpts/ss_flow_img_dit_1_3B_64_bf16.safetensors\n  [ComfyUI] HTTP Request: HEAD https://huggingface.co/TencentARC/Pixal3D/resolve/main/ckpts/ss_flow_img_dit_1_3B_64_bf16.safetensors \"HTTP/1.1 302 Found\"\n  [ComfyUI] \n  [capture-loop] iter=1550 t=190.1s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=8.5/23.9GB (36%) swap=0.2/14.5GB (2%) cpu=23% browser_rss=0.66GB\n  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(\ufffd):   0%|          | 0.00/5.36G [00:00<?, ?B/s]\n  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(\ufffd):   1%|1         | 67.1M/5.36G [00:04<05:15, 16.8MB/s]\n  [capture-loop] iter=1600 t=196.3s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=5 ram=8.9/23.9GB (37%) swap=0.2/14.5GB (2%) cpu=33% browser_rss=0.66GB\n  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(\ufffd):   5%|5         | 268M/5.36G [00:04<01:07, 75.1MB/s]\n  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(\ufffd):   8%|7         | 402M/5.36G [00:15<03:34, 23.1MB/s]\n  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(\ufffd):  10%|#         | 537M/5.36G [00:15<02:11, 36.5MB/s]\n  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(\ufffd):  14%|#3        | 738M/5.36G [00:16<01:12, 64.2MB/s]\n  [capture-loop] iter=1650 t=202.5s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=5 ram=9.2/23.9GB (38%) swap=0.2/14.5GB (2%) cpu=38% browser_rss=0.66GB\n  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(\ufffd):  16%|#6        | 872M/5.36G [00:16<00:51, 87.3MB/s]\n  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(\ufffd):  19%|#9        | 1.02G/5.36G [00:16<00:35, 121MB/s]\n  [capture-loop] iter=1700 t=208.9s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=5 ram=9.5/23.9GB (40%) swap=0.2/14.5GB (2%) cpu=41% browser_rss=0.66GB\n  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(\ufffd):  23%|##2       | 1.21G/5.36G [00:16<00:23, 174MB/s]\n  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(\ufffd):  24%|##3       | 1.27G/5.36G [00:23<01:22, 49.5MB/s]\n  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(\ufffd):  26%|##6       | 1.41G/5.36G [00:23<00:57, 69.0MB/s]\n  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(\ufffd):  29%|##8       | 1.54G/5.36G [00:27<01:09, 55.3MB/s]\n  [capture-loop] iter=1750 t=215.2s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=5 ram=9.7/23.9GB (41%) swap=0.2/14.5GB (2%) cpu=40% browser_rss=0.66GB\n  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(\ufffd):  31%|###1      | 1.68G/5.36G [00:27<00:48, 76.2MB/s]\n  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(\ufffd):  35%|###5      | 1.88G/5.36G [00:29<00:39, 87.9MB/s]\n  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(\ufffd):  38%|###7      | 2.01G/5.36G [00:29<00:29, 114MB/s]\n  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(\ufffd):  41%|####1     | 2.21G/5.36G [00:29<00:18, 167MB/s]\n  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(\ufffd):  43%|####2     | 2.28G/5.36G [00:29<00:17, 177MB/s]\n  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(\ufffd):  44%|####3     | 2.35G/5.36G [00:30<00:15, 188MB/s]\n  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(\ufffd):  45%|####5     | 2.41G/5.36G [00:31<00:21, 138MB/s]\n  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(\ufffd):  48%|####7     | 2.55G/5.36G [00:31<00:14, 189MB/s]\n  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(\ufffd):  49%|####8     | 2.62G/5.36G [00:33<00:30, 89.9MB/s]\n  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(\ufffd):  51%|#####1    | 2.75G/5.36G [00:33<00:20, 130MB/s]\n  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(\ufffd):  53%|#####2    | 2.82G/5.36G [00:34<00:21, 119MB/s]\n  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(\ufffd):  55%|#####5    | 2.95G/5.36G [00:34<00:14, 168MB/s]\n  [capture-loop] iter=1800 t=221.5s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=5 ram=9.3/23.9GB (39%) swap=0.2/14.5GB (2%) cpu=39% browser_rss=0.66GB\n  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(\ufffd):  59%|#####8    | 3.15G/5.36G [00:35<00:08, 259MB/s]\n  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(\ufffd):  61%|######1   | 3.29G/5.36G [00:35<00:06, 306MB/s]\n  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(\ufffd):  65%|######5   | 3.49G/5.36G [00:35<00:04, 404MB/s]\n  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(\ufffd):  68%|######7   | 3.62G/5.36G [00:35<00:04, 433MB/s]\n  [capture-loop] iter=1850 t=227.6s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=9.5/23.9GB (40%) swap=0.2/14.5GB (2%) cpu=36% browser_rss=0.66GB\n  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(\ufffd):  69%|######8   | 3.69G/5.36G [00:36<00:07, 230MB/s]\n  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(\ufffd):  71%|#######1  | 3.82G/5.36G [00:41<00:21, 70.5MB/s]\n  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(\ufffd):  74%|#######3  | 3.96G/5.36G [00:41<00:14, 96.7MB/s]\n  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(\ufffd):  75%|#######5  | 4.02G/5.36G [00:42<00:12, 109MB/s]\n  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(\ufffd):  79%|#######8  | 4.23G/5.36G [00:42<00:06, 176MB/s]\n  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(\ufffd):  80%|########  | 4.29G/5.36G [00:43<00:07, 137MB/s]\n  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(\ufffd):  84%|########3 | 4.49G/5.36G [00:43<00:04, 212MB/s]\n  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(\ufffd):  89%|########8 | 4.76G/5.36G [00:43<00:01, 331MB/s]\n  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(\ufffd):  90%|######### | 4.83G/5.36G [00:44<00:01, 319MB/s]\n  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(\ufffd):  91%|#########1| 4.90G/5.36G [00:45<00:02, 176MB/s]\n  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(\ufffd):  96%|#########6| 5.16G/5.36G [00:45<00:00, 296MB/s]\n  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(\ufffd): 100%|##########| 5.36G/5.36G [00:45<00:00, 389MB/s]\n  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(\ufffd): 100%|##########| 5.36G/5.36G [00:45<00:00, 117MB/s]\n  [ComfyUI]   downloading ckpts/tex_dec_next_dc_f16c32_fp16.json\n  [ComfyUI] HTTP Request: HEAD https://huggingface.co/TencentARC/Pixal3D/resolve/main/ckpts/tex_dec_next_dc_f16c32_fp16.json \"HTTP/1.1 307 Temporary Redirect\"\n  [ComfyUI] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/TencentARC/Pixal3D/7bde14f95a5ce8fc19af0877e2fa048ae8dd1966/ckpts%2Ftex_dec_next_dc_f16c32_fp16.json \"HTTP/1.1 200 OK\"\n  [ComfyUI] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/TencentARC/Pixal3D/7bde14f95a5ce8fc19af0877e2fa048ae8dd1966/ckpts%2Ftex_dec_next_dc_f16c32_fp16.json \"HTTP/1.1 200 OK\"\n  [ComfyUI] \n  [ComfyUI] tex_dec_next_dc_f16c32_fp16.json:   0%|          | 0.00/705 [00:00<?, ?B/s]\n  [ComfyUI] tex_dec_next_dc_f16c32_fp16.json: 100%|##########| 705/705 [00:00<00:00, 1.40MB/s]\n  [ComfyUI]   downloading ckpts/tex_dec_next_dc_f16c32_fp16.safetensors\n  [ComfyUI] HTTP Request: HEAD https://huggingface.co/TencentARC/Pixal3D/resolve/main/ckpts/tex_dec_next_dc_f16c32_fp16.safetensors \"HTTP/1.1 302 Found\"\n  [ComfyUI] \n  [capture-loop] iter=1900 t=233.5s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=3 ram=8.4/23.9GB (35%) swap=0.2/14.5GB (2%) cpu=22% browser_rss=0.66GB\n  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(\ufffd):   0%|          | 0.00/948M [00:00<?, ?B/s]\n  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(\ufffd):   0%|          | 1.50M/948M [00:02<21:01, 751kB/s]\n  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(\ufffd):   3%|3         | 30.7M/948M [00:02<00:50, 18.3MB/s]\n  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(\ufffd):   6%|5         | 54.3M/948M [00:02<00:28, 31.8MB/s]\n  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(\ufffd):   9%|8         | 82.4M/948M [00:02<00:18, 48.1MB/s]\n  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(\ufffd):  12%|#1        | 112M/948M [00:03<00:13, 64.1MB/s]\n  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(\ufffd):  14%|#4        | 137M/948M [00:03<00:11, 73.0MB/s]\n  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(\ufffd):  17%|#6        | 161M/948M [00:03<00:10, 78.6MB/s]\n  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(\ufffd):  20%|#9        | 187M/948M [00:03<00:08, 85.2MB/s]\n  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(\ufffd):  24%|##4       | 231M/948M [00:04<00:06, 111MB/s]\n  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(\ufffd):  27%|##6    \n... (truncated)", "hardware": {"os": "Windows-11-10.0.26100-SP0", "cpu": "AMD64 Family 23 Model 113 Stepping 0, AuthenticAMD"}}};
+        const workflowNames = Object.keys(workflowData);
+        const videoData = {};
+
+        const inIframe = window !== window.top;
+        let currentWorkflow = null;
+        let playInterval = null;
+        let originalLogContent = '';
+        let currentFrameIndex = 0;
+        let currentFrames = [];
+        let currentTotalTime = 0;
+
+        function openLightboxByName(name) {
+            const w = workflowData[name];
+            if (w) openLightbox(w.src, w.title, w.status, w.duration, w.log, w.hardware);
+        }
+
+        function openLightbox(src, title, status, duration, logContent, hardware) {
+            document.getElementById('lightbox-img').src = src;
+            document.getElementById('lightbox-title').textContent = title;
+            currentWorkflow = title;
+            originalLogContent = logContent;
+
+            const badge = document.getElementById('lightbox-badge');
+            badge.textContent = status;
+            badge.className = 'lightbox-badge ' + status;
+
+            document.getElementById('lightbox-duration').textContent = duration + 's';
+            document.getElementById('lightbox-log').textContent = logContent || '(No log available)';
+
+            const hwEl = document.getElementById('lightbox-hardware');
+            if (hardware) {
+                const parts = [];
+                if (hardware.os) parts.push(hardware.os);
+                if (hardware.cpu) parts.push(hardware.cpu);
+                if (hardware.gpu) parts.push(hardware.gpu);
+                hwEl.textContent = parts.join(' | ');
+            } else {
+                hwEl.textContent = status === 'skipped' ? '(Did not run on this machine)' : '';
+            }
+
+            const data = videoData[title];
+            const videoPlayer = document.getElementById('video-player');
+            const lightboxImg = document.getElementById('lightbox-img');
+            const lightboxVideo = document.getElementById('lightbox-video');
+
+            // Reset both modes; the branch below activates one.
+            videoPlayer.classList.remove('active');
+            lightboxVideo.style.display = 'none';
+            lightboxVideo.removeAttribute('src');
+            lightboxImg.style.display = '';
+
+            if (data && data.mp4) {
+                // Playable mp4 (desktop runs). Show <video>, hide the
+                // frame-slideshow img + slider.
+                lightboxVideo.src = 'videos/' + encodeURIComponent(title) + '/' + data.mp4;
+                lightboxVideo.style.display = '';
+                lightboxImg.style.display = 'none';
+            } else if (data && data.frames && data.frames.length > 1) {
+                currentFrames = data.frames;
+                currentTotalTime = data.total_time || data.frames[data.frames.length - 1].time;
+                setupVideoSlider(data.frames, currentTotalTime);
+                updateVideoFrameByIndex(title, data.frames.length - 1);
+                videoPlayer.classList.add('active');
+            }
+
+            loadResourceGraph(title);
+
+            // Close image overlay if open
+            closeImgOverlay();
+
+            document.getElementById('lightbox').classList.add('active');
+            history.replaceState(null, '', '#' + encodeURIComponent(title));
+
+            // Notify parent frames for deep linking
+            if (inIframe) {
+                window.parent.postMessage({ type: 'comfytest-open', name: title }, '*');
+            }
+        }
+
+        function buildSliderRange(frames, totalTime) {
+            const range = { 'min': frames[0].time };
+            frames.forEach((frame, idx) => {
+                if (idx > 0 && idx < frames.length - 1) {
+                    const pct = (frame.time / totalTime * 100).toFixed(1) + '%';
+                    range[pct] = frame.time;
+                }
+            });
+            range['max'] = frames[frames.length - 1].time;
+            return range;
+        }
+
+        function setupVideoSlider(frames, totalTime) {
+            const sliderEl = document.getElementById('video-slider');
+
+            if (sliderEl.noUiSlider) {
+                sliderEl.noUiSlider.destroy();
+            }
+
+            const range = buildSliderRange(frames, totalTime);
+
+            noUiSlider.create(sliderEl, {
+                start: frames[frames.length - 1].time,
+                snap: true,
+                range: range,
+                pips: {
+                    mode: 'range',
+                    density: 100
+                }
+            });
+
+            sliderEl.noUiSlider.on('update', function(values) {
+                const time = parseFloat(values[0]);
+                const frameIdx = frames.findIndex(f => Math.abs(f.time - time) < 0.01);
+                if (frameIdx >= 0 && frameIdx !== currentFrameIndex) {
+                    currentFrameIndex = frameIdx;
+                    showFrame(currentWorkflow, frameIdx);
+                }
+            });
+        }
+
+        function showFrame(workflowName, frameIndex) {
+            const data = videoData[workflowName];
+            if (!data || !data.frames) return;
+
+            const frame = data.frames[frameIndex];
+            const img = document.getElementById('lightbox-img');
+
+            const isLastFrame = frameIndex === data.frames.length - 1;
+            if (isLastFrame && workflowData[workflowName] && workflowData[workflowName].src) {
+                img.src = workflowData[workflowName].src;
+            } else {
+                img.src = 'videos/' + workflowName + '/' + frame.file;
+            }
+
+            const counter = document.getElementById('video-frame-counter');
+            const totalTime = data.total_time || data.frames[data.frames.length - 1].time;
+            counter.textContent = frame.time.toFixed(1) + 's / ' + totalTime.toFixed(1) + 's';
+
+            const logEl = document.getElementById('lightbox-log');
+            if (frame.log) {
+                logEl.textContent = frame.log;
+                logEl.scrollTop = logEl.scrollHeight;
+            }
+        }
+
+        function updateVideoFrameByIndex(workflowName, frameIndex) {
+            currentFrameIndex = frameIndex;
+            showFrame(workflowName, frameIndex);
+
+            const sliderEl = document.getElementById('video-slider');
+            if (sliderEl.noUiSlider && currentFrames[frameIndex]) {
+                sliderEl.noUiSlider.set(currentFrames[frameIndex].time);
+            }
+        }
+
+        function toggleVideoPlay() {
+            const btn = document.getElementById('video-play-btn');
+            if (playInterval) {
+                clearInterval(playInterval);
+                playInterval = null;
+                btn.innerHTML = '&#9654; Play';
+            } else {
+                btn.innerHTML = '&#9632; Stop';
+                playInterval = setInterval(() => {
+                    if (!currentFrames.length) return;
+                    currentFrameIndex = (currentFrameIndex + 1) % currentFrames.length;
+                    updateVideoFrameByIndex(currentWorkflow, currentFrameIndex);
+                }, 500);
+            }
+        }
+
+        let resourceGraphState = null;
+
+        async function loadResourceGraph(workflowName) {
+            const graphContainer = document.getElementById('resource-graph');
+            const canvas = document.getElementById('resource-canvas');
+            const gpuLegend = document.getElementById('gpu-legend');
+
+            resourceGraphState = null;
+
+            try {
+                const csvResponse = await fetch('logs/' + workflowName + '_resources.csv');
+
+                if (!csvResponse.ok) {
+                    graphContainer.classList.remove('active');
+                    return;
+                }
+
+                const text = await csvResponse.text();
+                const allLines = text.trim().split('\n');
+
+                let totalRamGb = 32;
+                if (allLines[0].startsWith('#')) {
+                    const metaMatch = allLines[0].match(/total_ram_gb=([\d.]+)/);
+                    if (metaMatch) {
+                        totalRamGb = parseFloat(metaMatch[1]);
+                    }
+                }
+
+                const dataLines = allLines.slice(2);
+
+                if (dataLines.length < 2) {
+                    graphContainer.classList.remove('active');
+                    return;
+                }
+
+                const data = dataLines.map(line => {
+                    const [t, ram, vram] = line.split(',');
+                    return {
+                        t: parseFloat(t),
+                        ram: parseFloat(ram),
+                        vram: vram ? parseFloat(vram) : null
+                    };
+                });
+
+                const hasVram = data.some(d => d.vram !== null);
+                gpuLegend.style.display = hasVram ? 'flex' : 'none';
+
+                graphContainer.classList.add('active');
+                await new Promise(r => setTimeout(r, 10));
+
+                const ctx = canvas.getContext('2d');
+                const dpr = window.devicePixelRatio || 1;
+                const rect = canvas.getBoundingClientRect();
+                canvas.width = rect.width * dpr;
+                canvas.height = rect.height * dpr;
+                ctx.scale(dpr, dpr);
+
+                const w = rect.width;
+                const h = rect.height;
+                const padding = { top: 10, right: 40, bottom: 20, left: 45 };
+                const graphW = w - padding.left - padding.right;
+                const graphH = h - padding.top - padding.bottom;
+
+                const maxRam = Math.max(...data.map(d => d.ram), 0.5);
+                const maxVram = hasVram ? Math.max(...data.filter(d => d.vram !== null).map(d => d.vram), 0.5) : 1;
+                const maxTime = data[data.length - 1].t;
+
+                resourceGraphState = { data, padding, w, h, graphW, graphH, maxRam, maxVram, maxTime, hasVram, dpr };
+
+                drawResourceGraph();
+            } catch (e) {
+                console.error('Resource graph error:', e);
+                graphContainer.classList.remove('active');
+            }
+        }
+
+        function drawResourceGraph(hoverX) {
+            if (!resourceGraphState) return;
+            const { data, padding, w, h, graphW, graphH, maxRam, maxVram, maxTime, hasVram, dpr } = resourceGraphState;
+
+            const canvas = document.getElementById('resource-canvas');
+            const ctx = canvas.getContext('2d');
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            ctx.clearRect(0, 0, w, h);
+
+            // Grid lines
+            ctx.strokeStyle = '#1c2d44';
+            ctx.lineWidth = 0.5;
+            for (let i = 1; i < 4; i++) {
+                const y = padding.top + (graphH * i / 4);
+                ctx.beginPath();
+                ctx.moveTo(padding.left, y);
+                ctx.lineTo(w - padding.right, y);
+                ctx.stroke();
+            }
+
+            // Axes
+            ctx.strokeStyle = '#243656';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(padding.left, padding.top);
+            ctx.lineTo(padding.left, h - padding.bottom);
+            ctx.lineTo(w - padding.right, h - padding.bottom);
+            ctx.lineTo(w - padding.right, padding.top);
+            ctx.stroke();
+
+            // Left axis: RAM
+            ctx.fillStyle = '#3fb950';
+            ctx.font = '9px sans-serif';
+            ctx.textAlign = 'right';
+            const ramMax = Math.ceil(maxRam * 10) / 10;
+            ctx.fillText(ramMax.toFixed(1) + ' GB', padding.left - 3, padding.top + 4);
+            ctx.fillText('0', padding.left - 3, h - padding.bottom + 4);
+
+            // Right axis: VRAM (if present)
+            if (hasVram) {
+                ctx.fillStyle = '#d29922';
+                ctx.textAlign = 'left';
+                const vramMax = Math.ceil(maxVram * 10) / 10;
+                ctx.fillText(vramMax.toFixed(1) + ' GB', w - padding.right + 3, padding.top + 4);
+                ctx.fillText('0', w - padding.right + 3, h - padding.bottom + 4);
+            }
+
+            // Time labels
+            ctx.fillStyle = '#4a6282';
+            ctx.textAlign = 'center';
+            ctx.fillText('0s', padding.left, h - padding.bottom + 12);
+            ctx.fillText(maxTime.toFixed(0) + 's', w - padding.right, h - padding.bottom + 12);
+
+            function drawLine(values, maxVal, color) {
+                if (values.every(v => v === null || isNaN(v))) return;
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 1.5;
+                ctx.beginPath();
+                let started = false;
+                data.forEach((d, i) => {
+                    const val = values[i];
+                    if (val === null || isNaN(val)) return;
+                    const x = padding.left + (d.t / maxTime) * graphW;
+                    const y = padding.top + (1 - val / maxVal) * graphH;
+                    if (!started) { ctx.moveTo(x, y); started = true; }
+                    else { ctx.lineTo(x, y); }
+                });
+                ctx.stroke();
+            }
+
+            drawLine(data.map(d => d.ram), ramMax, '#3fb950');
+            if (hasVram) {
+                drawLine(data.map(d => d.vram), Math.ceil(maxVram * 10) / 10, '#d29922');
+            }
+
+            // Hover crosshair
+            if (hoverX !== undefined && hoverX >= padding.left && hoverX <= w - padding.right) {
+                const timeAtCursor = ((hoverX - padding.left) / graphW) * maxTime;
+                let closest = data[0], closestDist = Infinity;
+                for (const d of data) {
+                    const dist = Math.abs(d.t - timeAtCursor);
+                    if (dist < closestDist) { closestDist = dist; closest = d; }
+                }
+
+                const snapX = padding.left + (closest.t / maxTime) * graphW;
+
+                // Vertical line
+                ctx.strokeStyle = 'rgba(230,237,243,0.2)';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(snapX, padding.top);
+                ctx.lineTo(snapX, h - padding.bottom);
+                ctx.stroke();
+
+                // Readout
+                ctx.font = '10px sans-serif';
+                ctx.textAlign = 'left';
+                const readoutX = snapX + 6;
+                let readoutY = padding.top + 14;
+
+                ctx.fillStyle = '#8ba3c1';
+                ctx.fillText(closest.t.toFixed(1) + 's', readoutX, readoutY);
+                readoutY += 13;
+
+                ctx.fillStyle = '#3fb950';
+                ctx.fillText('RAM: ' + closest.ram.toFixed(2) + ' GB', readoutX, readoutY);
+                readoutY += 13;
+
+                if (hasVram && closest.vram !== null) {
+                    ctx.fillStyle = '#d29922';
+                    ctx.fillText('VRAM: ' + closest.vram.toFixed(2) + ' GB', readoutX, readoutY);
+                }
+            }
+        }
+
+        // Canvas hover handler
+        document.getElementById('resource-canvas').addEventListener('mousemove', function(e) {
+            if (!resourceGraphState) return;
+            const rect = this.getBoundingClientRect();
+            drawResourceGraph(e.clientX - rect.left);
+        });
+        document.getElementById('resource-canvas').addEventListener('mouseleave', function() {
+            drawResourceGraph();
+        });
+
+        function closeImgOverlay() {
+            const overlay = document.getElementById('img-overlay');
+            overlay.classList.remove('active', 'zoomed');
+        }
+
+        function closeLightbox() {
+            if (playInterval) {
+                clearInterval(playInterval);
+                playInterval = null;
+                document.getElementById('video-play-btn').innerHTML = '&#9654; Play';
+            }
+            closeImgOverlay();
+            document.getElementById('resource-graph').classList.remove('active');
+            document.getElementById('lightbox').classList.remove('active');
+            history.replaceState(null, '', window.location.pathname);
+
+            if (inIframe) {
+                window.parent.postMessage({ type: 'comfytest-close' }, '*');
+            }
+        }
+
+        document.getElementById('lightbox').onclick = (e) => {
+            if (e.target.id === 'lightbox') closeLightbox();
+        };
+
+        function navigateLightbox(delta) {
+            if (workflowNames.length === 0) return;
+            const idx = workflowNames.indexOf(currentWorkflow);
+            if (idx === -1) return;
+            const newIdx = (idx + delta + workflowNames.length) % workflowNames.length;
+            openLightboxByName(workflowNames[newIdx]);
+        }
+
+        function handleKey(key) {
+            const overlay = document.getElementById('img-overlay');
+            if (key === 'Escape') {
+                if (overlay.classList.contains('active')) {
+                    closeImgOverlay();
+                } else {
+                    closeLightbox();
+                }
+                return;
+            }
+            if (document.getElementById('lightbox').classList.contains('active') && !overlay.classList.contains('active')) {
+                if (key === 'ArrowLeft') { navigateLightbox(-1); }
+                if (key === 'ArrowRight') { navigateLightbox(1); }
+                if ((key === 'ArrowUp' || key === 'ArrowDown') && inIframe) {
+                    window.parent.postMessage({
+                        type: 'comfytest-platform-shift',
+                        delta: key === 'ArrowUp' ? -1 : 1,
+                        workflow: currentWorkflow,
+                    }, '*');
+                }
+            }
+        }
+
+        document.onkeydown = (e) => {
+            if (['Escape', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
+                e.preventDefault();
+                handleKey(e.key);
+            }
+        };
+
+        // Click lightbox image -> open in fullscreen overlay (fit mode)
+        document.getElementById('lightbox-img').addEventListener('click', function(e) {
+            e.stopPropagation();
+            const overlay = document.getElementById('img-overlay');
+            const overlayImg = document.getElementById('img-overlay-content');
+            overlayImg.src = this.src;
+            overlay.classList.add('active');
+            overlay.classList.remove('zoomed');
+        });
+
+        // Click overlay image: fit -> zoomed -> close
+        document.getElementById('img-overlay-content').addEventListener('click', function(e) {
+            e.stopPropagation();
+            const overlay = document.getElementById('img-overlay');
+            if (overlay.classList.contains('zoomed')) {
+                closeImgOverlay();
+            } else {
+                overlay.classList.add('zoomed');
+            }
+        });
+
+        // Click overlay background -> close overlay
+        document.getElementById('img-overlay').addEventListener('click', function(e) {
+            if (e.target === this) closeImgOverlay();
+        });
+
+        function openFromHash() {
+            const hash = decodeURIComponent(window.location.hash.slice(1));
+            if (hash && workflowData[hash]) {
+                const w = workflowData[hash];
+                openLightbox(w.src, w.title, w.status, w.duration, w.log, w.hardware);
+            }
+        }
+
+        window.addEventListener('hashchange', openFromHash);
+        window.addEventListener('load', openFromHash);
+
+        // Listen for messages from parent frames
+        window.addEventListener('message', function(e) {
+            if (!e.data || !e.data.type) return;
+            if (e.data.type === 'comfytest-open' && e.data.name) {
+                openLightboxByName(e.data.name);
+            }
+            if (e.data.type === 'comfytest-key') {
+                handleKey(e.data.key);
+            }
+        });
+
+        // Detect iframe: hide header and move meta chips into summary
+        if (inIframe) {
+            document.body.classList.add('in-iframe');
+            const chips = document.querySelector('.meta-chips');
+            const summary = document.querySelector('.summary');
+            if (chips && summary) {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'summary-meta';
+                while (chips.firstChild) wrapper.appendChild(chips.firstChild);
+                summary.insertBefore(wrapper, summary.firstChild);
+            }
+        }
+    </script>
+</body>
+</html>
