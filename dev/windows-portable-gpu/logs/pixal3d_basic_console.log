@@ -10,6 +10,20 @@
 [Console-log] [GeomPack] Loading mesh preview extension...
 [Console-log] [GeomPack] Mesh preview extension registered
 [Console-warning] [MaskEditor] ComfyApp.open_maskeditor is deprecated. Plugins should migrate to using the command system or direct node context menu integration.
-[Console-warning] [.WebGL-0x59dc09e24c00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
-[Console-warning] [.WebGL-0x59dc09e24c00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[Console-warning] [.WebGL-0x3924007d0a00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[Console-warning] [.WebGL-0x3924007d0a00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
 [Console-log] [comfy-test] graphToPrompt: 13 nodes, missing class_type: [], sample: {"inputs":{"image":"pixal3d_test.png"},"class_type":"LoadImage","_meta":{"title":"Load Image"}}
+[Console-warning] WebGL: CONTEXT_LOST_WEBGL: loseContext: context lost
+[Console-warning] [.WebGL-0x3924007ce000]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[Console-warning] WebGL: INVALID_OPERATION: delete: object does not belong to this context
+[Console-warning] WebGL: INVALID_OPERATION: delete: object does not belong to this context
+[Console-warning] WebGL: INVALID_OPERATION: delete: object does not belong to this context
+[Console-warning] WebGL: INVALID_OPERATION: delete: object does not belong to this context
+[Console-warning] WebGL: INVALID_OPERATION: deleteVertexArray: object does not belong to this context
+[Console-warning] WebGL: INVALID_OPERATION: delete: object does not belong to this context
+[Console-warning] WebGL: INVALID_OPERATION: delete: object does not belong to this context
+[Console-warning] WebGL: INVALID_OPERATION: delete: object does not belong to this context
+[Console-warning] WebGL: INVALID_OPERATION: delete: object does not belong to this context
+[Console-warning] [.WebGL-0x3924007ce000]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[Console-warning] [.WebGL-0x3924007ce000]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[Console-warning] [.WebGL-0x3924007ce000]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
