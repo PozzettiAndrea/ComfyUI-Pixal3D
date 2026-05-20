@@ -1,35 +1,35 @@
 {
-  "timestamp": "2026-05-20T18:21:25.518534+00:00",
+  "timestamp": "2026-05-20T20:09:24.031489+00:00",
   "platform": "windows",
   "hardware": {
     "os": "Windows-11-10.0.26100-SP0",
-    "cpu": "AMD64 Family 23 Model 113 Stepping 0, AuthenticAMD"
+    "cpu": "Intel64 Family 6 Model 79 Stepping 1, GenuineIntel"
   },
-  "commit_hash": "4f5cee8bd2c44f667555d9e5252c672a4772f1ce",
-  "run_url": "https://github.com/PozzettiAndrea/comfy-gpu-ci/actions/runs/26180738251",
-  "success": false,
+  "commit_hash": "b259391fbc388d04f67dbef31923414359c2024d",
+  "run_url": "https://github.com/PozzettiAndrea/comfy-gpu-ci/actions/runs/26185908753",
+  "success": true,
   "summary": {
     "total": 1,
-    "passed": 0,
-    "failed": 1
+    "passed": 1,
+    "failed": 0
   },
   "workflows": [
     {
       "name": "pixal3d_basic",
-      "status": "fail",
-      "duration_seconds": 565.12,
-      "error": "Workflow execution failed: {'prompt_id': 'a3f15472-7a40-4ebc-9072-60061c1142a3', 'node_id': '20', 'node_type': 'Pixal3DGenerateMesh', 'executed': ['27', '3', '8', '26', '1', '9', '25', '7'], 'exception_message': 'ComfyUI-Pixal3D: Socket closed but worker process still running.\\n  exit code: None\\n  worker log (C:\\\\Users\\\\ContainerUser\\\\AppData\\\\Local\\\\Temp\\\\comfy_worker_debug.log, last 20 lines):\\n      File \"C:\\\\Users\\\\ContainerUser\\\\AppData\\\\Local\\\\Programs\\\\comfy-env\\\\envs\\\\pixal3d-nodes\\\\.pixi\\\\envs\\\\default\\\\lib\\\\site-packages\\\\torch\\\\nn\\\\modules\\\\module.py\", line 933 in _apply\\n      File \"C:\\\\Users\\\\ContainerUser\\\\AppData\\\\Local\\\\Programs\\\\comfy-env\\\\envs\\\\pixal3d-nodes\\\\.pixi\\\\envs\\\\default\\\\lib\\\\site-packages\\\\torch\\\\nn\\\\modules\\\\module.py\", line 933 in _apply\\n      File \"C:\\\\Users\\\\ContainerUser\\\\AppData\\\\Local\\\\Programs\\\\comfy-env\\\\envs\\\\pixal3d-nodes\\\\.pixi\\\\envs\\\\default\\\\lib\\\\site-packages\\\\torch\\\\nn\\\\modules\\\\module.py\", line 1381 in to\\n      File \"C:\\\\Users\\\\ContainerUser\\\\AppData\\\\Local\\\\Temp\\\\comfyui_pvenv_9r_htb6o\\\\persistent_worker.py\", line 1341 in _hooked_to\\n      File \"C:\\\\workspaces\\\\Pixal3D-2004\\\\ComfyUI\\\\custom_nodes\\\\ComfyUI-Pixal3D\\\\nodes\\\\pixal3d\\\\trainers\\\\flow_matching\\\\mixins\\\\image_conditioned_proj.py\", line 437 in to\\n      File \"C:\\\\workspaces\\\\Pixal3D-2004\\\\ComfyUI\\\\custom_nodes\\\\ComfyUI-Pixal3D\\\\nodes\\\\stages.py\", line 404 in _patched_to\\n      File \"C:\\\\workspaces\\\\Pixal3D-2004\\\\ComfyUI\\\\comfy\\\\model_patcher.py\", line 989 in unpatch_model\\n      File \"C:\\\\workspaces\\\\Pixal3D-2004\\\\ComfyUI\\\\custom_nodes\\\\ComfyUI-Pixal3D\\\\nodes\\\\stages.py\", line 431 in _patched_cpu\\n      File \"C:\\\\workspaces\\\\Pixal3D-2004\\\\ComfyUI\\\\custom_nodes\\\\ComfyUI-Pixal3D\\\\nodes\\\\pixal3d\\\\pipelines\\\\pixal3d_image_to_3d.py\", line 291 in get_proj_cond_shape\\n      File \"C:\\\\Users\\\\ContainerUser\\\\AppData\\\\Local\\\\Programs\\\\comfy-env\\\\envs\\\\pixal3d-nodes\\\\.pixi\\\\envs\\\\default\\\\lib\\\\site-packages\\\\torch\\\\utils\\\\_contextlib.py\", line 124 in decorate_context\\n      File \"C:\\\\workspaces\\\\Pixal3D-2004\\\\ComfyUI\\\\custom_nodes\\\\ComfyUI-Pixal3D\\\\nodes\\\\pixal3d\\\\pipelines\\\\pixal3d_image_to_3d.py\", line 763 in run\\n      File \"C:\\\\Users\\\\ContainerUser\\\\AppData\\\\Local\\\\Programs\\\\comfy-env\\\\envs\\\\pixal3d-nodes\\\\.pixi\\\\envs\\\\default\\\\lib\\\\site-packages\\\\torch\\\\utils\\\\_contextlib.py\", line 124 in decorate_context\\n      File \"C:\\\\workspaces\\\\Pixal3D-2004\\\\ComfyUI\\\\custom_nodes\\\\ComfyUI-Pixal3D\\\\nodes\\\\stages.py\", line 738 in _run_cascade\\n      File \"C:\\\\workspaces\\\\Pixal3D-2004\\\\ComfyUI\\\\custom_nodes\\\\ComfyUI-Pixal3D\\\\nodes\\\\stages.py\", line 1500 in generate_mesh_and_voxelgrid\\n      File \"C:\\\\workspaces\\\\Pixal3D-2004\\\\ComfyUI\\\\custom_nodes\\\\ComfyUI-Pixal3D\\\\nodes\\\\nodes_mesh.py\", line 77 in execute\\n      File \"C:\\\\workspaces\\\\Pixal3D-2004\\\\ComfyUI\\\\comfy_api\\\\latest\\\\_io.py\", line 1833 in EXECUTE_NORMALIZED\\n      File \"C:\\\\Users\\\\ContainerUser\\\\AppData\\\\Local\\\\Temp\\\\comfyui_pvenv_9r_htb6o\\\\persistent_worker.py\", line 1762 in main\\n      File \"C:\\\\Users\\\\ContainerUser\\\\AppData\\\\Local\\\\Temp\\\\comfyui_pvenv_9r_htb6o\\\\persistent_worker.py\", line 1807 in <module>\\n    \\n    20:21:10 [print] === END ===\\n', 'exception_type': 'RuntimeError', 'traceback': ['  File \"C:\\\\workspaces\\\\Pixal3D-2004\\\\ComfyUI\\\\execution.py\", line 535, in execute\\n    output_data, output_ui, has_subgraph, has_pending_tasks = await get_output_data(prompt_id, unique_id, obj, input_data_all, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)\\n                                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\n', '  File \"C:\\\\workspaces\\\\Pixal3D-2004\\\\ComfyUI\\\\execution.py\", line 335, in get_output_data\\n    return_values = await _async_map_node_over_list(prompt_id, unique_id, obj, input_data_all, obj.FUNCTION, allow_interrupt=True, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)\\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\n', '  File \"C:\\\\workspaces\\\\Pixal3D-2004\\\\ComfyUI\\\\execution.py\", line 309, in _async_map_node_over_list\\n    await process_inputs(input_dict, i)\\n', '  File \"C:\\\\workspaces\\\\Pixal3D-2004\\\\ComfyUI\\\\execution.py\", line 297, in process_inputs\\n    result = f(**inputs)\\n             ^^^^^^^^^^^\\n', '  File \"C:\\\\workspaces\\\\Pixal3D-2004\\\\.venv\\\\Lib\\\\site-packages\\\\comfy_env\\\\isolation\\\\metadata.py\", line 560, in proxy\\n    result = worker.call_method(\\n             ^^^^^^^^^^^^^^^^^^^\\n', '  File \"C:\\\\workspaces\\\\Pixal3D-2004\\\\.venv\\\\Lib\\\\site-packages\\\\comfy_env\\\\isolation\\\\workers\\\\subprocess.py\", line 669, in call_method\\n    response = self._send_request(request, timeout)\\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\n', '  File \"C:\\\\workspaces\\\\Pixal3D-2004\\\\.venv\\\\Lib\\\\site-packages\\\\comfy_env\\\\isolation\\\\workers\\\\subprocess.py\", line 589, in _send_request\\n    raise RuntimeError(\\n'], 'current_inputs': {'seed': [42], 'max_num_tokens': [49152], 'ss_steps': [12], 'ss_guidance': [7.5], 'ss_rescale': [0.7], 'ss_rescale_t': [5], 'shape_steps': [12], 'shape_guidance': [7.5], 'shape_rescale': [0.5], 'shape_rescale_t': [3], 'tex_steps': [12], 'tex_guidance': [1], 'tex_rescale': [0], 'tex_rescale_t': [3], 'pipeline': [\"{'pipeline_type': '1024_cascade', 'attn_backend': 'auto'}\"], 'image': ['tensor([[[[0., 0., 0.],\\n          [0., 0., 0.],\\n          [0., 0., 0.],\\n          ...,\\n          [0., 0., 0.],\\n          [0., 0., 0.],\\n          [0., 0., 0.]],\\n\\n         [[0., 0., 0.],\\n          [0., 0., 0.],\\n          [0., 0., 0.],\\n          ...,\\n          [0., 0., 0.],\\n          [0., 0., 0.],\\n          [0., 0., 0.]],\\n\\n         [[0., 0., 0.],\\n          [0., 0., 0.],\\n          [0., 0., 0.],\\n          ...,\\n          [0., 0., 0.],\\n          [0., 0., 0.],\\n          [0., 0., 0.]],\\n\\n         ...,\\n\\n         [[0., 0., 0.],\\n          [0., 0., 0.],\\n          [0., 0., 0.],\\n          ...,\\n          [0., 0., 0.],\\n          [0., 0., 0.],\\n          [0., 0., 0.]],\\n\\n         [[0., 0., 0.],\\n          [0., 0., 0.],\\n          [0., 0., 0.],\\n          ...,\\n          [0., 0., 0.],\\n          [0., 0., 0.],\\n          [0., 0., 0.]],\\n\\n         [[0., 0., 0.],\\n          [0., 0., 0.],\\n          [0., 0., 0.],\\n          ...,\\n          [0., 0., 0.],\\n          [0., 0., 0.],\\n          [0., 0., 0.]]]])'], 'camera': [\"{'camera_angle_x': 0.6282833104125424, 'distance': 1.538933981542112, 'mesh_scale': 1.0}\"]}, 'current_outputs': ['27', '22', '20', '8', '3', '26', '1', '9', '16', '25', '23', '7', '24'], 'timestamp': 1779301283740}\n\nDetails:\nWorkflow: C:\\ComfyUI-Pixal3D\\workflows\\pixal3d_basic.json\nNode error: Pixal3DGenerateMesh",
+      "status": "pass",
+      "duration_seconds": 778.86,
+      "error": null,
       "hardware": {
         "os": "Windows-11-10.0.26100-SP0",
-        "cpu": "AMD64 Family 23 Model 113 Stepping 0, AuthenticAMD"
+        "cpu": "Intel64 Family 6 Model 79 Stepping 1, GenuineIntel"
       },
       "resources": {
         "ram": {
-          "peak": 19.52,
-          "avg": 6.56
+          "peak": 26.98,
+          "avg": 11.62
         },
-        "total_ram_gb": 23.9,
-        "samples": 557
+        "total_ram_gb": 31.9,
+        "samples": 768
       }
     }
   ]
