@@ -1,13 +1,796 @@
 Capturing execution frames: pixal3d_basic.json
   Frame 1 saved (frame_000.jpg, t=0.0s)
   Validating workflow...
+  [ComfyUI] === /validate endpoint called ===
+  [ComfyUI] Received JSON with keys: ['prompt']
+  [ComfyUI] Prompt has 13 nodes
+  [ComfyUI]   Node 1: LoadImage
+  [ComfyUI]     Inputs: {"image": "pixal3d_test.png"}
   Queuing workflow for execution...
+  [ComfyUI]   Node 3: Pixal3DPreprocessImage
+  [ComfyUI]     Inputs: {"image": ["1", 0], "mask": ["9", 0]}
+  [ComfyUI]   Node 7: Pixal3DLoadPipeline
+  [ComfyUI]     Inputs: {"pipeline_type": "1024_cascade", "attn_backend": "auto"}
+  [ComfyUI]   Node 8: MaskPreview
+  [ComfyUI]     Inputs: {"mask": ["9", 0]}
+  [ComfyUI]   Node 9: InvertMask
+  [ComfyUI]     Inputs: {"mask": ["1", 1]}
+  [ComfyUI]   Node 16: Preview3D
+  [ComfyUI]     Inputs: {"model_file": ["23", 0], "image": ""}
+  [ComfyUI]   Node 20: Pixal3DGenerateMesh
+  [ComfyUI]     Inputs: {"seed": 42, "max_num_tokens": 49152, "ss_steps": 12, "ss_guidance": 7.5, "ss_rescale": 0.7, "ss_rescale_t": 5, "shape_steps": 12, "shape_guidance": 7.5, "shape_rescale": 0.5, "shape_rescale_t": 3, "t
+  [ComfyUI]   Node 22: Pixal3DRasterizePBR
+  [ComfyUI]     Inputs: {"texture_size": 2048, "double_sided": false, "bake_mode": "pbr", "debug_dump": false, "trimesh": ["24", 0], "voxelgrid": ["20", 1], "original_mesh": ["20", 0]}
+  [ComfyUI]   Node 23: Pixal3DExportGLB
+  [ComfyUI]     Inputs: {"filename_prefix": "pixal3d", "trimesh": ["22", 0]}
+  [ComfyUI]   Node 24: Pixal3DProcessMesh
+  [ComfyUI]     Inputs: {"target_face_count": 200000, "remesh": true, "remesh_resolution": 512, "remesh_band": 1, "remove_inner_faces": true, "fill_holes": true, "fill_holes_perimeter": 0.03, "floater_threshold": 0.001, "wel
+  [ComfyUI]   Node 25: DownloadAndLoadMoGe2Model
+  [ComfyUI]     Inputs: {"model": "moge-2-vitl-normal.pt", "precision": "auto", "attention": "auto"}
+  [ComfyUI]   Node 26: MoGe2Inference
+  [ComfyUI]     Inputs: {"resolution_level": 9, "num_tokens": 0, "fov_x_deg": 0, "force_projection": true, "apply_mask": true, "moge_model": ["25", 0], "images": ["3", 0]}
+  [ComfyUI]   Node 27: Pixal3DCameraFromFOV
+  [ComfyUI]     Inputs: {"fov_x_deg": ["26", 6], "mesh_scale": 1, "extend_pixel": 0, "image_resolution": 512}
+  [ComfyUI] Generated prompt_id: c709456d-a0c2-4a2a-b60f-8257c6a16d65
+  [ComfyUI] Calling execution.validate_prompt()...
+  [ComfyUI] Validation result: valid=True
+  [ComfyUI] === Validation PASSED ===
+  [ComfyUI] got prompt
+  [ComfyUI] [pixal3d] >>> Pixal3DPreprocessImage.execute ...
+  [ComfyUI] [pixal3d] <<< Pixal3DPreprocessImage.execute  (0.0s)
+  [ComfyUI] [comfy-env] Running DownloadAndLoadMoGe2Model: model: 'moge-2-vitl-normal.pt', precision: 'auto', attention: 'auto'
+  [ComfyUI] [VRAM] Before DownloadAndLoadMoGe2Model: 1130 / 8150 MB
+  [ComfyUI] [comfy-env] SubprocessWorker: C:\Users\ContainerUser\AppData\Local\Programs\comfy-env\envs\moge2-nodes\.pixi\envs\default\python.exe
+  [ComfyUI] [comfy-env] env_vars: {'COMFYUI_BASE': 'C:\\workspaces\\Pixal3D-1224\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI'}
+  [ComfyUI] [SubprocessWorker] call_method: nodes.load_model.DownloadAndLoadMoGe2Model.EXECUTE_NORMALIZED
+  [ComfyUI] [SubprocessWorker] acquired lock, ensuring started...
+  [ComfyUI] [comfy-env] default: Library/bin has 237 DLLs
+  [ComfyUI] [ComfyUI-MoGe2] python: C:\Users\ContainerUser\AppData\Local\Programs\comfy-env\envs\moge2-nodes\.pixi\envs\default\python.exe
+  [ComfyUI] [ComfyUI-MoGe2] sys_path sent to worker: ['C:\\workspaces\\Pixal3D-1224\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI', 'C:\\workspaces\\Pixal3D-1224\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\custom_nodes\\ComfyUI-MoGe2', 'C:\\Users\\ContainerUser\\AppData\\Local\\Programs\\comfy-env\\envs\\moge2-nodes\\.pixi\\envs\\default\\Lib\\site-packages', 'C:\\workspaces\\Pixal3D-1224\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\custom_nodes\\ComfyUI-MoGe2']
+  [ComfyUI] [SubprocessWorker] is_pixi=True, python=C:\Users\ContainerUser\AppData\Local\Programs\comfy-env\envs\moge2-nodes\.pixi\envs\default\python.exe
+  [ComfyUI] [SubprocessWorker] launching cmd=['C:\\Users\\ContainerUser\\.pixi\\bin\\pixi.exe', 'run', '--as-is', '--manifest-path', 'C:\\Users\\ContainerUser\\AppData\\Local\\Programs\\comfy-env\\envs\\moge2-nodes\\pixi.toml', '-e', 'default', 'python', 'C:\\Users\\ContainerUser\\AppData\\Local\\Temp\\comfyui_pvenv_eq69fx24\\persistent_worker.py', 'tcp://127.0.0.1:52188']...
   Node executed (1 total), capturing...
-  Frame 2 saved (frame_001.jpg, t=0.7s)
-  [capture-node] freeze=5ms shot=139ms unfreeze=0ms saved=True
-  Execution complete (t=0.7s)
-  Execution error: {'prompt_id': 'cf6bcb1f-b946-47ee-83f0-4db556eb7012', 'node_id': '4', 'node_type': 'Pixal3DEstimateCamera', 'executed': ['9', '8', '1', '3'], 'exception_message': "No module named 'moge'\n", 'exception_type': 'ModuleNotFoundError', 'traceback': ['  File "C:\\workspaces\\Pixal3D-1336\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\execution.py", line 535, in execute\n    output_data, output_ui, has_subgraph, has_pending_tasks = await get_output_data(prompt_id, unique_id, obj, input_data_all, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)\n                                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n', '  File "C:\\workspaces\\Pixal3D-1336\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\execution.py", line 335, in get_output_data\n    return_values = await _async_map_node_over_list(prompt_id, unique_id, obj, input_data_all, obj.FUNCTION, allow_interrupt=True, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n', '  File "C:\\workspaces\\Pixal3D-1336\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\execution.py", line 309, in _async_map_node_over_list\n    await process_inputs(input_dict, i)\n', '  File "C:\\workspaces\\Pixal3D-1336\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\execution.py", line 297, in process_inputs\n    result = f(**inputs)\n', '  File "C:\\workspaces\\Pixal3D-1336\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\comfy_api\\internal\\__init__.py", line 149, in wrapped_func\n    return method(locked_class, **inputs)\n', '  File "C:\\workspaces\\Pixal3D-1336\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\comfy_api\\latest\\_io.py", line 1833, in EXECUTE_NORMALIZED\n    to_return = cls.execute(*args, **kwargs)\n', '  File "C:\\workspaces\\Pixal3D-1336\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\custom_nodes\\ComfyUI-Pixal3D\\nodes\\nodes_inference.py", line 79, in execute\n    cam = estimate_camera(\n        image,\n    ...<2 lines>...\n        image_resolution=image_resolution,\n    )\n', '  File "C:\\workspaces\\Pixal3D-1336\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\custom_nodes\\ComfyUI-Pixal3D\\nodes\\stages.py", line 690, in estimate_camera\n    moge = init_moge()\n', '  File "C:\\workspaces\\Pixal3D-1336\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\custom_nodes\\ComfyUI-Pixal3D\\nodes\\stages.py", line 551, in init_moge\n    from moge.model.v2 import MoGeModel\n'], 'current_inputs': {'mesh_scale': [1], 'extend_pixel': [0], 'image_resolution': [512], 'image': ['tensor([[[[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]],\n\n         [[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]],\n\n         [[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]],\n\n         ...,\n\n         [[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]],\n\n         [[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]],\n\n         [[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]]]])']}, 'current_outputs': ['8', '20', '7', '3', '9', '24', '1', '4', '16', '23', '22'], 'timestamp': 1778758891043}
+  Frame 2 saved (frame_001.jpg, t=0.6s)
+  [capture-node] freeze=4ms shot=100ms unfreeze=5ms saved=True
+  [ComfyUI] [worker:ComfyUI-MoGe2] ERROR: Failed to import comfy_kitchen, Error: No module named 'comfy_kitchen', fp8 and fp4 support will not be available.
+  [ComfyUI] [SubprocessWorker] worker started/confirmed
+  [ComfyUI] [SubprocessWorker] serializing kwargs to shm...
+  [ComfyUI] [SubprocessWorker] created 0 shm blocks
+  [ComfyUI] [SubprocessWorker] sending request via socket...
+  [ComfyUI] [SubprocessWorker] call_id=1 sending call_method
+  [ComfyUI] Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+  [ComfyUI] [worker:ComfyUI-MoGe2] WARNING: Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+  [ComfyUI] 
+  [ComfyUI] model.pt:   0%|          | 0.00/1.32G [00:00<?, ?B/s]
+  Frame 3 saved (frame_002.jpg, t=5.0s)
+  [capture-periodic] freeze=2ms shot=92ms unfreeze=3ms saved=True
+  [capture-loop] iter=50 t=6.3s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=7.0/23.9GB (29%) swap=0.3/14.5GB (2%) cpu=14% browser_rss=0.73GB
+  [ComfyUI] 
+  [ComfyUI] model.pt:   5%|▌         | 67.1M/1.32G [00:03<00:56, 22.3MB/s][SubprocessWorker] callback 'report_progress' from call_id=1
+  Frame 4 saved (frame_003.jpg, t=7.2s)
+  [capture-periodic] freeze=3ms shot=99ms unfreeze=3ms saved=True
+  [ComfyUI] 
+  [ComfyUI] model.pt:  15%|█▌        | 201M/1.32G [00:04<00:22, 50.2MB/s] [SubprocessWorker] callback 'report_progress' from call_id=1
+  [ComfyUI] 
+  [ComfyUI] model.pt:  20%|██        | 268M/1.32G [00:04<00:15, 69.9MB/s][SubprocessWorker] callback 'report_progress' from call_id=1
+  Frame 5 saved (frame_004.jpg, t=9.4s)
+  [capture-periodic] freeze=4ms shot=107ms unfreeze=4ms saved=True
+  [ComfyUI] 
+  [ComfyUI] model.pt:  25%|██▌       | 335M/1.32G [00:07<00:21, 45.6MB/s][SubprocessWorker] callback 'report_progress' from call_id=1
+  [ComfyUI] 
+  [ComfyUI] model.pt:  30%|███       | 402M/1.32G [00:07<00:14, 62.2MB/s][SubprocessWorker] callback 'report_progress' from call_id=1
+  Frame 6 saved (frame_005.jpg, t=11.5s)
+  [capture-periodic] freeze=7ms shot=98ms unfreeze=4ms saved=True
+  [capture-loop] iter=100 t=12.7s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=7.4/23.9GB (31%) swap=0.3/14.5GB (2%) cpu=22% browser_rss=0.73GB
+  [ComfyUI] 
+  [ComfyUI] model.pt:  41%|████      | 537M/1.32G [00:09<00:12, 64.4MB/s][SubprocessWorker] callback 'report_progress' from call_id=1
+  Frame 7 saved (frame_006.jpg, t=13.7s)
+  [capture-periodic] freeze=3ms shot=100ms unfreeze=8ms saved=True
+  [ComfyUI] 
+  [ComfyUI] model.pt:  46%|████▌     | 604M/1.32G [00:10<00:11, 65.1MB/s][SubprocessWorker] callback 'report_progress' from call_id=1
+  [ComfyUI] 
+  [ComfyUI] model.pt:  58%|█████▊    | 768M/1.32G [00:10<00:04, 113MB/s] [SubprocessWorker] callback 'report_progress' from call_id=1
+  [ComfyUI] 
+  [ComfyUI] model.pt:  66%|██████▌   | 872M/1.32G [00:11<00:03, 145MB/s][SubprocessWorker] callback 'report_progress' from call_id=1
+  Frame 8 saved (frame_007.jpg, t=15.9s)
+  [capture-periodic] freeze=3ms shot=90ms unfreeze=6ms saved=True
+  [ComfyUI] 
+  [ComfyUI] model.pt:  81%|████████  | 1.07G/1.32G [00:12<00:01, 165MB/s][SubprocessWorker] callback 'report_progress' from call_id=1
+  [ComfyUI] 
+  [ComfyUI] model.pt: 100%|██████████| 1.32G/1.32G [00:12<00:00, 269MB/s][SubprocessWorker] callback 'report_progress' from call_id=1
+  [ComfyUI] 
+  [ComfyUI] model.pt: 100%|██████████| 1.32G/1.32G [00:12<00:00, 108MB/s]
+  [ComfyUI] [SubprocessWorker] got response: ok
+  [ComfyUI] [comfy-env] DownloadAndLoadMoGe2Model done (15.95s): result: NodeOutput
+  [ComfyUI] [VRAM] After DownloadAndLoadMoGe2Model: 1130 / 8150 MB
+  [ComfyUI] [comfy-env] Running MoGe2Inference: resolution_level: 9, num_tokens: 0, fov_x_deg: 0.0, force_projection: True, apply_mask: True, moge_model: dict, images: torch.float32 [1,428,428,3] cpu
+  [ComfyUI] [VRAM] Before MoGe2Inference: 1130 / 8150 MB
+  [ComfyUI] [SubprocessWorker] call_method: nodes.nodes_inference.MoGe2Inference.EXECUTE_NORMALIZED
+  [ComfyUI] [SubprocessWorker] acquired lock, ensuring started...
+  [ComfyUI] [ComfyUI-MoGe2] Health check: ping (timeout=5.0s)...
+  [ComfyUI] [ComfyUI-MoGe2] Health check: ok
+  [ComfyUI] [SubprocessWorker] worker started/confirmed
+  [ComfyUI] [comfy-env] PRE-SERIALIZE 'images' shape: torch.Size([1, 428, 428, 3])
+  [ComfyUI] [SubprocessWorker] serializing kwargs to shm...
+  [ComfyUI] [SubprocessWorker] created 0 shm blocks
+  [ComfyUI] [SubprocessWorker] sending request via socket...
+  [ComfyUI] [SubprocessWorker] call_id=2 sending call_method
+  [ComfyUI] [worker:ComfyUI-MoGe2] [comfy-env] _from_shm got dict with keys: ['__type__', 'strategy', 'manager_path', 'storage_key', 'storage_size']
+  [ComfyUI] [worker:ComfyUI-MoGe2] [comfy-env] DESERIALIZE TensorRef: tensor_size=[1, 428, 428, 3]
+  [ComfyUI] [worker:ComfyUI-MoGe2] [comfy-env] DESERIALIZED tensor shape: torch.Size([1, 428, 428, 3])
+  [ComfyUI] [worker:ComfyUI-MoGe2] WARNING: No comfy kitchen, using old apply_rope functions.
+  Frame 9 saved (frame_008.jpg, t=18.1s)
+  [capture-periodic] freeze=3ms shot=93ms unfreeze=5ms saved=True
+  [capture-loop] iter=150 t=18.6s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=3 ram=7.2/23.9GB (30%) swap=0.3/14.5GB (2%) cpu=20% browser_rss=0.74GB
+  Frame 10 saved (frame_009.jpg, t=20.3s)
+  [capture-periodic] freeze=3ms shot=97ms unfreeze=5ms saved=True
+  [capture-loop] iter=200 t=24.4s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=3 ram=7.3/23.9GB (30%) swap=0.3/14.5GB (2%) cpu=14% browser_rss=0.67GB
+  [capture-loop] iter=250 t=30.2s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=9.3/23.9GB (39%) swap=0.3/14.5GB (2%) cpu=25% browser_rss=0.67GB
+  [ComfyUI] [SubprocessWorker] callback 'request_vram_budget' from call_id=2
+  [ComfyUI] [comfy-env] VRAM request: 0.66GB, free before eviction: 7.36GB
+  [ComfyUI] [comfy-env] VRAM after eviction: 7.36GB
+  [ComfyUI] [worker:ComfyUI-MoGe2] [VRAM] +320MB (now 320MB) reserved=352MB peak=320MB
+  [ComfyUI] [worker:ComfyUI-MoGe2] [VRAM] +332MB (now 652MB) reserved=1536MB peak=775MB
+  [ComfyUI] [SubprocessWorker] callback 'report_progress' from call_id=2
+  [ComfyUI] [SubprocessWorker] got response: ok
+  [ComfyUI] [comfy-env] Created 1 model patchers: ['MoGeWrapper_1']
+  [ComfyUI] [comfy-env] MoGe2Inference done (16.88s): result: NodeOutput
+  [ComfyUI] [VRAM] After MoGe2Inference: 1130 / 8150 MB
+  [ComfyUI] [VRAM] Loaded: SubprocessModel (631 MB)
+  [ComfyUI] [pixal3d] >>> Pixal3DCameraFromFOV.execute ...
+  [ComfyUI] [Pixal3DCameraFromFOV] fov_x_deg=36.00, camera_angle_x=0.6283, distance=1.5389, mesh_scale=1.0000
+  [ComfyUI] [pixal3d] <<< Pixal3DCameraFromFOV.execute  (0.0s)
+  [ComfyUI] [pixal3d] >>> Pixal3DLoadPipeline.execute ...
+  [ComfyUI] [pixal3d] <<< Pixal3DLoadPipeline.execute  (0.0s)
+  [ComfyUI] [pixal3d] >>> Pixal3DGenerateMesh.execute ...
+  [ComfyUI] [pixal3d] >>> init_pipeline TOTAL ...
+  [ComfyUI] [pixal3d] >>> download Pixal3D weights ...
+  [ComfyUI] [pixal3d] Ensuring weights present in C:\workspaces\Pixal3D-1224\portable-comfyui\ComfyUI_windows_portable\ComfyUI\models\pixal3d
+  [ComfyUI]   downloading pipeline.json
+  Frame 11 saved (frame_010.jpg, t=33.3s)
+  [capture-periodic] freeze=2ms shot=86ms unfreeze=4ms saved=True
+  [ComfyUI] HTTP Request: HEAD https://huggingface.co/TencentARC/Pixal3D/resolve/main/pipeline.json "HTTP/1.1 307 Temporary Redirect"
+  [ComfyUI] Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+  [ComfyUI] Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+  [ComfyUI] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/TencentARC/Pixal3D/7bde14f95a5ce8fc19af0877e2fa048ae8dd1966/pipeline.json "HTTP/1.1 200 OK"
+  [ComfyUI] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/TencentARC/Pixal3D/7bde14f95a5ce8fc19af0877e2fa048ae8dd1966/pipeline.json "HTTP/1.1 200 OK"
+  [ComfyUI] 
+  [ComfyUI] pipeline.json: 0.00B [00:00, ?B/s]
+  [ComfyUI] pipeline.json: 4.07kB [00:00, 17.6MB/s]
+  [ComfyUI]   downloading ckpts/shape_dec_next_dc_f16c32_fp16.json
+  [ComfyUI] HTTP Request: HEAD https://huggingface.co/TencentARC/Pixal3D/resolve/main/ckpts/shape_dec_next_dc_f16c32_fp16.json "HTTP/1.1 307 Temporary Redirect"
+  [ComfyUI] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/TencentARC/Pixal3D/7bde14f95a5ce8fc19af0877e2fa048ae8dd1966/ckpts%2Fshape_dec_next_dc_f16c32_fp16.json "HTTP/1.1 200 OK"
+  [ComfyUI] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/TencentARC/Pixal3D/7bde14f95a5ce8fc19af0877e2fa048ae8dd1966/ckpts%2Fshape_dec_next_dc_f16c32_fp16.json "HTTP/1.1 200 OK"
+  [ComfyUI] 
+  [ComfyUI] shape_dec_next_dc_f16c32_fp16.json:   0%|          | 0.00/678 [00:00<?, ?B/s]
+  [ComfyUI] shape_dec_next_dc_f16c32_fp16.json: 100%|##########| 678/678 [00:00<00:00, 2.31MB/s]
+  [ComfyUI]   downloading ckpts/shape_dec_next_dc_f16c32_fp16.safetensors
+  [ComfyUI] HTTP Request: HEAD https://huggingface.co/TencentARC/Pixal3D/resolve/main/ckpts/shape_dec_next_dc_f16c32_fp16.safetensors "HTTP/1.1 302 Found"
+  [ComfyUI] HTTP Request: GET https://huggingface.co/api/models/TencentARC/Pixal3D/xet-read-token/7bde14f95a5ce8fc19af0877e2fa048ae8dd1966 "HTTP/1.1 200 OK"
+  [ComfyUI] 
+  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(�):   0%|          | 0.00/948M [00:00<?, ?B/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(�):   0%|          | 419k/948M [00:01<47:23, 333kB/s]
+  Frame 12 saved (frame_011.jpg, t=35.5s)
+  [capture-periodic] freeze=3ms shot=107ms unfreeze=8ms saved=True
+  [capture-loop] iter=300 t=36.2s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=3 ram=8.2/23.9GB (34%) swap=0.3/14.5GB (2%) cpu=27% browser_rss=0.68GB
+  [ComfyUI] 
+  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(�):  11%|#1        | 107M/948M [00:02<00:14, 56.7MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(�):  14%|#3        | 133M/948M [00:02<00:12, 64.2MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(�):  16%|#6        | 154M/948M [00:02<00:11, 67.9MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(�):  18%|#7        | 170M/948M [00:03<00:11, 67.3MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(�):  24%|##4       | 231M/948M [00:03<00:08, 87.4MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(�):  26%|##5       | 245M/948M [00:03<00:08, 81.3MB/s]
+  Frame 13 saved (frame_012.jpg, t=37.7s)
+  [capture-periodic] freeze=3ms shot=95ms unfreeze=5ms saved=True
+  [ComfyUI] 
+  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(�):  27%|##7       | 258M/948M [00:04<00:11, 60.3MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(�):  31%|###1      | 298M/948M [00:04<00:09, 67.5MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(�):  37%|###6      | 349M/948M [00:05<00:06, 94.2MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(�):  39%|###8      | 369M/948M [00:05<00:06, 91.8MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(�):  56%|#####6    | 533M/948M [00:06<00:04, 103MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(�):  57%|#####7    | 545M/948M [00:07<00:04, 95.7MB/s]
+  [capture-loop] iter=350 t=42.0s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=3 ram=8.7/23.9GB (36%) swap=0.3/14.5GB (2%) cpu=18% browser_rss=0.67GB
+  [ComfyUI] 
+  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(�):  79%|#######9  | 750M/948M [00:08<00:01, 108MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(�):  86%|########5 | 814M/948M [00:09<00:01, 94.0MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(�): 100%|##########| 948M/948M [00:10<00:00, 113MB/s]
+  [ComfyUI] ckpts/shape_dec_next_dc_f16c32_fp16.safe(�): 100%|##########| 948M/948M [00:10<00:00, 89.7MB/s]
+  [ComfyUI]   downloading ckpts/slat_flow_img2shape_dit_1_3B_1024_bf16.json
+  [ComfyUI] HTTP Request: HEAD https://huggingface.co/TencentARC/Pixal3D/resolve/main/ckpts/slat_flow_img2shape_dit_1_3B_1024_bf16.json "HTTP/1.1 307 Temporary Redirect"
+  [ComfyUI] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/TencentARC/Pixal3D/7bde14f95a5ce8fc19af0877e2fa048ae8dd1966/ckpts%2Fslat_flow_img2shape_dit_1_3B_1024_bf16.json "HTTP/1.1 200 OK"
+  [ComfyUI] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/TencentARC/Pixal3D/7bde14f95a5ce8fc19af0877e2fa048ae8dd1966/ckpts%2Fslat_flow_img2shape_dit_1_3B_1024_bf16.json "HTTP/1.1 200 OK"
+  [ComfyUI] 
+  [ComfyUI] (�)t_flow_img2shape_dit_1_3B_1024_bf16.json:   0%|          | 0.00/535 [00:00<?, ?B/s]
+  [ComfyUI] (�)t_flow_img2shape_dit_1_3B_1024_bf16.json: 100%|##########| 535/535 [00:00<00:00, 1.88MB/s]
+  [ComfyUI]   downloading ckpts/slat_flow_img2shape_dit_1_3B_1024_bf16.safetensors
+  [ComfyUI] HTTP Request: HEAD https://huggingface.co/TencentARC/Pixal3D/resolve/main/ckpts/slat_flow_img2shape_dit_1_3B_1024_bf16.safetensors "HTTP/1.1 302 Found"
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(�):   0%|          | 0.00/5.55G [00:00<?, ?B/s]
+  [capture-loop] iter=400 t=47.8s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=3 ram=8.9/23.9GB (37%) swap=0.3/14.5GB (2%) cpu=15% browser_rss=0.67GB
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(�):   2%|2         | 134M/5.55G [00:03<02:11, 41.2MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(�):   5%|4         | 268M/5.55G [00:03<00:58, 90.2MB/s]
+  [capture-loop] iter=450 t=53.7s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=8.8/23.9GB (37%) swap=0.3/14.5GB (2%) cpu=22% browser_rss=0.67GB
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(�):   6%|6         | 335M/5.55G [00:10<03:27, 25.1MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(�):   7%|7         | 402M/5.55G [00:11<02:35, 33.1MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(�):   8%|8         | 469M/5.55G [00:11<01:58, 42.7MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(�):  10%|9         | 536M/5.55G [00:12<01:33, 53.6MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(�):  11%|#         | 603M/5.55G [00:12<01:10, 70.5MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(�):  12%|#2        | 670M/5.55G [00:13<01:10, 69.4MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(�):  13%|#3        | 737M/5.55G [00:14<01:04, 74.4MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(�):  15%|#4        | 805M/5.55G [00:14<00:55, 85.9MB/s]
+  [capture-loop] iter=500 t=60.0s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=9.0/23.9GB (38%) swap=0.3/14.5GB (2%) cpu=29% browser_rss=0.66GB
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(�):  16%|#5        | 872M/5.55G [00:15<00:43, 108MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(�):  18%|#8        | 1.02G/5.55G [00:16<00:35, 126MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(�):  19%|#9        | 1.07G/5.55G [00:16<00:33, 135MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(�):  21%|##        | 1.14G/5.55G [00:19<01:16, 57.7MB/s]
+  [capture-loop] iter=550 t=66.1s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=9.4/23.9GB (39%) swap=0.3/14.5GB (2%) cpu=31% browser_rss=0.66GB
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(�):  22%|##1       | 1.21G/5.55G [00:21<01:34, 45.9MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(�):  25%|##5       | 1.41G/5.55G [00:24<01:09, 59.8MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(�):  27%|##6       | 1.48G/5.55G [00:24<00:57, 71.1MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(�):  29%|##9       | 1.61G/5.55G [00:25<00:45, 86.1MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(�):  31%|###1      | 1.74G/5.55G [00:25<00:31, 121MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(�):  33%|###2      | 1.81G/5.55G [00:26<00:30, 124MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(�):  35%|###5      | 1.94G/5.55G [00:27<00:30, 117MB/s]
+  [capture-loop] iter=600 t=72.4s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=9.6/23.9GB (40%) swap=0.3/14.5GB (2%) cpu=36% browser_rss=0.66GB
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(�):  36%|###6      | 2.01G/5.55G [00:29<00:42, 82.4MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(�):  39%|###8      | 2.15G/5.55G [00:29<00:28, 120MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(�):  40%|###9      | 2.21G/5.55G [00:29<00:24, 135MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(�):  41%|####1     | 2.28G/5.55G [00:31<00:35, 92.4MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(�):  44%|####3     | 2.41G/5.55G [00:31<00:22, 137MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(�):  45%|####4     | 2.48G/5.55G [00:32<00:24, 123MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(�):  47%|####7     | 2.62G/5.55G [00:32<00:16, 175MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(�):  50%|####9     | 2.75G/5.55G [00:32<00:12, 230MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(�):  52%|#####1    | 2.88G/5.55G [00:32<00:09, 285MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(�):  54%|#####4    | 3.02G/5.55G [00:33<00:07, 336MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(�):  56%|#####5    | 3.08G/5.55G [00:33<00:07, 321MB/s]
+  [capture-loop] iter=650 t=78.6s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=9.2/23.9GB (38%) swap=0.3/14.5GB (2%) cpu=36% browser_rss=0.66GB
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(�):  57%|#####6    | 3.15G/5.55G [00:34<00:13, 178MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(�):  59%|#####9    | 3.29G/5.55G [00:37<00:26, 83.8MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(�):  60%|######    | 3.35G/5.55G [00:37<00:24, 91.0MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(�):  63%|######2   | 3.49G/5.55G [00:38<00:15, 133MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(�):  64%|######4   | 3.55G/5.55G [00:38<00:13, 149MB/s]
+  [capture-loop] iter=700 t=84.7s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=9.3/23.9GB (39%) swap=0.3/14.5GB (2%) cpu=32% browser_rss=0.65GB
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(�):  66%|######6   | 3.69G/5.55G [00:40<00:19, 95.0MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(�):  68%|######7   | 3.76G/5.55G [00:41<00:20, 87.3MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(�):  71%|#######1  | 3.96G/5.55G [00:43<00:15, 105MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(�):  75%|#######4  | 4.16G/5.55G [00:43<00:08, 162MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(�):  77%|#######7  | 4.29G/5.55G [00:43<00:06, 201MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(�):  80%|#######9  | 4.43G/5.55G [00:43<00:04, 244MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(�):  83%|########3 | 4.63G/5.55G [00:44<00:02, 332MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(�):  86%|########5 | 4.76G/5.55G [00:45<00:03, 239MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(�):  89%|########9 | 4.96G/5.55G [00:45<00:01, 318MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(�):  93%|#########3| 5.16G/5.55G [00:45<00:00, 403MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(�):  98%|#########7| 5.43G/5.55G [00:45<00:00, 531MB/s]
+  [capture-loop] iter=750 t=90.7s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=3 ram=8.5/23.9GB (35%) swap=0.3/14.5GB (2%) cpu=25% browser_rss=0.66GB
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_1024_(�): 100%|##########| 5.55G/5.55G [00:45<00:00, 121MB/s]
+  [ComfyUI]   downloading ckpts/slat_flow_img2shape_dit_1_3B_512_bf16.json
+  [ComfyUI] HTTP Request: HEAD https://huggingface.co/TencentARC/Pixal3D/resolve/main/ckpts/slat_flow_img2shape_dit_1_3B_512_bf16.json "HTTP/1.1 307 Temporary Redirect"
+  [ComfyUI] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/TencentARC/Pixal3D/7bde14f95a5ce8fc19af0877e2fa048ae8dd1966/ckpts%2Fslat_flow_img2shape_dit_1_3B_512_bf16.json "HTTP/1.1 200 OK"
+  [ComfyUI] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/TencentARC/Pixal3D/7bde14f95a5ce8fc19af0877e2fa048ae8dd1966/ckpts%2Fslat_flow_img2shape_dit_1_3B_512_bf16.json "HTTP/1.1 200 OK"
+  [ComfyUI] 
+  [ComfyUI] (�)at_flow_img2shape_dit_1_3B_512_bf16.json:   0%|          | 0.00/535 [00:00<?, ?B/s]
+  [ComfyUI] (�)at_flow_img2shape_dit_1_3B_512_bf16.json: 100%|##########| 535/535 [00:00<00:00, 2.43MB/s]
+  [ComfyUI]   downloading ckpts/slat_flow_img2shape_dit_1_3B_512_bf16.safetensors
+  [ComfyUI] HTTP Request: HEAD https://huggingface.co/TencentARC/Pixal3D/resolve/main/ckpts/slat_flow_img2shape_dit_1_3B_512_bf16.safetensors "HTTP/1.1 302 Found"
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(�):   0%|          | 0.00/5.55G [00:00<?, ?B/s]
+  [capture-loop] iter=800 t=96.6s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=5 ram=8.8/23.9GB (37%) swap=0.3/14.5GB (2%) cpu=17% browser_rss=0.66GB
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(�):   0%|          | 30.7k/5.55G [00:05<276:09:35, 5.58kB/s]
+  [capture-loop] iter=850 t=102.6s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=9.3/23.9GB (39%) swap=0.3/14.5GB (2%) cpu=26% browser_rss=0.66GB
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(�):   2%|2         | 134M/5.55G [00:13<07:58, 11.3MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(�):   6%|6         | 335M/5.55G [00:13<02:30, 34.5MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(�):   8%|8         | 470M/5.55G [00:15<01:47, 47.1MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(�):  11%|#         | 604M/5.55G [00:15<01:10, 70.1MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(�):  15%|#4        | 805M/5.55G [00:15<00:40, 116MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(�):  18%|#8        | 1.01G/5.55G [00:15<00:26, 173MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(�):  21%|##        | 1.14G/5.55G [00:16<00:20, 212MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(�):  22%|##1       | 1.21G/5.55G [00:16<00:19, 219MB/s]
+  [capture-loop] iter=900 t=108.7s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=9.0/23.9GB (38%) swap=0.3/14.5GB (2%) cpu=34% browser_rss=0.65GB
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(�):  23%|##2       | 1.27G/5.55G [00:19<00:51, 82.9MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(�):  24%|##4       | 1.34G/5.55G [00:20<00:49, 84.2MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(�):  27%|##6       | 1.48G/5.55G [00:22<00:55, 72.9MB/s]
+  [capture-loop] iter=950 t=114.9s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=9.4/23.9GB (39%) swap=0.3/14.5GB (2%) cpu=32% browser_rss=0.65GB
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(�):  29%|##9       | 1.61G/5.55G [00:25<01:05, 59.8MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(�):  30%|###       | 1.68G/5.55G [00:25<00:57, 67.2MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(�):  33%|###2      | 1.81G/5.55G [00:26<00:40, 92.3MB/s]
+  [capture-loop] iter=1000 t=121.3s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=9.7/23.9GB (41%) swap=0.3/14.5GB (2%) cpu=34% browser_rss=0.65GB
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(�):  36%|###6      | 2.01G/5.55G [00:31<01:01, 57.1MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(�):  39%|###8      | 2.15G/5.55G [00:31<00:43, 77.5MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(�):  40%|###9      | 2.21G/5.55G [00:33<00:46, 71.9MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(�):  44%|####3     | 2.41G/5.55G [00:33<00:26, 118MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(�):  45%|####4     | 2.48G/5.55G [00:33<00:23, 130MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(�):  47%|####7     | 2.62G/5.55G [00:35<00:29, 99.5MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(�):  51%|#####     | 2.82G/5.55G [00:35<00:17, 156MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(�):  54%|#####4    | 3.02G/5.55G [00:36<00:11, 222MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(�):  58%|#####8    | 3.22G/5.55G [00:36<00:07, 296MB/s]
+  [capture-loop] iter=1050 t=127.4s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=5 ram=9.3/23.9GB (39%) swap=0.3/14.5GB (2%) cpu=32% browser_rss=0.65GB
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(�):  60%|######    | 3.35G/5.55G [00:36<00:06, 333MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(�):  64%|######4   | 3.55G/5.55G [00:36<00:04, 418MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(�):  66%|######6   | 3.69G/5.55G [00:37<00:04, 442MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(�):  69%|######8   | 3.82G/5.55G [00:37<00:03, 463MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(�):  70%|#######   | 3.89G/5.55G [00:37<00:04, 334MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(�):  71%|#######1  | 3.96G/5.55G [00:38<00:07, 222MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(�):  75%|#######4  | 4.16G/5.55G [00:40<00:08, 172MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(�):  77%|#######7  | 4.29G/5.55G [00:40<00:05, 216MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(�):  79%|#######8  | 4.36G/5.55G [00:42<00:09, 119MB/s]
+  [capture-loop] iter=1100 t=133.8s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=9.0/23.9GB (38%) swap=0.3/14.5GB (2%) cpu=29% browser_rss=0.65GB
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(�):  81%|########1 | 4.49G/5.55G [00:44<00:11, 94.8MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(�):  85%|########4 | 4.69G/5.55G [00:44<00:06, 130MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(�):  88%|########8 | 4.90G/5.55G [00:45<00:03, 189MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(�):  92%|#########1| 5.10G/5.55G [00:45<00:01, 255MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(�):  96%|#########5| 5.30G/5.55G [00:45<00:00, 331MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(�): 100%|##########| 5.55G/5.55G [00:45<00:00, 452MB/s]
+  [ComfyUI] ckpts/slat_flow_img2shape_dit_1_3B_512_b(�): 100%|##########| 5.55G/5.55G [00:45<00:00, 121MB/s]
+  [ComfyUI]   downloading ckpts/slat_flow_imgshape2tex_dit_1_3B_1024_bf16.json
+  [ComfyUI] HTTP Request: HEAD https://huggingface.co/TencentARC/Pixal3D/resolve/main/ckpts/slat_flow_imgshape2tex_dit_1_3B_1024_bf16.json "HTTP/1.1 307 Temporary Redirect"
+  [ComfyUI] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/TencentARC/Pixal3D/7bde14f95a5ce8fc19af0877e2fa048ae8dd1966/ckpts%2Fslat_flow_imgshape2tex_dit_1_3B_1024_bf16.json "HTTP/1.1 200 OK"
+  [ComfyUI] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/TencentARC/Pixal3D/7bde14f95a5ce8fc19af0877e2fa048ae8dd1966/ckpts%2Fslat_flow_imgshape2tex_dit_1_3B_1024_bf16.json "HTTP/1.1 200 OK"
+  [ComfyUI] 
+  [ComfyUI] (�)low_imgshape2tex_dit_1_3B_1024_bf16.json:   0%|          | 0.00/535 [00:00<?, ?B/s]
+  [ComfyUI] (�)low_imgshape2tex_dit_1_3B_1024_bf16.json: 100%|##########| 535/535 [00:00<00:00, 1.64MB/s]
+  [ComfyUI]   downloading ckpts/slat_flow_imgshape2tex_dit_1_3B_1024_bf16.safetensors
+  [ComfyUI] HTTP Request: HEAD https://huggingface.co/TencentARC/Pixal3D/resolve/main/ckpts/slat_flow_imgshape2tex_dit_1_3B_1024_bf16.safetensors "HTTP/1.1 302 Found"
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(�):   0%|          | 0.00/5.55G [00:00<?, ?B/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(�):   0%|          | 30.7k/5.55G [00:02<125:37:24, 12.3kB/s]
+  [capture-loop] iter=1150 t=139.7s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=8.5/23.9GB (36%) swap=0.3/14.5GB (2%) cpu=18% browser_rss=0.66GB
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(�):   5%|4         | 268M/5.55G [00:03<00:49, 107MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(�):   6%|6         | 335M/5.55G [00:08<02:18, 37.8MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(�):   8%|8         | 470M/5.55G [00:08<01:20, 62.8MB/s]
+  [capture-loop] iter=1200 t=145.7s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=8.5/23.9GB (36%) swap=0.3/14.5GB (2%) cpu=22% browser_rss=0.66GB
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(�):  12%|#2        | 671M/5.55G [00:08<00:43, 113MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(�):  13%|#3        | 738M/5.55G [00:09<00:38, 126MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(�):  15%|#4        | 805M/5.55G [00:10<00:48, 98.2MB/s]
+  [capture-loop] iter=1250 t=152.0s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=9.0/23.9GB (38%) swap=0.3/14.5GB (2%) cpu=31% browser_rss=0.66GB
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(�):  16%|#5        | 872M/5.55G [00:17<02:37, 29.8MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(�):  18%|#8        | 1.02G/5.55G [00:18<01:30, 50.1MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(�):  19%|#9        | 1.07G/5.55G [00:18<01:18, 57.2MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(�):  21%|##        | 1.14G/5.55G [00:19<01:18, 56.3MB/s]
+  [capture-loop] iter=1300 t=158.3s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=9.3/23.9GB (39%) swap=0.3/14.5GB (2%) cpu=33% browser_rss=0.66GB
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(�):  22%|##1       | 1.21G/5.55G [00:23<01:55, 37.5MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(�):  25%|##5       | 1.41G/5.55G [00:23<00:55, 75.1MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(�):  29%|##9       | 1.61G/5.55G [00:23<00:32, 123MB/s]
+  [capture-loop] iter=1350 t=164.7s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=9.6/23.9GB (40%) swap=0.3/14.5GB (2%) cpu=32% browser_rss=0.65GB
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(�):  33%|###2      | 1.81G/5.55G [00:29<00:59, 62.9MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(�):  35%|###5      | 1.94G/5.55G [00:29<00:43, 82.1MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(�):  36%|###6      | 2.01G/5.55G [00:29<00:38, 92.4MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(�):  40%|###9      | 2.21G/5.55G [00:30<00:23, 144MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(�):  42%|####2     | 2.35G/5.55G [00:30<00:17, 181MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(�):  46%|####5     | 2.55G/5.55G [00:30<00:11, 255MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(�):  47%|####7     | 2.62G/5.55G [00:33<00:26, 112MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(�):  48%|####8     | 2.68G/5.55G [00:33<00:23, 124MB/s]
+  [ComfyUI] 
+  [capture-loop] iter=1400 t=170.9s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=9.3/23.9GB (39%) swap=0.3/14.5GB (2%) cpu=32% browser_rss=0.65GB
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(�):  50%|####9     | 2.75G/5.55G [00:33<00:22, 126MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(�):  51%|#####     | 2.82G/5.55G [00:34<00:21, 128MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(�):  52%|#####1    | 2.88G/5.55G [00:37<00:44, 59.6MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(�):  53%|#####3    | 2.95G/5.55G [00:37<00:34, 74.5MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(�):  54%|#####4    | 3.02G/5.55G [00:38<00:29, 84.6MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(�):  56%|#####5    | 3.08G/5.55G [00:38<00:26, 94.3MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(�):  57%|#####6    | 3.15G/5.55G [00:39<00:23, 103MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(�):  58%|#####8    | 3.22G/5.55G [00:39<00:18, 125MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(�):  59%|#####9    | 3.29G/5.55G [00:39<00:17, 128MB/s]
+  [capture-loop] iter=1450 t=177.1s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=9.5/23.9GB (40%) swap=0.3/14.5GB (2%) cpu=30% browser_rss=0.65GB
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(�):  60%|######    | 3.35G/5.55G [00:40<00:16, 130MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(�):  62%|######1   | 3.42G/5.55G [00:40<00:16, 131MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(�):  63%|######2   | 3.49G/5.55G [00:41<00:17, 115MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(�):  65%|######5   | 3.62G/5.55G [00:42<00:12, 156MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(�):  69%|######8   | 3.82G/5.55G [00:42<00:06, 260MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(�):  71%|#######1  | 3.96G/5.55G [00:42<00:05, 311MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(�):  74%|#######3  | 4.09G/5.55G [00:42<00:04, 359MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(�):  76%|#######6  | 4.22G/5.55G [00:44<00:07, 185MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(�):  77%|#######7  | 4.29G/5.55G [00:44<00:07, 173MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(�):  81%|########  | 4.49G/5.55G [00:45<00:03, 264MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(�):  85%|########4 | 4.69G/5.55G [00:45<00:02, 355MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(�):  89%|########9 | 4.96G/5.55G [00:45<00:01, 493MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(�):  93%|#########3| 5.16G/5.55G [00:45<00:00, 565MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(�):  97%|#########6| 5.36G/5.55G [00:46<00:00, 617MB/s]
+  [capture-loop] iter=1500 t=183.3s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=8.4/23.9GB (35%) swap=0.3/14.5GB (2%) cpu=26% browser_rss=0.65GB
+  [ComfyUI] 
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(�): 100%|##########| 5.55G/5.55G [00:46<00:00, 723MB/s]
+  [ComfyUI] ckpts/slat_flow_imgshape2tex_dit_1_3B_10(�): 100%|##########| 5.55G/5.55G [00:46<00:00, 120MB/s]
+  [ComfyUI]   downloading ckpts/ss_dec_conv3d_16l8_fp16.json
+  [ComfyUI] HTTP Request: HEAD https://huggingface.co/TencentARC/Pixal3D/resolve/main/ckpts/ss_dec_conv3d_16l8_fp16.json "HTTP/1.1 307 Temporary Redirect"
+  [ComfyUI] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/TencentARC/Pixal3D/7bde14f95a5ce8fc19af0877e2fa048ae8dd1966/ckpts%2Fss_dec_conv3d_16l8_fp16.json "HTTP/1.1 200 OK"
+  [ComfyUI] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/TencentARC/Pixal3D/7bde14f95a5ce8fc19af0877e2fa048ae8dd1966/ckpts%2Fss_dec_conv3d_16l8_fp16.json "HTTP/1.1 200 OK"
+  [ComfyUI] 
+  [ComfyUI] ss_dec_conv3d_16l8_fp16.json:   0%|          | 0.00/245 [00:00<?, ?B/s]
+  [ComfyUI] ss_dec_conv3d_16l8_fp16.json: 100%|##########| 245/245 [00:00<00:00, 642kB/s]
+  [ComfyUI]   downloading ckpts/ss_dec_conv3d_16l8_fp16.safetensors
+  [ComfyUI] HTTP Request: HEAD https://huggingface.co/TencentARC/Pixal3D/resolve/main/ckpts/ss_dec_conv3d_16l8_fp16.safetensors "HTTP/1.1 302 Found"
+  [ComfyUI] 
+  [ComfyUI] ckpts/ss_dec_conv3d_16l8_fp16.safetensor(�):   0%|          | 0.00/148M [00:00<?, ?B/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/ss_dec_conv3d_16l8_fp16.safetensor(�):  45%|####5     | 67.0M/148M [00:01<00:02, 38.2MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/ss_dec_conv3d_16l8_fp16.safetensor(�): 100%|##########| 148M/148M [00:02<00:00, 80.6MB/s]
+  [ComfyUI] ckpts/ss_dec_conv3d_16l8_fp16.safetensor(�): 100%|##########| 148M/148M [00:02<00:00, 70.0MB/s]
+  [ComfyUI]   downloading ckpts/ss_flow_img_dit_1_3B_64_bf16.json
+  [ComfyUI] HTTP Request: HEAD https://huggingface.co/TencentARC/Pixal3D/resolve/main/ckpts/ss_flow_img_dit_1_3B_64_bf16.json "HTTP/1.1 307 Temporary Redirect"
+  [ComfyUI] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/TencentARC/Pixal3D/7bde14f95a5ce8fc19af0877e2fa048ae8dd1966/ckpts%2Fss_flow_img_dit_1_3B_64_bf16.json "HTTP/1.1 200 OK"
+  [ComfyUI] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/TencentARC/Pixal3D/7bde14f95a5ce8fc19af0877e2fa048ae8dd1966/ckpts%2Fss_flow_img_dit_1_3B_64_bf16.json "HTTP/1.1 200 OK"
+  [ComfyUI] 
+  [ComfyUI] ss_flow_img_dit_1_3B_64_bf16.json:   0%|          | 0.00/503 [00:00<?, ?B/s]
+  [ComfyUI] ss_flow_img_dit_1_3B_64_bf16.json: 100%|##########| 503/503 [00:00<00:00, 1.72MB/s]
+  [ComfyUI]   downloading ckpts/ss_flow_img_dit_1_3B_64_bf16.safetensors
+  [ComfyUI] HTTP Request: HEAD https://huggingface.co/TencentARC/Pixal3D/resolve/main/ckpts/ss_flow_img_dit_1_3B_64_bf16.safetensors "HTTP/1.1 302 Found"
+  [ComfyUI] 
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(�):   0%|          | 0.00/5.36G [00:00<?, ?B/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(�):   1%|1         | 67.1M/5.36G [00:02<03:37, 24.4MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(�):   5%|4         | 256M/5.36G [00:03<00:47, 108MB/s]
+  [capture-loop] iter=1550 t=189.2s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=8.1/23.9GB (34%) swap=0.3/14.5GB (2%) cpu=23% browser_rss=0.66GB
+  [ComfyUI] 
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(�):   6%|6         | 335M/5.36G [00:07<01:58, 42.3MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(�):   8%|7         | 402M/5.36G [00:07<01:29, 55.5MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(�):  10%|#         | 537M/5.36G [00:08<00:56, 85.9MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(�):  13%|#2        | 671M/5.36G [00:09<00:53, 87.2MB/s]
+  [capture-loop] iter=1600 t=195.4s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=6 ram=8.4/23.9GB (35%) swap=0.3/14.5GB (2%) cpu=31% browser_rss=0.65GB
+  [ComfyUI] 
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(�):  14%|#4        | 768M/5.36G [00:09<00:40, 112MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(�):  15%|#5        | 805M/5.36G [00:12<01:12, 62.8MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(�):  16%|#6        | 872M/5.36G [00:13<01:18, 56.8MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(�):  18%|#7        | 939M/5.36G [00:13<01:01, 72.2MB/s]
+  [capture-loop] iter=1650 t=201.8s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=5 ram=8.9/23.9GB (37%) swap=0.3/14.5GB (2%) cpu=41% browser_rss=0.65GB
+  [ComfyUI] 
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(�):  19%|#9        | 1.02G/5.36G [00:17<01:34, 45.7MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(�):  20%|##        | 1.07G/5.36G [00:17<01:18, 54.7MB/s]
+  [capture-loop] iter=1700 t=208.1s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=9.4/23.9GB (39%) swap=0.3/14.5GB (2%) cpu=42% browser_rss=0.66GB
+  [ComfyUI] 
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(�):  24%|##3       | 1.27G/5.36G [00:22<01:32, 44.2MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(�):  26%|##6       | 1.41G/5.36G [00:24<01:18, 50.1MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(�):  29%|##8       | 1.54G/5.36G [00:24<00:53, 71.6MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(�):  33%|###2      | 1.74G/5.36G [00:26<00:44, 81.3MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(�):  36%|###6      | 1.94G/5.36G [00:27<00:27, 122MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(�):  40%|####      | 2.15G/5.36G [00:27<00:18, 173MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(�):  41%|####1     | 2.21G/5.36G [00:27<00:17, 182MB/s]
+  [capture-loop] iter=1750 t=214.4s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=5 ram=9.2/23.9GB (38%) swap=0.3/14.5GB (2%) cpu=43% browser_rss=0.66GB
+  [ComfyUI] 
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(�):  43%|####2     | 2.28G/5.36G [00:29<00:25, 120MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(�):  45%|####5     | 2.41G/5.36G [00:29<00:18, 161MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(�):  46%|####6     | 2.48G/5.36G [00:32<00:36, 78.2MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(�):  49%|####8     | 2.62G/5.36G [00:32<00:24, 112MB/s]
+  [capture-loop] iter=1800 t=220.9s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=5 ram=9.5/23.9GB (40%) swap=0.3/14.5GB (2%) cpu=41% browser_rss=0.66GB
+  [ComfyUI] 
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(�):  50%|#####     | 2.68G/5.36G [00:35<00:41, 65.1MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(�):  53%|#####2    | 2.82G/5.36G [00:35<00:30, 84.6MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(�):  56%|#####6    | 3.02G/5.36G [00:36<00:16, 139MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(�):  60%|######    | 3.22G/5.36G [00:36<00:10, 204MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(�):  61%|######1   | 3.29G/5.36G [00:36<00:09, 212MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(�):  65%|######5   | 3.49G/5.36G [00:36<00:06, 300MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(�):  69%|######8   | 3.69G/5.36G [00:37<00:04, 389MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(�):  70%|#######   | 3.76G/5.36G [00:37<00:04, 365MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(�):  71%|#######1  | 3.82G/5.36G [00:40<00:17, 88.2MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(�):  75%|#######5  | 4.02G/5.36G [00:41<00:09, 142MB/s]
+  [capture-loop] iter=1850 t=227.1s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=9.1/23.9GB (38%) swap=0.3/14.5GB (2%) cpu=41% browser_rss=0.66GB
+  [ComfyUI] 
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(�):  76%|#######6  | 4.09G/5.36G [00:42<00:10, 120MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(�):  79%|#######8  | 4.23G/5.36G [00:42<00:07, 160MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(�):  83%|########2 | 4.43G/5.36G [00:42<00:03, 239MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(�):  84%|########3 | 4.49G/5.36G [00:42<00:03, 243MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(�):  85%|########5 | 4.56G/5.36G [00:43<00:03, 211MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(�):  86%|########6 | 4.63G/5.36G [00:45<00:06, 107MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(�):  88%|########7 | 4.69G/5.36G [00:45<00:06, 102MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(�):  91%|#########1| 4.90G/5.36G [00:46<00:02, 182MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(�):  96%|#########6| 5.16G/5.36G [00:46<00:00, 305MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(�): 100%|##########| 5.36G/5.36G [00:46<00:00, 392MB/s]
+  [ComfyUI] ckpts/ss_flow_img_dit_1_3B_64_bf16.safet(�): 100%|##########| 5.36G/5.36G [00:46<00:00, 115MB/s]
+  [ComfyUI]   downloading ckpts/tex_dec_next_dc_f16c32_fp16.json
+  [ComfyUI] HTTP Request: HEAD https://huggingface.co/TencentARC/Pixal3D/resolve/main/ckpts/tex_dec_next_dc_f16c32_fp16.json "HTTP/1.1 307 Temporary Redirect"
+  [ComfyUI] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/TencentARC/Pixal3D/7bde14f95a5ce8fc19af0877e2fa048ae8dd1966/ckpts%2Ftex_dec_next_dc_f16c32_fp16.json "HTTP/1.1 200 OK"
+  [ComfyUI] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/TencentARC/Pixal3D/7bde14f95a5ce8fc19af0877e2fa048ae8dd1966/ckpts%2Ftex_dec_next_dc_f16c32_fp16.json "HTTP/1.1 200 OK"
+  [ComfyUI] 
+  [ComfyUI] tex_dec_next_dc_f16c32_fp16.json:   0%|          | 0.00/705 [00:00<?, ?B/s]
+  [ComfyUI] tex_dec_next_dc_f16c32_fp16.json: 100%|##########| 705/705 [00:00<00:00, 3.22MB/s]
+  [ComfyUI]   downloading ckpts/tex_dec_next_dc_f16c32_fp16.safetensors
+  [ComfyUI] HTTP Request: HEAD https://huggingface.co/TencentARC/Pixal3D/resolve/main/ckpts/tex_dec_next_dc_f16c32_fp16.safetensors "HTTP/1.1 302 Found"
+  [ComfyUI] 
+  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(�):   0%|          | 0.00/948M [00:00<?, ?B/s]
+  [capture-loop] iter=1900 t=233.1s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=4 ram=8.3/23.9GB (35%) swap=0.3/14.5GB (2%) cpu=20% browser_rss=0.65GB
+  [ComfyUI] 
+  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(�):   0%|          | 1.50M/948M [00:00<07:53, 2.00MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(�):   0%|          | 2.71M/948M [00:01<05:25, 2.90MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(�):   3%|3         | 31.9M/948M [00:01<00:23, 38.3MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(�):   5%|4         | 42.9M/948M [00:01<00:22, 40.5MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(�):   7%|6         | 65.9M/948M [00:01<00:15, 56.3MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(�):   8%|8         | 76.2M/948M [00:02<00:16, 51.7MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(�):  10%|#         | 97.5M/948M [00:02<00:13, 61.9MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(�):  14%|#3        | 129M/948M [00:02<00:10, 81.8MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(�):  19%|#8        | 176M/948M [00:02<00:06, 113MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(�):  24%|##4       | 228M/948M [00:03<00:08, 88.9MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(�):  27%|##7       | 256M/948M [00:03<00:07, 93.7MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(�):  37%|###7      | 352M/948M [00:04<00:05, 110MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(�):  40%|###9      | 376M/948M [00:04<00:05, 108MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(�):  41%|####1     | 393M/948M [00:05<00:05, 99.1MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(�):  46%|####5     | 433M/948M [00:05<00:04, 113MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(�):  52%|#####1    | 490M/948M [00:05<00:04, 113MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(�):  56%|#####5    | 530M/948M [00:06<00:03, 124MB/s]
+  [capture-loop] iter=1950 t=239.0s state={'complete': False, 'error': None, 'executedCount': 1, 'wsState': 1} eval_ms=3 ram=8.5/23.9GB (36%) swap=0.3/14.5GB (2%) cpu=27% browser_rss=0.65GB
+  [ComfyUI] 
+  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(�):  60%|#####9    | 568M/948M [00:06<00:04, 87.9MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(�):  71%|#######1  | 676M/948M [00:09<00:04, 61.2MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(�):  96%|#########5| 907M/948M [00:09<00:00, 144MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(�):  99%|#########9| 943M/948M [00:09<00:00, 144MB/s]
+  [ComfyUI] 
+  [ComfyUI] ckpts/tex_dec_next_dc_f16c32_fp16.safete(�): 100%|##########| 948M/948M [00:09<00:00, 99.3MB/s]
+  [ComfyUI] [pixal3d] <<< download Pixal3D weights  (209.0s)
+  [ComfyUI] [pixal3d] !!! init_pipeline TOTAL FAILED after 209.1s: KeyError: 'flash_attn'
+  [ComfyUI] [pixal3d] !!! Pixal3DGenerateMesh.execute FAILED after 209.1s: KeyError: 'flash_attn'
+  [ComfyUI] !!! Exception during processing !!! 'flash_attn'
+  [ComfyUI] Traceback (most recent call last):
+  [ComfyUI]   File "C:\workspaces\Pixal3D-1224\portable-comfyui\ComfyUI_windows_portable\ComfyUI\execution.py", line 535, in execute
+  [ComfyUI]     output_data, output_ui, has_subgraph, has_pending_tasks = await get_output_data(prompt_id, unique_id, obj, input_data_all, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)
+  [ComfyUI]                                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  [ComfyUI]   File "C:\workspaces\Pixal3D-1224\portable-comfyui\ComfyUI_windows_portable\ComfyUI\execution.py", line 335, in get_output_data
+  [ComfyUI]     return_values = await _async_map_node_over_list(prompt_id, unique_id, obj, input_data_all, obj.FUNCTION, allow_interrupt=True, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)
+  [ComfyUI]                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  [ComfyUI]   File "C:\workspaces\Pixal3D-1224\portable-comfyui\ComfyUI_windows_portable\ComfyUI\execution.py", line 309, in _async_map_node_over_list
+  [ComfyUI]     await process_inputs(input_dict, i)
+  [ComfyUI]   File "C:\workspaces\Pixal3D-1224\portable-comfyui\ComfyUI_windows_portable\ComfyUI\execution.py", line 297, in process_inputs
+  [ComfyUI]     result = f(**inputs)
+  [ComfyUI]   File "C:\workspaces\Pixal3D-1224\portable-comfyui\ComfyUI_windows_portable\ComfyUI\comfy_api\internal\__init__.py", line 149, in wrapped_func
+  [ComfyUI]     return method(locked_class, **inputs)
+  [ComfyUI]   File "C:\workspaces\Pixal3D-1224\portable-comfyui\ComfyUI_windows_portable\ComfyUI\comfy_api\latest\_io.py", line 1833, in EXECUTE_NORMALIZED
+  [ComfyUI]     to_return = cls.execute(*args, **kwargs)
+  [ComfyUI]   File "C:\workspaces\Pixal3D-1224\portable-comfyui\ComfyUI_windows_portable\ComfyUI\custom_nodes\ComfyUI-Pixal3D\nodes\nodes_mesh.py", line 77, in execute
+  [ComfyUI]     tri, voxelgrid = generate_mesh_and_voxelgrid(
+  [ComfyUI]                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+  [ComfyUI]         image=image,
+  [ComfyUI]         ^^^^^^^^^^^^
+  [ComfyUI]     ...<7 lines>...
+  [ComfyUI]         tex_steps=tex_steps, tex_guidance=tex_guidance, tex_rescale=tex_rescale, tex_rescale_t=tex_rescale_t,
+  [ComfyUI]         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  [ComfyUI]     )
+  [ComfyUI]     ^
+  [ComfyUI]   File "C:\workspaces\Pixal3D-1224\portable-comfyui\ComfyUI_windows_portable\ComfyUI\custom_nodes\ComfyUI-Pixal3D\nodes\stages.py", line 1504, in generate_mesh_and_voxelgrid
+  [ComfyUI]     pipeline, mw, _res = _run_cascade(
+  [ComfyUI]                          ~~~~~~~~~~~~^
+  [ComfyUI]         image, camera_params, seed, pipeline_type, attn_backend, max_num_tokens,
+  [ComfyUI]         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  [ComfyUI]     ...<2 lines>...
+  [ComfyUI]         tex_steps, tex_guidance, tex_rescale, tex_rescale_t,
+  [ComfyUI]         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  [ComfyUI]     )
+  [ComfyUI]     ^
+  [ComfyUI]   File "C:\workspaces\Pixal3D-1224\portable-comfyui\ComfyUI_windows_portable\ComfyUI\custom_nodes\ComfyUI-Pixal3D\nodes\stages.py", line 738, in _run_cascade
+  [ComfyUI]     pipeline = init_pipeline(attn_backend=attn_backend)
+  [ComfyUI]   File "C:\workspaces\Pixal3D-1224\portable-comfyui\ComfyUI_windows_portable\ComfyUI\custom_nodes\ComfyUI-Pixal3D\nodes\stages.py", line 491, in init_pipeline
+  [ComfyUI]     _patch_naf_to_local_model()
+  [ComfyUI]     ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  [ComfyUI]   File "C:\workspaces\Pixal3D-1224\portable-comfyui\ComfyUI_windows_portable\ComfyUI\custom_nodes\ComfyUI-Pixal3D\nodes\stages.py", line 269, in _patch_naf_to_local_model
+  [ComfyUI]     from .pixal3d.trainers.flow_matching.mixins.image_conditioned_proj import (
+  [ComfyUI]         DinoV3ProjFeatureExtractor,
+  [ComfyUI]     )
+  [ComfyUI]   File "C:\workspaces\Pixal3D-1224\portable-comfyui\ComfyUI_windows_portable\ComfyUI\custom_nodes\ComfyUI-Pixal3D\nodes\pixal3d\trainers\flow_matching\mixins\image_conditioned_proj.py", line 14, in <module>
+  [ComfyUI]     from transformers import DINOv3ViTModel
+  [ComfyUI]   File "<frozen importlib._bootstrap>", line 1412, in _handle_fromlist
+  [ComfyUI]   File "C:\workspaces\Pixal3D-1224\portable-comfyui\ComfyUI_windows_portable\python_embeded\Lib\site-packages\transformers\utils\import_utils.py", line 2226, in __getattr__
+  [ComfyUI]     module = self._get_module(self._class_to_module[name])
+  [ComfyUI]   File "C:\workspaces\Pixal3D-1224\portable-comfyui\ComfyUI_windows_portable\python_embeded\Lib\site-packages\transformers\utils\import_utils.py", line 2460, in _get_module
+  [ComfyUI]     raise e
+  [ComfyUI]   File "C:\workspaces\Pixal3D-1224\portable-comfyui\ComfyUI_windows_portable\python_embeded\Lib\site-packages\transformers\utils\import_utils.py", line 2458, in _get_module
+  [ComfyUI]     return importlib.import_module("." + module_name, self.__name__)
+  [ComfyUI]            ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  [ComfyUI]   File "importlib\__init__.py", line 88, in import_module
+  [ComfyUI]   File "C:\workspaces\Pixal3D-1224\portable-comfyui\ComfyUI_windows_portable\python_embeded\Lib\site-packages\transformers\models\dinov3_vit\modeling_dinov3_vit.py", line 30, in <module>
+  [ComfyUI]     from ...activations import ACT2FN
+  [ComfyUI]   File "C:\workspaces\Pixal3D-1224\portable-comfyui\ComfyUI_windows_portable\python_embeded\Lib\site-packages\transformers\activations.py", line 22, in <module>
+  [ComfyUI]     from .integrations.hub_kernels import use_kernel_forward_from_hub
+  [ComfyUI]   File "C:\workspaces\Pixal3D-1224\portable-comfyui\ComfyUI_windows_portable\python_embeded\Lib\site-packages\transformers\integrations\hub_kernels.py", line 25, in <module>
+  [ComfyUI]     from .flash_attention import flash_attention_forward
+  [ComfyUI]   File "C:\workspaces\Pixal3D-1224\portable-comfyui\ComfyUI_windows_portable\python_embeded\Lib\site-packages\transformers\integrations\flash_attention.py", line 9, in <module>
+  [ComfyUI]     _use_top_left_mask = flash_attn_supports_top_left_mask()
+  [ComfyUI]   File "C:\workspaces\Pixal3D-1224\portable-comfyui\ComfyUI_windows_portable\python_embeded\Lib\site-packages\transformers\modeling_flash_attention_utils.py", line 43, in flash_attn_supports_top_left_mask
+  [ComfyUI]     if is_flash_attn_2_available() or is_flash_attn_3_available() or is_flash_attn_4_available():
+  [ComfyUI]        ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  [ComfyUI]   File "C:\workspaces\Pixal3D-1224\portable-comfyui\ComfyUI_windows_portable\python_embeded\Lib\site-packages\transformers\utils\import_utils.py", line 965, in is_flash_attn_2_available
+  [ComfyUI]     pkg.replace("_", "-") for pkg in PACKAGE_DISTRIBUTION_MAPPING["flash_attn"]
+  Execution complete (t=242.4s)
+  [ComfyUI]                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  Execution error: {'prompt_id': 'a0a90302-1c01-4500-a5fd-bb1c47e3fbcb', 'node_id': '20', 'node_type': 'Pixal3DGenerateMesh', 'executed': ['3', '8', '27', '25', '26', '1', '9', '7'], 'exception_message': "'flash_attn'\n", 'exception_type': 'KeyError', 'traceback': ['  File "C:\\workspaces\\Pixal3D-1224\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\execution.py", line 535, in execute\n    output_data, output_ui, has_subgraph, has_pending_tasks = await get_output_data(prompt_id, unique_id, obj, input_data_all, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)\n                                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n', '  File "C:\\workspaces\\Pixal3D-1224\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\execution.py", line 335, in get_output_data\n    return_values = await _async_map_node_over_list(prompt_id, unique_id, obj, input_data_all, obj.FUNCTION, allow_interrupt=True, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n', '  File "C:\\workspaces\\Pixal3D-1224\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\execution.py", line 309, in _async_map_node_over_list\n    await process_inputs(input_dict, i)\n', '  File "C:\\workspaces\\Pixal3D-1224\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\execution.py", line 297, in process_inputs\n    result = f(**inputs)\n', '  File "C:\\workspaces\\Pixal3D-1224\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\comfy_api\\internal\\__init__.py", line 149, in wrapped_func\n    return method(locked_class, **inputs)\n', '  File "C:\\workspaces\\Pixal3D-1224\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\comfy_api\\latest\\_io.py", line 1833, in EXECUTE_NORMALIZED\n    to_return = cls.execute(*args, **kwargs)\n', '  File "C:\\workspaces\\Pixal3D-1224\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\custom_nodes\\ComfyUI-Pixal3D\\nodes\\nodes_mesh.py", line 77, in execute\n    tri, voxelgrid = generate_mesh_and_voxelgrid(\n                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~^\n        image=image,\n        ^^^^^^^^^^^^\n    ...<7 lines>...\n        tex_steps=tex_steps, tex_guidance=tex_guidance, tex_rescale=tex_rescale, tex_rescale_t=tex_rescale_t,\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n', '  File "C:\\workspaces\\Pixal3D-1224\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\custom_nodes\\ComfyUI-Pixal3D\\nodes\\stages.py", line 1504, in generate_mesh_and_voxelgrid\n    pipeline, mw, _res = _run_cascade(\n                         ~~~~~~~~~~~~^\n        image, camera_params, seed, pipeline_type, attn_backend, max_num_tokens,\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    ...<2 lines>...\n        tex_steps, tex_guidance, tex_rescale, tex_rescale_t,\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n', '  File "C:\\workspaces\\Pixal3D-1224\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\custom_nodes\\ComfyUI-Pixal3D\\nodes\\stages.py", line 738, in _run_cascade\n    pipeline = init_pipeline(attn_backend=attn_backend)\n', '  File "C:\\workspaces\\Pixal3D-1224\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\custom_nodes\\ComfyUI-Pixal3D\\nodes\\stages.py", line 491, in init_pipeline\n    _patch_naf_to_local_model()\n    ~~~~~~~~~~~~~~~~~~~~~~~~~^^\n', '  File "C:\\workspaces\\Pixal3D-1224\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\custom_nodes\\ComfyUI-Pixal3D\\nodes\\stages.py", line 269, in _patch_naf_to_local_model\n    from .pixal3d.trainers.flow_matching.mixins.image_conditioned_proj import (\n        DinoV3ProjFeatureExtractor,\n    )\n', '  File "C:\\workspaces\\Pixal3D-1224\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\custom_nodes\\ComfyUI-Pixal3D\\nodes\\pixal3d\\trainers\\flow_matching\\mixins\\image_conditioned_proj.py", line 14, in <module>\n    from transformers import DINOv3ViTModel\n', '  File "<frozen importlib._bootstrap>", line 1412, in _handle_fromlist\n', '  File "C:\\workspaces\\Pixal3D-1224\\portable-comfyui\\ComfyUI_windows_portable\\python_embeded\\Lib\\site-packages\\transformers\\utils\\import_utils.py", line 2226, in __getattr__\n    module = self._get_module(self._class_to_module[name])\n', '  File "C:\\workspaces\\Pixal3D-1224\\portable-comfyui\\ComfyUI_windows_portable\\python_embeded\\Lib\\site-packages\\transformers\\utils\\import_utils.py", line 2460, in _get_module\n    raise e\n', '  File "C:\\workspaces\\Pixal3D-1224\\portable-comfyui\\ComfyUI_windows_portable\\python_embeded\\Lib\\site-packages\\transformers\\utils\\import_utils.py", line 2458, in _get_module\n    return importlib.import_module("." + module_name, self.__name__)\n           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n', '  File "importlib\\__init__.py", line 88, in import_module\n', '  File "C:\\workspaces\\Pixal3D-1224\\portable-comfyui\\ComfyUI_windows_portable\\python_embeded\\Lib\\site-packages\\transformers\\models\\dinov3_vit\\modeling_dinov3_vit.py", line 30, in <module>\n    from ...activations import ACT2FN\n', '  File "C:\\workspaces\\Pixal3D-1224\\portable-comfyui\\ComfyUI_windows_portable\\python_embeded\\Lib\\site-packages\\transformers\\activations.py", line 22, in <module>\n    from .integrations.hub_kernels import use_kernel_forward_from_hub\n', '  File "C:\\workspaces\\Pixal3D-1224\\portable-comfyui\\ComfyUI_windows_portable\\python_embeded\\Lib\\site-packages\\transformers\\integrations\\hub_kernels.py", line 25, in <module>\n    from .flash_attention import flash_attention_forward\n', '  File "C:\\workspaces\\Pixal3D-1224\\portable-comfyui\\ComfyUI_windows_portable\\python_embeded\\Lib\\site-packages\\transformers\\integrations\\flash_attention.py", line 9, in <module>\n    _use_top_left_mask = flash_attn_supports_top_left_mask()\n', '  File "C:\\workspaces\\Pixal3D-1224\\portable-comfyui\\ComfyUI_windows_portable\\python_embeded\\Lib\\site-packages\\transformers\\modeling_flash_attention_utils.py", line 43, in flash_attn_supports_top_left_mask\n    if is_flash_attn_2_available() or is_flash_attn_3_available() or is_flash_attn_4_available():\n       ~~~~~~~~~~~~~~~~~~~~~~~~~^^\n', '  File "C:\\workspaces\\Pixal3D-1224\\portable-comfyui\\ComfyUI_windows_portable\\python_embeded\\Lib\\site-packages\\transformers\\utils\\import_utils.py", line 965, in is_flash_attn_2_available\n    pkg.replace("_", "-") for pkg in PACKAGE_DISTRIBUTION_MAPPING["flash_attn"]\n                                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^\n'], 'current_inputs': {'seed': [42], 'max_num_tokens': [49152], 'ss_steps': [12], 'ss_guidance': [7.5], 'ss_rescale': [0.7], 'ss_rescale_t': [5], 'shape_steps': [12], 'shape_guidance': [7.5], 'shape_rescale': [0.5], 'shape_rescale_t': [3], 'tex_steps': [12], 'tex_guidance': [1], 'tex_rescale': [0], 'tex_rescale_t': [3], 'pipeline': ["{'pipeline_type': '1024_cascade', 'attn_backend': 'auto'}"], 'image': ['tensor([[[[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]],\n\n         [[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]],\n\n         [[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]],\n\n         ...,\n\n         [[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]],\n\n         [[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]],\n\n         [[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]]]])'], 'camera': ["{'camera_angle_x': 0.6282833104125424, 'distance': 1.538933981542112, 'mesh_scale': 1.0}"]}, 'current_outputs': ['3', '8', '27', '16', '25', '26', '24', '1', '9', '23', '7', '22', '20'], 'timestamp': 1779273293169}
+  [ComfyUI] KeyError: 'flash_attn'
     Status: FAILED
-    Error: Workflow execution failed: {'prompt_id': 'cf6bcb1f-b946-47ee-83f0-4db556eb7012', 'node_id': '4', 'node_type': 'Pixal3DEstimateCamera', 'executed': ['9', '8', '1', '3'], 'exception_message': "No module named 'moge'\n", 'exception_type': 'ModuleNotFoundError', 'traceback': ['  File "C:\\workspaces\\Pixal3D-1336\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\execution.py", line 535, in execute\n    output_data, output_ui, has_subgraph, has_pending_tasks = await get_output_data(prompt_id, unique_id, obj, input_data_all, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)\n                                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n', '  File "C:\\workspaces\\Pixal3D-1336\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\execution.py", line 335, in get_output_data\n    return_values = await _async_map_node_over_list(prompt_id, unique_id, obj, input_data_all, obj.FUNCTION, allow_interrupt=True, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n', '  File "C:\\workspaces\\Pixal3D-1336\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\execution.py", line 309, in _async_map_node_over_list\n    await process_inputs(input_dict, i)\n', '  File "C:\\workspaces\\Pixal3D-1336\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\execution.py", line 297, in process_inputs\n    result = f(**inputs)\n', '  File "C:\\workspaces\\Pixal3D-1336\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\comfy_api\\internal\\__init__.py", line 149, in wrapped_func\n    return method(locked_class, **inputs)\n', '  File "C:\\workspaces\\Pixal3D-1336\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\comfy_api\\latest\\_io.py", line 1833, in EXECUTE_NORMALIZED\n    to_return = cls.execute(*args, **kwargs)\n', '  File "C:\\workspaces\\Pixal3D-1336\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\custom_nodes\\ComfyUI-Pixal3D\\nodes\\nodes_inference.py", line 79, in execute\n    cam = estimate_camera(\n        image,\n    ...<2 lines>...\n        image_resolution=image_resolution,\n    )\n', '  File "C:\\workspaces\\Pixal3D-1336\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\custom_nodes\\ComfyUI-Pixal3D\\nodes\\stages.py", line 690, in estimate_camera\n    moge = init_moge()\n', '  File "C:\\workspaces\\Pixal3D-1336\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\custom_nodes\\ComfyUI-Pixal3D\\nodes\\stages.py", line 551, in init_moge\n    from moge.model.v2 import MoGeModel\n'], 'current_inputs': {'mesh_scale': [1], 'extend_pixel': [0], 'image_resolution': [512], 'image': ['tensor([[[[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]],\n\n         [[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]],\n\n         [[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]],\n\n         ...,\n\n         [[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]],\n\n         [[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]],\n\n         [[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]]]])']}, 'current_outputs': ['8', '20', '7', '3', '9', '24', '1', '4', '16', '23', '22'], 'timestamp': 1778758891043}
+    Error: Workflow execution failed: {'prompt_id': 'a0a90302-1c01-4500-a5fd-bb1c47e3fbcb', 'node_id': '20', 'node_type': 'Pixal3DGenerateMesh', 'executed': ['3', '8', '27', '25', '26', '1', '9', '7'], 'exception_message': "'flash_attn'\n", 'exception_type': 'KeyError', 'traceback': ['  File "C:\\workspaces\\Pixal3D-1224\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\execution.py", line 535, in execute\n    output_data, output_ui, has_subgraph, has_pending_tasks = await get_output_data(prompt_id, unique_id, obj, input_data_all, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)\n                                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n', '  File "C:\\workspaces\\Pixal3D-1224\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\execution.py", line 335, in get_output_data\n    return_values = await _async_map_node_over_list(prompt_id, unique_id, obj, input_data_all, obj.FUNCTION, allow_interrupt=True, execution_block_cb=execution_block_cb, pre_execute_cb=pre_execute_cb, v3_data=v3_data)\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n', '  File "C:\\workspaces\\Pixal3D-1224\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\execution.py", line 309, in _async_map_node_over_list\n    await process_inputs(input_dict, i)\n', '  File "C:\\workspaces\\Pixal3D-1224\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\execution.py", line 297, in process_inputs\n    result = f(**inputs)\n', '  File "C:\\workspaces\\Pixal3D-1224\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\comfy_api\\internal\\__init__.py", line 149, in wrapped_func\n    return method(locked_class, **inputs)\n', '  File "C:\\workspaces\\Pixal3D-1224\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\comfy_api\\latest\\_io.py", line 1833, in EXECUTE_NORMALIZED\n    to_return = cls.execute(*args, **kwargs)\n', '  File "C:\\workspaces\\Pixal3D-1224\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\custom_nodes\\ComfyUI-Pixal3D\\nodes\\nodes_mesh.py", line 77, in execute\n    tri, voxelgrid = generate_mesh_and_voxelgrid(\n                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~^\n        image=image,\n        ^^^^^^^^^^^^\n    ...<7 lines>...\n        tex_steps=tex_steps, tex_guidance=tex_guidance, tex_rescale=tex_rescale, tex_rescale_t=tex_rescale_t,\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n', '  File "C:\\workspaces\\Pixal3D-1224\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\custom_nodes\\ComfyUI-Pixal3D\\nodes\\stages.py", line 1504, in generate_mesh_and_voxelgrid\n    pipeline, mw, _res = _run_cascade(\n                         ~~~~~~~~~~~~^\n        image, camera_params, seed, pipeline_type, attn_backend, max_num_tokens,\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    ...<2 lines>...\n        tex_steps, tex_guidance, tex_rescale, tex_rescale_t,\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n', '  File "C:\\workspaces\\Pixal3D-1224\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\custom_nodes\\ComfyUI-Pixal3D\\nodes\\stages.py", line 738, in _run_cascade\n    pipeline = init_pipeline(attn_backend=attn_backend)\n', '  File "C:\\workspaces\\Pixal3D-1224\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\custom_nodes\\ComfyUI-Pixal3D\\nodes\\stages.py", line 491, in init_pipeline\n    _patch_naf_to_local_model()\n    ~~~~~~~~~~~~~~~~~~~~~~~~~^^\n', '  File "C:\\workspaces\\Pixal3D-1224\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\custom_nodes\\ComfyUI-Pixal3D\\nodes\\stages.py", line 269, in _patch_naf_to_local_model\n    from .pixal3d.trainers.flow_matching.mixins.image_conditioned_proj import (\n        DinoV3ProjFeatureExtractor,\n    )\n', '  File "C:\\workspaces\\Pixal3D-1224\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\custom_nodes\\ComfyUI-Pixal3D\\nodes\\pixal3d\\trainers\\flow_matching\\mixins\\image_conditioned_proj.py", line 14, in <module>\n    from transformers import DINOv3ViTModel\n', '  File "<frozen importlib._bootstrap>", line 1412, in _handle_fromlist\n', '  File "C:\\workspaces\\Pixal3D-1224\\portable-comfyui\\ComfyUI_windows_portable\\python_embeded\\Lib\\site-packages\\transformers\\utils\\import_utils.py", line 2226, in __getattr__\n    module = self._get_module(self._class_to_module[name])\n', '  File "C:\\workspaces\\Pixal3D-1224\\portable-comfyui\\ComfyUI_windows_portable\\python_embeded\\Lib\\site-packages\\transformers\\utils\\import_utils.py", line 2460, in _get_module\n    raise e\n', '  File "C:\\workspaces\\Pixal3D-1224\\portable-comfyui\\ComfyUI_windows_portable\\python_embeded\\Lib\\site-packages\\transformers\\utils\\import_utils.py", line 2458, in _get_module\n    return importlib.import_module("." + module_name, self.__name__)\n           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n', '  File "importlib\\__init__.py", line 88, in import_module\n', '  File "C:\\workspaces\\Pixal3D-1224\\portable-comfyui\\ComfyUI_windows_portable\\python_embeded\\Lib\\site-packages\\transformers\\models\\dinov3_vit\\modeling_dinov3_vit.py", line 30, in <module>\n    from ...activations import ACT2FN\n', '  File "C:\\workspaces\\Pixal3D-1224\\portable-comfyui\\ComfyUI_windows_portable\\python_embeded\\Lib\\site-packages\\transformers\\activations.py", line 22, in <module>\n    from .integrations.hub_kernels import use_kernel_forward_from_hub\n', '  File "C:\\workspaces\\Pixal3D-1224\\portable-comfyui\\ComfyUI_windows_portable\\python_embeded\\Lib\\site-packages\\transformers\\integrations\\hub_kernels.py", line 25, in <module>\n    from .flash_attention import flash_attention_forward\n', '  File "C:\\workspaces\\Pixal3D-1224\\portable-comfyui\\ComfyUI_windows_portable\\python_embeded\\Lib\\site-packages\\transformers\\integrations\\flash_attention.py", line 9, in <module>\n    _use_top_left_mask = flash_attn_supports_top_left_mask()\n', '  File "C:\\workspaces\\Pixal3D-1224\\portable-comfyui\\ComfyUI_windows_portable\\python_embeded\\Lib\\site-packages\\transformers\\modeling_flash_attention_utils.py", line 43, in flash_attn_supports_top_left_mask\n    if is_flash_attn_2_available() or is_flash_attn_3_available() or is_flash_attn_4_available():\n       ~~~~~~~~~~~~~~~~~~~~~~~~~^^\n', '  File "C:\\workspaces\\Pixal3D-1224\\portable-comfyui\\ComfyUI_windows_portable\\python_embeded\\Lib\\site-packages\\transformers\\utils\\import_utils.py", line 965, in is_flash_attn_2_available\n    pkg.replace("_", "-") for pkg in PACKAGE_DISTRIBUTION_MAPPING["flash_attn"]\n                                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^\n'], 'current_inputs': {'seed': [42], 'max_num_tokens': [49152], 'ss_steps': [12], 'ss_guidance': [7.5], 'ss_rescale': [0.7], 'ss_rescale_t': [5], 'shape_steps': [12], 'shape_guidance': [7.5], 'shape_rescale': [0.5], 'shape_rescale_t': [3], 'tex_steps': [12], 'tex_guidance': [1], 'tex_rescale': [0], 'tex_rescale_t': [3], 'pipeline': ["{'pipeline_type': '1024_cascade', 'attn_backend': 'auto'}"], 'image': ['tensor([[[[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]],\n\n         [[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]],\n\n         [[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]],\n\n         ...,\n\n         [[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]],\n\n         [[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]],\n\n         [[0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.],\n          ...,\n          [0., 0., 0.],\n          [0., 0., 0.],\n          [0., 0., 0.]]]])'], 'camera': ["{'camera_angle_x': 0.6282833104125424, 'distance': 1.538933981542112, 'mesh_scale': 1.0}"]}, 'current_outputs': ['3', '8', '27', '16', '25', '26', '24', '1', '9', '23', '7', '22', '20'], 'timestamp': 1779273293169}
     Details: Workflow: C:\ComfyUI-Pixal3D\workflows\pixal3d_basic.json
-Node error: Pixal3DEstimateCamera
+Node error: Pixal3DGenerateMesh
+  [ComfyUI] 
+  [ComfyUI] Prompt executed in 242.11 seconds
