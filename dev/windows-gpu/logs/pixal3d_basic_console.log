@@ -10,6 +10,9 @@
 [Console-log] [GeomPack] Loading mesh preview extension...
 [Console-log] [GeomPack] Mesh preview extension registered
 [Console-warning] [MaskEditor] ComfyApp.open_maskeditor is deprecated. Plugins should migrate to using the command system or direct node context menu integration.
-[Console-warning] [.WebGL-0x435c001a6a00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
-[Console-warning] [.WebGL-0x435c001a6a00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[Console-warning] [.WebGL-0x72c409101800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[Console-warning] [.WebGL-0x72c409101800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
 [Console-log] [comfy-test] graphToPrompt: 13 nodes, missing class_type: [], sample: {"inputs":{"image":"pixal3d_test.png"},"class_type":"LoadImage","_meta":{"title":"Load Image"}}
+[Console-warning] WebGL: CONTEXT_LOST_WEBGL: loseContext: context lost
+[Console-warning] [.WebGL-0x72c405432a00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[Console-warning] WebGL: CONTEXT_LOST_WEBGL: loseContext: context lost
