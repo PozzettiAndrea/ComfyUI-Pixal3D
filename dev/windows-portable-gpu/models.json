@@ -1,11 +1,40 @@
 {
-  "models_dir": "C:\\workspaces\\Pixal3D-2146\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\models",
+  "models_dir": "C:\\workspaces\\Pixal3D-2125\\portable-comfyui\\ComfyUI_windows_portable\\ComfyUI\\models",
   "summary": {
-    "total_files": 45,
-    "total_size_bytes": 25391002990,
-    "total_size_human": "23.6 GB"
+    "total_files": 49,
+    "total_size_bytes": 26603563121,
+    "total_size_human": "24.8 GB"
   },
   "folders": {
+    "dinov3": {
+      "total_size_bytes": 1212560132,
+      "total_size_human": "1.1 GB",
+      "source": {
+        "type": "unknown"
+      },
+      "files": [
+        {
+          "path": "model.safetensors",
+          "size_bytes": 1212559808,
+          "size_human": "1.1 GB"
+        },
+        {
+          "path": ".cache\\huggingface\\CACHEDIR.TAG",
+          "size_bytes": 195,
+          "size_human": "195.0 B"
+        },
+        {
+          "path": ".cache\\huggingface\\download\\model.safetensors.metadata",
+          "size_bytes": 128,
+          "size_human": "128.0 B"
+        },
+        {
+          "path": ".cache\\huggingface\\.gitignore",
+          "size_bytes": 1,
+          "size_human": "1.0 B"
+        }
+      ]
+    },
     "moge2": {
       "total_size_bytes": 1323816228,
       "total_size_human": "1.2 GB",
@@ -50,7 +79,7 @@
       ]
     },
     "pixal3d": {
-      "total_size_bytes": 24044862339,
+      "total_size_bytes": 24044862338,
       "total_size_human": "22.4 GB",
       "source": {
         "type": "unknown"
@@ -152,6 +181,11 @@
           "size_human": "128.0 B"
         },
         {
+          "path": ".cache\\huggingface\\download\\ckpts\\slat_flow_imgshape2tex_dit_1_3B_1024_bf16.safetensors.metadata",
+          "size_bytes": 128,
+          "size_human": "128.0 B"
+        },
+        {
           "path": ".cache\\huggingface\\download\\ckpts\\ss_dec_conv3d_16l8_fp16.safetensors.metadata",
           "size_bytes": 128,
           "size_human": "128.0 B"
@@ -167,22 +201,7 @@
           "size_human": "128.0 B"
         },
         {
-          "path": ".cache\\huggingface\\download\\ckpts\\slat_flow_imgshape2tex_dit_1_3B_1024_bf16.safetensors.metadata",
-          "size_bytes": 127,
-          "size_human": "127.0 B"
-        },
-        {
           "path": ".cache\\huggingface\\download\\pipeline.json.metadata",
-          "size_bytes": 104,
-          "size_human": "104.0 B"
-        },
-        {
-          "path": ".cache\\huggingface\\download\\ckpts\\shape_dec_next_dc_f16c32_fp16.json.metadata",
-          "size_bytes": 104,
-          "size_human": "104.0 B"
-        },
-        {
-          "path": ".cache\\huggingface\\download\\ckpts\\slat_flow_img2shape_dit_1_3B_1024_bf16.json.metadata",
           "size_bytes": 104,
           "size_human": "104.0 B"
         },
@@ -192,22 +211,32 @@
           "size_human": "104.0 B"
         },
         {
+          "path": ".cache\\huggingface\\download\\ckpts\\slat_flow_imgshape2tex_dit_1_3B_1024_bf16.json.metadata",
+          "size_bytes": 104,
+          "size_human": "104.0 B"
+        },
+        {
           "path": ".cache\\huggingface\\download\\ckpts\\ss_dec_conv3d_16l8_fp16.json.metadata",
           "size_bytes": 104,
           "size_human": "104.0 B"
         },
         {
-          "path": ".cache\\huggingface\\download\\ckpts\\tex_dec_next_dc_f16c32_fp16.json.metadata",
-          "size_bytes": 104,
-          "size_human": "104.0 B"
+          "path": ".cache\\huggingface\\download\\ckpts\\shape_dec_next_dc_f16c32_fp16.json.metadata",
+          "size_bytes": 103,
+          "size_human": "103.0 B"
         },
         {
-          "path": ".cache\\huggingface\\download\\ckpts\\slat_flow_imgshape2tex_dit_1_3B_1024_bf16.json.metadata",
+          "path": ".cache\\huggingface\\download\\ckpts\\slat_flow_img2shape_dit_1_3B_1024_bf16.json.metadata",
           "size_bytes": 103,
           "size_human": "103.0 B"
         },
         {
           "path": ".cache\\huggingface\\download\\ckpts\\ss_flow_img_dit_1_3B_64_bf16.json.metadata",
+          "size_bytes": 103,
+          "size_human": "103.0 B"
+        },
+        {
+          "path": ".cache\\huggingface\\download\\ckpts\\tex_dec_next_dc_f16c32_fp16.json.metadata",
           "size_bytes": 103,
           "size_human": "103.0 B"
         },

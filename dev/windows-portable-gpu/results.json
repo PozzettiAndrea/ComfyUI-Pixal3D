@@ -1,12 +1,12 @@
 {
-  "timestamp": "2026-05-20T20:04:55.440425+00:00",
+  "timestamp": "2026-05-22T19:45:01.596491+00:00",
   "platform": "windows_portable",
   "hardware": {
     "os": "Windows-11-10.0.26100-SP0",
-    "cpu": "AMD64 Family 23 Model 113 Stepping 0, AuthenticAMD"
+    "cpu": "AMD64 Family 25 Model 33 Stepping 2, AuthenticAMD"
   },
-  "commit_hash": "b259391fbc388d04f67dbef31923414359c2024d",
-  "run_url": "https://github.com/PozzettiAndrea/comfy-gpu-ci/actions/runs/26185910089",
+  "commit_hash": "884750ae05776d7ce4c20f7cccd664debc86324a",
+  "run_url": "https://github.com/PozzettiAndrea/comfy-gpu-ci/actions/runs/26306881255",
   "success": true,
   "summary": {
     "total": 1,
@@ -17,19 +17,19 @@
     {
       "name": "pixal3d_basic",
       "status": "pass",
-      "duration_seconds": 722.3,
+      "duration_seconds": 877.2,
       "error": null,
       "hardware": {
         "os": "Windows-11-10.0.26100-SP0",
-        "cpu": "AMD64 Family 23 Model 113 Stepping 0, AuthenticAMD"
+        "cpu": "AMD64 Family 25 Model 33 Stepping 2, AuthenticAMD"
       },
       "resources": {
         "ram": {
-          "peak": 19.86,
-          "avg": 6.75
+          "peak": 23.17,
+          "avg": 9.58
         },
-        "total_ram_gb": 23.9,
-        "samples": 713
+        "total_ram_gb": 31.9,
+        "samples": 869
       }
     }
   ]
