@@ -135,6 +135,10 @@ class Pixal3DProcessMesh(io.ComfyNode):
                 io.Int.Input("target_face_count", default=200000, min=1000, max=5000000, step=1000),
                 io.Boolean.Input("weld_vertices", default=True, optional=True),
                 io.Int.Input("weld_digits", default=4, min=1, max=8, optional=True),
+                io.Boolean.Input("unwrap_uv", default=True, optional=True,
+                    tooltip="Build a UV atlas (xatlas unwrap). Turn OFF to skip the atlas "
+                            "and output geometry only (no UVs) -- faster, for retopology / "
+                            "non-textured flows. Pixal3DRasterizePBR needs UVs, so leave ON for PBR baking."),
                 io.Float.Input("chart_cone_angle", default=90.0, min=0.0, max=359.9, step=1.0, optional=True),
                 io.Int.Input("chart_refine_iterations", default=0, min=0, max=10, optional=True),
                 io.Int.Input("chart_global_iterations", default=1, min=0, max=10, optional=True),
@@ -159,6 +163,7 @@ class Pixal3DProcessMesh(io.ComfyNode):
         target_face_count: int = 200000,
         weld_vertices: bool = True,
         weld_digits: int = 4,
+        unwrap_uv: bool = True,
         chart_cone_angle: float = 90.0,
         chart_refine_iterations: int = 0,
         chart_global_iterations: int = 1,
@@ -178,6 +183,7 @@ class Pixal3DProcessMesh(io.ComfyNode):
                 target_face_count=target_face_count,
                 weld_vertices=weld_vertices,
                 weld_digits=weld_digits,
+                unwrap_uv=unwrap_uv,
                 chart_cone_angle=chart_cone_angle,
                 chart_refine_iterations=chart_refine_iterations,
                 chart_global_iterations=chart_global_iterations,

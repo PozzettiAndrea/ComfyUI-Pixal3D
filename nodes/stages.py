@@ -1081,9 +1081,11 @@ def process_mesh(
     chart_refine_iterations: int = 0,
     chart_global_iterations: int = 1,
     chart_smooth_strength: int = 1,
+    unwrap_uv: bool = True,
 ):
-    """Heavy mesh cleanup + UV unwrap. Port of TRELLIS2 Trellis2ProcessMesh.execute().
-    Returns a trimesh.Trimesh with .visual.uv set and vertex_normals populated."""
+    """Heavy mesh cleanup + (optional) UV unwrap. Port of TRELLIS2 Trellis2ProcessMesh.execute().
+    Returns a trimesh.Trimesh with vertex_normals populated; .visual.uv is set only
+    when unwrap_uv is True (otherwise the output is geometry-only, no atlas)."""
     import cumesh_vb
     import trimesh as Trimesh
 
@@ -1179,6 +1181,25 @@ def process_mesh(
             )
             del wv, wf, wm
         _log_mesh_stats("after weld", cm)
+
+    if not unwrap_uv:
+        # Geometry-only: skip the xatlas atlas build entirely.
+        with _phase("process_mesh: skip uv_unwrap (no atlas)"):
+            cm.compute_vertex_normals()
+            geo_v, geo_f = cm.read()
+            geo_n = cm.read_vertex_normals().cpu().numpy()
+        result = Trimesh.Trimesh(
+            vertices=geo_v.cpu().numpy(),
+            faces=geo_f.cpu().numpy(),
+            vertex_normals=geo_n,
+            process=False,
+        )
+        _dbg(f"process_mesh: OUT {len(result.vertices)} verts / {len(result.faces)} faces "
+             f"(no UVs -- atlas skipped)")
+        del cm, geo_v, geo_f
+        gc.collect()
+        _mm().soft_empty_cache()
+        return result
 
     with _phase("process_mesh: uv_unwrap (xatlas)"):
         _log_mesh_stats("pre-uv_unwrap", cm)
