@@ -39,25 +39,64 @@ class Pixal3DGenerateMesh(io.ComfyNode):
                 io.Custom("PIXAL3D_PIPELINE").Input("pipeline", tooltip="From Pixal3DLoadPipeline."),
                 io.Image.Input("image", tooltip="Preprocessed image."),
                 io.Custom("PIXAL3D_CAMERA").Input("camera", tooltip="From Pixal3DCameraFromFOV."),
-                io.Int.Input("seed", default=42, min=0, max=2**31 - 1),
+                io.Int.Input("seed", default=42, min=0, max=2**31 - 1,
+                    tooltip="Random seed for the whole cascade. Same seed + same inputs = "
+                            "reproducible mesh. Change it to get a different generation."),
                 io.Boolean.Input("generate_texture", default=True, optional=True,
-                                 tooltip="Run the texture stage. Turn OFF to skip texture "
-                                         "generation entirely (shape only) -- much faster; "
-                                         "the voxelgrid is then empty (no PBR bake possible). "
-                                         "Use for retopology / geometry-only workflows."),
-                io.Int.Input("max_num_tokens", default=49152, min=1024, max=131072, step=1024, optional=True),
-                io.Int.Input("ss_steps", default=12, min=1, max=64, optional=True),
-                io.Float.Input("ss_guidance", default=7.5, min=0.0, max=15.0, step=0.1, optional=True),
-                io.Float.Input("ss_rescale", default=0.7, min=0.0, max=1.0, step=0.05, optional=True),
-                io.Float.Input("ss_rescale_t", default=5.0, min=0.0, max=10.0, step=0.1, optional=True),
-                io.Int.Input("shape_steps", default=12, min=1, max=64, optional=True),
-                io.Float.Input("shape_guidance", default=7.5, min=0.0, max=15.0, step=0.1, optional=True),
-                io.Float.Input("shape_rescale", default=0.5, min=0.0, max=1.0, step=0.05, optional=True),
-                io.Float.Input("shape_rescale_t", default=3.0, min=0.0, max=10.0, step=0.1, optional=True),
-                io.Int.Input("tex_steps", default=12, min=1, max=64, optional=True),
-                io.Float.Input("tex_guidance", default=1.0, min=0.0, max=15.0, step=0.1, optional=True),
-                io.Float.Input("tex_rescale", default=0.0, min=0.0, max=1.0, step=0.05, optional=True),
-                io.Float.Input("tex_rescale_t", default=3.0, min=0.0, max=10.0, step=0.1, optional=True),
+                    tooltip="Run the texture stage. Turn OFF to skip texture generation "
+                            "entirely (shape only) -- much faster; the voxelgrid output is "
+                            "then empty (no PBR bake possible). Use for retopology / "
+                            "geometry-only workflows."),
+                io.Int.Input("max_num_tokens", default=49152, min=1024, max=131072, step=1024, optional=True,
+                    tooltip="Upper bound on sparse tokens at the HR shape stage. The pipeline "
+                            "lowers the HR resolution (1024 -> ... in 128 steps) until the token "
+                            "count fits under this. Higher = more detail but more VRAM/time; "
+                            "lower it if you hit out-of-memory."),
+
+                # --- Stage 1: sparse structure (coarse 32^3 occupancy) ---
+                io.Int.Input("ss_steps", default=12, min=1, max=64, optional=True,
+                    tooltip="Sparse-structure sampler steps -- diffusion iterations for the coarse "
+                            "voxel occupancy (overall silhouette/blockout). More = cleaner structure, "
+                            "slower; 12 is a good default."),
+                io.Float.Input("ss_guidance", default=7.5, min=0.0, max=15.0, step=0.1, optional=True,
+                    tooltip="Sparse-structure classifier-free guidance strength: how hard the coarse "
+                            "shape is pushed to match the image. Higher = closer to the image but can "
+                            "over-sharpen/distort; lower = looser."),
+                io.Float.Input("ss_rescale", default=0.7, min=0.0, max=1.0, step=0.05, optional=True,
+                    tooltip="Sparse-structure guidance rescale (0-1). Counteracts over-saturation from "
+                            "high guidance by renormalizing predictions. 0 = off, ~0.7 = strong."),
+                io.Float.Input("ss_rescale_t", default=5.0, min=0.0, max=10.0, step=0.1, optional=True,
+                    tooltip="Timestep threshold above which ss_rescale is applied (early/noisy steps). "
+                            "Higher = rescale active over more of the schedule."),
+
+                # --- Stages 2-3: shape (LR 512 -> HR 1024 geometry) ---
+                io.Int.Input("shape_steps", default=12, min=1, max=64, optional=True,
+                    tooltip="Shape SLat sampler steps -- diffusion iterations for the geometry latent "
+                            "(LR 512 and HR 1024 passes). More = finer surface detail, slower."),
+                io.Float.Input("shape_guidance", default=7.5, min=0.0, max=15.0, step=0.1, optional=True,
+                    tooltip="Shape classifier-free guidance strength: how strongly the geometry follows "
+                            "the image. Higher = more faithful detail, risk of artifacts; lower = smoother."),
+                io.Float.Input("shape_rescale", default=0.5, min=0.0, max=1.0, step=0.05, optional=True,
+                    tooltip="Shape guidance rescale (0-1) -- tames over-strong shape guidance. "
+                            "0 = off, ~0.5 = moderate."),
+                io.Float.Input("shape_rescale_t", default=3.0, min=0.0, max=10.0, step=0.1, optional=True,
+                    tooltip="Timestep threshold above which shape_rescale is applied. "
+                            "Higher = rescale active over more of the schedule."),
+
+                # --- Stage 4: texture (PBR voxel attrs); ignored if generate_texture is off ---
+                io.Int.Input("tex_steps", default=12, min=1, max=64, optional=True,
+                    tooltip="Texture SLat sampler steps -- diffusion iterations for the PBR texture "
+                            "voxels. More = sharper texture, slower. Ignored when generate_texture is OFF."),
+                io.Float.Input("tex_guidance", default=1.0, min=0.0, max=15.0, step=0.1, optional=True,
+                    tooltip="Texture classifier-free guidance strength. Texture needs far less guidance "
+                            "than geometry (default 1.0); raising it tends to oversaturate colors. "
+                            "Ignored when generate_texture is OFF."),
+                io.Float.Input("tex_rescale", default=0.0, min=0.0, max=1.0, step=0.05, optional=True,
+                    tooltip="Texture guidance rescale (0-1). Default 0 (off) since tex_guidance is already "
+                            "low. Ignored when generate_texture is OFF."),
+                io.Float.Input("tex_rescale_t", default=3.0, min=0.0, max=10.0, step=0.1, optional=True,
+                    tooltip="Timestep threshold above which tex_rescale is applied. "
+                            "Ignored when generate_texture is OFF."),
             ],
             outputs=[
                 io.Custom("TRIMESH").Output(display_name="mesh"),
@@ -121,28 +160,62 @@ class Pixal3DProcessMesh(io.ComfyNode):
                 "upstream o_voxel.postprocess.to_glb's geometry stage."
             ),
             inputs=[
-                io.Custom("TRIMESH").Input("trimesh"),
+                io.Custom("TRIMESH").Input("trimesh",
+                    tooltip="Input mesh to clean up (typically the raw DC mesh from "
+                            "Pixal3D Generate Mesh)."),
                 io.Boolean.Input("remesh", default=False, optional=True,
-                    tooltip="Run dual-contouring remesh for cleaner topology. Slower; usually unneeded since the cascade already produces uniform DC output."),
-                io.Int.Input("remesh_resolution", default=512, min=64, max=2048, step=64, optional=True),
-                io.Float.Input("remesh_band", default=1.0, min=0.1, max=5.0, step=0.1, optional=True),
+                    tooltip="Run dual-contouring remesh for cleaner, uniform topology. Slower; "
+                            "usually unneeded since the cascade already produces uniform DC output."),
+                io.Int.Input("remesh_resolution", default=512, min=64, max=2048, step=64, optional=True,
+                    tooltip="Voxel grid resolution for the DC remesh (only used when remesh is ON). "
+                            "Higher = finer topology, slower, more faces."),
+                io.Float.Input("remesh_band", default=1.0, min=0.1, max=5.0, step=0.1, optional=True,
+                    tooltip="Narrow-band width (in voxels) around the surface for the DC remesh "
+                            "(only used when remesh is ON). Wider captures more but costs memory."),
                 io.Boolean.Input("remove_inner_faces", default=False, optional=True,
-                    tooltip="Only effective when remesh=on. Drops quads whose centers fall inside the original mesh's bulk."),
-                io.Boolean.Input("fill_holes", default=True, optional=True),
-                io.Float.Input("fill_holes_perimeter", default=0.03, min=0.001, max=0.5, step=0.001, optional=True),
+                    tooltip="Only effective when remesh is ON. Drops quads whose centers fall "
+                            "inside the original mesh's bulk (removes internal/hidden geometry)."),
+                io.Boolean.Input("fill_holes", default=True, optional=True,
+                    tooltip="Close small holes in the surface during cleanup so the mesh is "
+                            "watertight before simplification."),
+                io.Float.Input("fill_holes_perimeter", default=0.03, min=0.001, max=0.5, step=0.001, optional=True,
+                    tooltip="Max hole perimeter to fill (fraction of mesh scale). Larger value "
+                            "fills bigger holes; too large may bridge gaps you wanted to keep."),
                 io.Float.Input("floater_threshold", default=1e-3, min=0.0, max=0.1, step=0.001, optional=True,
-                    tooltip="Min area for connected components. 0 disables."),
-                io.Int.Input("target_face_count", default=200000, min=1000, max=5000000, step=1000),
-                io.Boolean.Input("weld_vertices", default=True, optional=True),
-                io.Int.Input("weld_digits", default=4, min=1, max=8, optional=True),
-                io.Boolean.Input("unwrap_uv", default=True, optional=True,
-                    tooltip="Build a UV atlas (xatlas unwrap). Turn OFF to skip the atlas "
-                            "and output geometry only (no UVs) -- faster, for retopology / "
-                            "non-textured flows. Pixal3DRasterizePBR needs UVs, so leave ON for PBR baking."),
-                io.Float.Input("chart_cone_angle", default=90.0, min=0.0, max=359.9, step=1.0, optional=True),
-                io.Int.Input("chart_refine_iterations", default=0, min=0, max=10, optional=True),
-                io.Int.Input("chart_global_iterations", default=1, min=0, max=10, optional=True),
-                io.Int.Input("chart_smooth_strength", default=1, min=0, max=10, optional=True),
+                    tooltip="Minimum area for a connected component to survive -- removes small "
+                            "disconnected 'floater' islands. 0 disables floater removal."),
+                io.Int.Input("target_face_count", default=200000, min=1000, max=5000000, step=1000,
+                    tooltip="Target triangle count after simplification. Lower = lighter mesh, "
+                            "less detail. The cleanup does a 2-pass simplify down to this count."),
+                io.Boolean.Input("weld_vertices", default=True, optional=True,
+                    tooltip="Merge coincident vertices after cleanup so the mesh is properly "
+                            "connected (no split seams from numerical duplicates)."),
+                io.Int.Input("weld_digits", default=4, min=1, max=8, optional=True,
+                    tooltip="Decimal places of vertex-position rounding used when welding. "
+                            "Higher = stricter (welds only very-close verts); lower = more aggressive."),
+                # UV atlas mode: choosing 'skip' hides the chart_* parameters entirely.
+                io.DynamicCombo.Input("uv_mode",
+                    options=[
+                        io.DynamicCombo.Option("unwrap", [
+                            io.Float.Input("chart_cone_angle", default=90.0, min=0.0, max=359.9, step=1.0, optional=True,
+                                tooltip="Max cone half-angle (deg) for grouping faces into a UV chart. "
+                                        "Larger = fewer, bigger charts (more stretch); smaller = more "
+                                        "charts/seams (less stretch)."),
+                            io.Int.Input("chart_refine_iterations", default=0, min=0, max=10, optional=True,
+                                tooltip="Local chart-boundary refinement passes. More = cleaner chart "
+                                        "edges at some cost; 0 is usually fine."),
+                            io.Int.Input("chart_global_iterations", default=1, min=0, max=10, optional=True,
+                                tooltip="Global chart re-segmentation passes. More can improve overall "
+                                        "atlas layout/packing at higher cost."),
+                            io.Int.Input("chart_smooth_strength", default=1, min=0, max=10, optional=True,
+                                tooltip="Smoothing strength applied to chart boundaries. Higher = "
+                                        "smoother seams, can merge small charts."),
+                        ]),
+                        io.DynamicCombo.Option("skip", []),
+                    ],
+                    tooltip="UV handling. 'unwrap' = build a UV atlas (xatlas) so the mesh is ready "
+                            "for Pixal3D Rasterize PBR (reveals chart settings). 'skip' = no atlas, "
+                            "output geometry only (no UVs) -- faster, for retopology / non-textured flows."),
             ],
             outputs=[
                 io.Custom("TRIMESH").Output(display_name="mesh"),
@@ -163,13 +236,12 @@ class Pixal3DProcessMesh(io.ComfyNode):
         target_face_count: int = 200000,
         weld_vertices: bool = True,
         weld_digits: int = 4,
-        unwrap_uv: bool = True,
-        chart_cone_angle: float = 90.0,
-        chart_refine_iterations: int = 0,
-        chart_global_iterations: int = 1,
-        chart_smooth_strength: int = 1,
+        uv_mode: dict = None,
     ):
         from .stages import process_mesh, _phase
+        # uv_mode is a DynamicCombo dict: {"uv_mode": "unwrap"|"skip", + chart_* when "unwrap"}.
+        uv_mode = uv_mode or {}
+        unwrap_uv = uv_mode.get("uv_mode", "unwrap") != "skip"
         with _phase("Pixal3DProcessMesh.execute"):
             out = process_mesh(
                 trimesh,
@@ -184,10 +256,10 @@ class Pixal3DProcessMesh(io.ComfyNode):
                 weld_vertices=weld_vertices,
                 weld_digits=weld_digits,
                 unwrap_uv=unwrap_uv,
-                chart_cone_angle=chart_cone_angle,
-                chart_refine_iterations=chart_refine_iterations,
-                chart_global_iterations=chart_global_iterations,
-                chart_smooth_strength=chart_smooth_strength,
+                chart_cone_angle=uv_mode.get("chart_cone_angle", 90.0),
+                chart_refine_iterations=uv_mode.get("chart_refine_iterations", 0),
+                chart_global_iterations=uv_mode.get("chart_global_iterations", 1),
+                chart_smooth_strength=uv_mode.get("chart_smooth_strength", 1),
             )
             return io.NodeOutput(out)
 
