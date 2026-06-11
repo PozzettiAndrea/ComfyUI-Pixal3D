@@ -604,7 +604,38 @@ class Pixal3DImageTo3DPipeline(Pipeline):
                 )
             )
         return out_mesh
-    
+
+    @torch.no_grad()
+    def decode_shape_only(
+        self,
+        shape_slat: SparseTensor,
+        resolution: int,
+    ) -> List[MeshWithVoxel]:
+        """Decode geometry only (no texture stage). Builds MeshWithVoxel with the
+        decoded shape and zeroed PBR attrs, so downstream code that expects a
+        voxelgrid still works (it just carries no texture)."""
+        meshes, subs = self.decode_shape_slat(shape_slat, resolution)
+        n_attr = max(s.stop for s in self.pbr_attr_layout.values())
+        out_mesh = []
+        torch.cuda.synchronize()
+        for m, sub in zip(meshes, subs):
+            m.fill_holes()
+            attrs = torch.zeros(
+                (sub.coords.shape[0], n_attr), dtype=torch.float32, device=sub.coords.device
+            )
+            out_mesh.append(
+                MeshWithVoxel(
+                    m.vertices, m.faces,
+                    origin=[-0.5, -0.5, -0.5],
+                    voxel_size=1 / resolution,
+                    coords=sub.coords[:, 1:],
+                    attrs=attrs,
+                    voxel_shape=torch.Size([*sub.shape, *sub.spatial_shape]),
+                    layout=self.pbr_attr_layout,
+                )
+            )
+        return out_mesh
+
     @torch.no_grad()
     def run(
         self,
@@ -619,6 +650,7 @@ class Pixal3DImageTo3DPipeline(Pipeline):
         return_latent: bool = False,
         pipeline_type: Optional[str] = None,
         max_num_tokens: int = 49152,
+        generate_texture: bool = True,
     ) -> List[MeshWithVoxel]:
         """
         Run the Pixal3D pipeline (proj mode, cascade).
@@ -758,7 +790,16 @@ class Pixal3DImageTo3DPipeline(Pipeline):
         del cond_shape_hr, noise_hr, hr_slat, hr_coords_unique
         torch.cuda.empty_cache()
 
-        # ---- Stage 4: Texture (proj) ----
+        # ---- Stage 4: Texture (proj) ----  [skipped when generate_texture=False]
+        res = actual_hr_resolution
+        if not generate_texture:
+            out_mesh = self.decode_shape_only(shape_slat, res)
+            del shape_slat
+            torch.cuda.empty_cache()
+            if return_latent:
+                return out_mesh, (None, None, res)
+            return out_mesh
+
         tex_grid_res = actual_hr_resolution // 16
         cond_tex = self.get_proj_cond_shape(
             self.image_cond_model_tex_1024, [image], shape_slat.coords,
@@ -775,7 +816,6 @@ class Pixal3DImageTo3DPipeline(Pipeline):
         torch.cuda.empty_cache()
 
         # ---- Stage 5: Decode ----
-        res = actual_hr_resolution
         out_mesh = self.decode_latent(shape_slat, tex_slat, res)
         if return_latent:
             return out_mesh, (shape_slat, tex_slat, res)

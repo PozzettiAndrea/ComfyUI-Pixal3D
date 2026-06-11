@@ -797,12 +797,15 @@ def _run_cascade(
     ss_steps: int, ss_guidance: float, ss_rescale: float, ss_rescale_t: float,
     shape_steps: int, shape_guidance: float, shape_rescale: float, shape_rescale_t: float,
     tex_steps: int, tex_guidance: float, tex_rescale: float, tex_rescale_t: float,
+    generate_texture: bool = True,
 ):
-    """Run the 4-stage cascade. Returns (pipeline, MeshWithVoxel, resolution)."""
+    """Run the 4-stage cascade. Returns (pipeline, MeshWithVoxel, resolution).
+    With generate_texture=False the texture stage is skipped (shape only)."""
     pipeline = init_pipeline(attn_backend=attn_backend)
     pil = comfy_image_to_pil(image)
     torch.manual_seed(seed)
-    log.info(f"[pixal3d] Running cascade ({pipeline_type}, seed={seed})")
+    log.info(f"[pixal3d] Running cascade ({pipeline_type}, seed={seed}, "
+             f"texture={'on' if generate_texture else 'OFF (shape only)'})")
     mesh_list, (shape_slat, tex_slat, res) = pipeline.run(
         pil,
         camera_params=camera_params,
@@ -823,6 +826,7 @@ def _run_cascade(
         return_latent=True,
         pipeline_type=pipeline_type,
         max_num_tokens=max_num_tokens,
+        generate_texture=generate_texture,
     )
     mw = mesh_list[0]
     log.info(f"[pixal3d] Mesh extracted at resolution {res}")
@@ -1562,14 +1566,18 @@ def generate_mesh_and_voxelgrid(
     ss_steps: int = 12, ss_guidance: float = 7.5, ss_rescale: float = 0.7, ss_rescale_t: float = 5.0,
     shape_steps: int = 12, shape_guidance: float = 7.5, shape_rescale: float = 0.5, shape_rescale_t: float = 3.0,
     tex_steps: int = 12, tex_guidance: float = 1.0, tex_rescale: float = 0.0, tex_rescale_t: float = 3.0,
+    generate_texture: bool = True,
 ):
     """Run the cascade and split the result into IPC-safe (TRIMESH, PIXAL3D_VOXELGRID).
-    The trimesh is the raw DC mesh in pixal3d internal coords ([-0.5, 0.5]^3, Z-up)."""
+    The trimesh is the raw DC mesh in pixal3d internal coords ([-0.5, 0.5]^3, Z-up).
+    If generate_texture is False, the texture stage is skipped (shape only) and the
+    voxelgrid carries zeroed PBR attrs."""
     pipeline, mw, _res = _run_cascade(
         image, camera_params, seed, pipeline_type, attn_backend, max_num_tokens,
         ss_steps, ss_guidance, ss_rescale, ss_rescale_t,
         shape_steps, shape_guidance, shape_rescale, shape_rescale_t,
         tex_steps, tex_guidance, tex_rescale, tex_rescale_t,
+        generate_texture=generate_texture,
     )
     tri = _trimesh_from_meshwithvoxel(mw)
     voxelgrid = _meshwithvoxel_to_dict(mw, pipeline)

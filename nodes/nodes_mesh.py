@@ -40,6 +40,11 @@ class Pixal3DGenerateMesh(io.ComfyNode):
                 io.Image.Input("image", tooltip="Preprocessed image."),
                 io.Custom("PIXAL3D_CAMERA").Input("camera", tooltip="From Pixal3DCameraFromFOV."),
                 io.Int.Input("seed", default=42, min=0, max=2**31 - 1),
+                io.Boolean.Input("generate_texture", default=True, optional=True,
+                                 tooltip="Run the texture stage. Turn OFF to skip texture "
+                                         "generation entirely (shape only) -- much faster; "
+                                         "the voxelgrid is then empty (no PBR bake possible). "
+                                         "Use for retopology / geometry-only workflows."),
                 io.Int.Input("max_num_tokens", default=49152, min=1024, max=131072, step=1024, optional=True),
                 io.Int.Input("ss_steps", default=12, min=1, max=64, optional=True),
                 io.Float.Input("ss_guidance", default=7.5, min=0.0, max=15.0, step=0.1, optional=True),
@@ -67,6 +72,7 @@ class Pixal3DGenerateMesh(io.ComfyNode):
         image,
         camera,
         seed: int = 42,
+        generate_texture: bool = True,
         max_num_tokens: int = 49152,
         ss_steps: int = 12, ss_guidance: float = 7.5, ss_rescale: float = 0.7, ss_rescale_t: float = 5.0,
         shape_steps: int = 12, shape_guidance: float = 7.5, shape_rescale: float = 0.5, shape_rescale_t: float = 3.0,
@@ -78,6 +84,7 @@ class Pixal3DGenerateMesh(io.ComfyNode):
                 image=image,
                 camera_params=camera,
                 seed=seed,
+                generate_texture=generate_texture,
                 pipeline_type=pipeline.get("pipeline_type", "1024_cascade"),
                 attn_backend=pipeline.get("attn_backend", "auto"),
                 max_num_tokens=max_num_tokens,
