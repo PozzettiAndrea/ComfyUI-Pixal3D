@@ -68,9 +68,12 @@ class Pixal3DCameraFromFOV(io.ComfyNode):
                     default=60.0, min=1.0, max=170.0, step=0.1,
                     tooltip="Horizontal FOV in degrees. Wire from MoGe2Inference.fov_x.",
                 ),
-                io.Float.Input("mesh_scale", default=1.0, min=0.1, max=10.0, step=0.05, optional=True),
-                io.Int.Input("extend_pixel", default=0, min=0, max=128, optional=True),
-                io.Int.Input("image_resolution", default=512, min=256, max=2048, step=64, optional=True),
+                io.Float.Input("mesh_scale", default=1.0, min=0.1, max=10.0, step=0.05, optional=True,
+                    tooltip="Object world-size scale used in the projection. Leave at 1.0 unless "
+                            "you deliberately want to rescale the conditioning."),
+                io.Int.Input("extend_pixel", default=0, min=0, max=128, optional=True,
+                    tooltip="Pixel margin added when computing the back-projection distance. "
+                            "Leave at 0 for normal use."),
             ],
             outputs=[
                 io.Custom("PIXAL3D_CAMERA").Output(display_name="camera"),
@@ -83,15 +86,16 @@ class Pixal3DCameraFromFOV(io.ComfyNode):
         fov_x_deg: float,
         mesh_scale: float = 1.0,
         extend_pixel: int = 0,
-        image_resolution: int = 512,
     ):
         from .stages import pack_camera_from_fov, _phase
+        # image_resolution is a fixed model constant (the cond model projects at 512),
+        # not a user knob -- so it's hard-pinned here rather than exposed as an input.
         with _phase("Pixal3DCameraFromFOV.execute"):
             cam = pack_camera_from_fov(
                 fov_x_deg=fov_x_deg,
                 mesh_scale=mesh_scale,
                 extend_pixel=extend_pixel,
-                image_resolution=image_resolution,
+                image_resolution=512,
             )
             log.info(
                 f"[Pixal3DCameraFromFOV] fov_x_deg={fov_x_deg:.2f}, "
