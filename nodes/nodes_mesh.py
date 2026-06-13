@@ -404,6 +404,16 @@ class Pixal3DProcessMeshVisibility(io.ComfyNode):
             io.Int.Input("view_resolution", default=1024, min=64, max=4096, step=64, optional=True,
                 tooltip="Ray-grid density used to probe visibility. Higher catches thin slivers but "
                         "costs more rays; 1024 is plenty for most meshes."),
+            io.Boolean.Input("per_face_probe", default=True, optional=True,
+                tooltip="Also cast one ray per face through its centroid, so every face is directly "
+                        "tested. Eliminates the speckle holes that come from the image-grid rays "
+                        "undersampling small faces / missing exact edge hits."),
+            io.Boolean.Input("fill_pinholes", default=True, optional=True,
+                tooltip="Mop up residual specks: flip small unviewed islands that are fully enclosed "
+                        "by viewed faces (interior holes). The large unviewed back region is kept."),
+            io.Int.Input("max_hole_faces", default=64, min=1, max=100000, step=1, optional=True,
+                tooltip="Largest enclosed unviewed island (in faces) that fill_pinholes will close. "
+                        "Bigger leaves genuine occluded pockets alone."),
             io.Boolean.Input("colorize", default=True, optional=True,
                 tooltip="Tint faces for preview: viewed = green, not-viewed = red. (Sets face colors; "
                         "turn off if you'll bake PBR downstream.)"),
@@ -446,9 +456,12 @@ class Pixal3DProcessMeshVisibility(io.ComfyNode):
         weld_digits: int = 4,
         uv_mode: dict = None,
         tag_visibility: bool = True,
-        projection: str = "orthographic",
+        projection: str = "perspective",
         view_from: str = "-Y",
         view_resolution: int = 1024,
+        per_face_probe: bool = True,
+        fill_pinholes: bool = True,
+        max_hole_faces: int = 64,
         colorize: bool = True,
         keep: str = "all",
         camera: dict = None,
@@ -491,13 +504,14 @@ class Pixal3DProcessMeshVisibility(io.ComfyNode):
             gu, gv = np.meshgrid(us, vs)
             n_rays = gu.size
 
+            # --- camera geometry, shared by the image grid and the per-face probe ---
+            pad = 0.05 * ext[axis] + 1e-6
+            campos = None
             if projection == "perspective":
-                # pinhole rays from a single camera point on the `sgn` side
                 cam_angle = float((camera or {}).get("camera_angle_x", 0.8575560450553894))
                 radius = float(np.linalg.norm(ext) * 0.5)
-                # Use Pixal3D's actual camera distance (mesh is in the canonical ~[-0.5,0.5]
-                # scale, so distance is faithful as-is); only floor it so the camera can't
-                # end up inside the mesh.
+                # Pixal3D's actual camera distance (mesh is canonical ~[-0.5,0.5] scale, so
+                # distance is faithful as-is); floor only so the camera isn't inside the mesh.
                 cam_dist = max(float((camera or {}).get("distance", 2.0)), radius * 1.05)
                 fwd = np.zeros(3); fwd[axis] = -sgn          # looking toward the object
                 up_guess = np.array([0.0, 0.0, 1.0]) if axis != 2 else np.array([0.0, 1.0, 0.0])
@@ -505,15 +519,12 @@ class Pixal3DProcessMeshVisibility(io.ComfyNode):
                 up = np.cross(right, fwd)
                 campos = center - fwd * cam_dist
                 half = math.tan(cam_angle * 0.5)
-                su = np.linspace(-half, half, res)
-                sv = np.linspace(-half, half, res)
-                su, sv = np.meshgrid(su, sv)
+                su, sv = np.meshgrid(np.linspace(-half, half, res), np.linspace(-half, half, res))
                 dirs = (fwd[None, :] + su.ravel()[:, None] * right[None, :] + sv.ravel()[:, None] * up[None, :])
                 dirs /= (np.linalg.norm(dirs, axis=1, keepdims=True) + 1e-9)
                 origins = np.tile(campos, (n_rays, 1))
             else:
                 # orthographic: parallel rays along the view axis from just outside the bbox
-                pad = 0.05 * ext[axis] + 1e-6
                 origins = np.zeros((n_rays, 3))
                 origins[:, perp[0]] = gu.ravel()
                 origins[:, perp[1]] = gv.ravel()
@@ -526,6 +537,55 @@ class Pixal3DProcessMeshVisibility(io.ComfyNode):
             seen = hit_faces[hit_faces >= 0]
             if seen.size:
                 viewed[np.unique(seen)] = True
+            n_grid = int(viewed.sum())
+
+            # --- per-face centroid probe: one dedicated ray per face, so undersampling /
+            #     missed exact-edge hits can't leave speckle holes inside the viewed region ---
+            if per_face_probe and nF:
+                cen = out.triangles_center
+                if projection == "perspective":
+                    pdirs = cen - campos[None, :]
+                    pdirs /= (np.linalg.norm(pdirs, axis=1, keepdims=True) + 1e-9)
+                    porig = np.tile(campos, (nF, 1))
+                else:
+                    porig = cen.copy()
+                    porig[:, axis] = (b1[axis] + pad) if sgn > 0 else (b0[axis] - pad)
+                    pdirs = np.zeros((nF, 3)); pdirs[:, axis] = -sgn
+                pf = out.ray.intersects_first(ray_origins=porig, ray_directions=pdirs)
+                viewed |= (pf == np.arange(nF))
+            n_probe = int(viewed.sum())
+
+            # --- fill small enclosed unviewed islands (residual embree pinholes) ---
+            n_fill = 0
+            if fill_pinholes and nF and not viewed.all():
+                adj = out.face_adjacency
+                if len(adj):
+                    from collections import defaultdict as _dd
+                    deg = np.bincount(adj.ravel(), minlength=nF)
+                    boundary = deg < 3  # triangle touching an open mesh edge
+                    parent = np.arange(nF)
+
+                    def _find(x):
+                        while parent[x] != x:
+                            parent[x] = parent[parent[x]]
+                            x = parent[x]
+                        return x
+
+                    for a, b in adj:
+                        a, b = int(a), int(b)
+                        if not viewed[a] and not viewed[b]:
+                            ra, rb = _find(a), _find(b)
+                            if ra != rb:
+                                parent[ra] = rb
+                    comp = _dd(list)
+                    for f in np.nonzero(~viewed)[0]:
+                        comp[_find(int(f))].append(int(f))
+                    maxh = int(max_hole_faces)
+                    for faces in comp.values():
+                        if len(faces) <= maxh and not boundary[faces].any():
+                            viewed[faces] = True
+                            n_fill += len(faces)
+
             ratio = float(viewed.mean()) if nF else 0.0
 
             # Store as trimesh face/vertex attributes (a 0/1 scalar field) so it shows up
@@ -553,7 +613,8 @@ class Pixal3DProcessMeshVisibility(io.ComfyNode):
                     mesh_out = out.submesh([idx], append=True)
 
             summary = (f"Visibility ({projection}, view {view_from}, {res}x{res} rays): "
-                       f"{int(viewed.sum())}/{nF} faces viewed ({100.0 * ratio:.1f}%); keep={keep}.")
+                       f"{int(viewed.sum())}/{nF} faces viewed ({100.0 * ratio:.1f}%) "
+                       f"[grid {n_grid} -> +probe {n_probe - n_grid} -> +fill {n_fill}]; keep={keep}.")
             log.info(f"[Pixal3DProcessMeshVisibility] {summary}")
             return io.NodeOutput(mesh_out, summary)
 
