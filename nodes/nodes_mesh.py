@@ -300,6 +300,40 @@ def _voxels_to_surface(coords, res, mode="voxel_cubes"):
                            faces=np.concatenate(fparts, 0), process=True)
 
 
+def _occlusion_cull(coords, res, camera, keep_layers=1.0, ray_bins=None):
+    """Keep only the front-most voxels per camera ray (+ keep_layers behind), using
+    each voxel's own projected depth as the occluder. Replicates Pixal3D's ProjGrid
+    projection (grid -> Blender rotation -> /mesh_scale/2 -> perspective) so 'front'
+    matches what the model's projective conditioning sees. Returns (kept_coords, mask)."""
+    import numpy as np
+    if len(coords) == 0:
+        return coords, np.zeros(0, bool)
+    rb = int(ray_bins) if ray_bins else int(res)
+    ms = float(camera.get("mesh_scale", 1.0))
+    dist = float(camera.get("distance", 2.0))
+    angle = float(camera.get("camera_angle_x", 0.8575560450553894))
+
+    p = (coords.astype(np.float64) + 0.5) / res * 2.0 - 1.0          # voxel centres in [-1,1]
+    R = np.array([[1, 0, 0], [0, 0, -1], [0, 1, 0]], float)          # ProjGrid Blender rotation
+    pr = (p @ R.T) / ms / 2.0
+    T = np.array([[1, 0, 0, 0.], [0, 0, -1, -dist], [0, 1, 0, 0], [0, 0, 0, 1]], float)  # cam->world
+    cam = np.concatenate([pr, np.ones((len(pr), 1))], 1) @ np.linalg.inv(T).T
+    xc, yc, zc = cam[:, 0], cam[:, 1], cam[:, 2]
+    depth = -zc                                                       # Blender camera faces -Z
+    t = np.tan(angle / 2.0) + 1e-9
+    fx = 0.5 / t * xc / (-zc + 1e-8) + 0.5                            # normalized pixel [0,1]
+    fy = -0.5 / t * yc / (-zc + 1e-8) + 0.5
+    bx = np.clip((fx * rb).astype(np.int64), 0, rb - 1)
+    by = np.clip((fy * rb).astype(np.int64), 0, rb - 1)
+    key = by * rb + bx                                               # ray bin per voxel
+    front = np.full(rb * rb, np.inf)
+    np.minimum.at(front, key, depth)                                # nearest depth per ray
+    voxel_world = 1.0 / (res * ms)
+    margin = float(keep_layers) * voxel_world + 1e-6
+    keep = (depth <= front[key] + margin) & (depth > 0)
+    return coords[keep], keep
+
+
 class Pixal3DGenerateSparse(io.ComfyNode):
     """Stage 1 only: the sparse-structure 'blockout' as a surface mesh.
 
@@ -369,6 +403,87 @@ class Pixal3DGenerateSparse(io.ComfyNode):
                        f"{len(mesh.vertices)} verts / {len(mesh.faces)} faces (hollow surface shell).")
             log.info(f"[Pixal3DGenerateSparse] {summary}")
             return io.NodeOutput(mesh, n, summary, cam)
+
+
+class Pixal3DGenerateSparseOccluded(io.ComfyNode):
+    """Sparse-structure blockout + occlusion cull (the 'less back bullshit' experiment).
+
+    Runs Stage 1 once, then culls the occluded back of the voxel shell: for each
+    camera ray, keep only the front-most voxel (+ keep_layers behind it), using the
+    voxels' own projected depth as the occluder. Returns both the initial shell and
+    the front-only shell, so you can see exactly which voxels the model's projective
+    conditioning *should* be reading (the visible front) vs the back it's mirroring.
+    """
+
+    @classmethod
+    def define_schema(cls):
+        return io.Schema(
+            node_id="Pixal3DGenerateSparseOccluded",
+            display_name="Pixal3D Generate Sparse Occluded",
+            category="Pixal3D",
+            description=(
+                "Sparse-structure blockout, then occlusion-cull the back: keep only the front-most "
+                "voxel per camera ray (+ keep_layers). Outputs the initial shell and the front-only "
+                "shell. The cull uses Pixal3D's own ProjGrid projection, so 'front' matches what the "
+                "conditioning sees."
+            ),
+            inputs=[
+                io.Custom("PIXAL3D_PIPELINE").Input("pipeline", tooltip="From Pixal3DLoadPipeline."),
+                io.Image.Input("image", tooltip="Preprocessed image (from Pixal3D Preprocess Image)."),
+                io.Custom("PIXAL3D_CAMERA").Input("camera", tooltip="From Pixal3DCameraFromFOV."),
+                io.Int.Input("seed", default=42, min=0, max=2**31 - 1),
+                io.Float.Input("iso_distance_multiplier", default=1.0, min=1.0, max=1000.0, step=0.5, optional=True,
+                    tooltip="Isometric long-lens flattening (1.0 = perspective). The occlusion uses this "
+                            "same flattened camera, so it matches your generation view."),
+                io.Float.Input("keep_layers", default=1.0, min=0.0, max=16.0, step=0.5, optional=True,
+                    tooltip="How many voxels behind the front surface to keep per ray. 1 = first-hit +-1 "
+                            "voxel; higher keeps a thicker front band; 0 = only the exact front voxel."),
+                io.Int.Input("ray_bins", default=0, min=0, max=512, optional=True,
+                    tooltip="Ray-grid resolution for grouping voxels into rays. 0 = use the voxel "
+                            "resolution (32). Higher = finer ray separation."),
+                io.Combo.Input("mode", options=["voxel_cubes", "marching_cubes"], default="voxel_cubes",
+                    tooltip="Surface style for both output meshes."),
+                io.Int.Input("ss_steps", default=12, min=1, max=64, optional=True),
+                io.Float.Input("ss_guidance", default=7.5, min=0.0, max=15.0, step=0.1, optional=True),
+                io.Float.Input("ss_rescale", default=0.7, min=0.0, max=1.0, step=0.05, optional=True),
+                io.Float.Input("ss_rescale_t", default=5.0, min=0.0, max=10.0, step=0.1, optional=True),
+            ],
+            outputs=[
+                io.Custom("TRIMESH").Output(display_name="initial_sparse_mesh"),
+                io.Custom("TRIMESH").Output(display_name="after_occlusion_sparse_mesh"),
+                io.String.Output(display_name="summary"),
+                io.Custom("PIXAL3D_CAMERA").Output(display_name="camera"),
+            ],
+        )
+
+    @classmethod
+    def execute(cls, pipeline, image, camera, seed=42, iso_distance_multiplier=1.0,
+                keep_layers=1.0, ray_bins=0, mode="voxel_cubes",
+                ss_steps=12, ss_guidance=7.5, ss_rescale=0.7, ss_rescale_t=5.0):
+        from .stages import generate_sparse_structure, _YUP_TO_ZUP_ROT, _phase
+        cam, m = _long_lens_camera(camera, iso_distance_multiplier)
+        with _phase("Pixal3DGenerateSparseOccluded.execute"):
+            coords, res = generate_sparse_structure(
+                image=image, camera_params=cam, seed=seed,
+                attn_backend=pipeline.get("attn_backend", "auto"),
+                ss_res=32, ss_steps=ss_steps, ss_guidance=ss_guidance,
+                ss_rescale=ss_rescale, ss_rescale_t=ss_rescale_t,
+            )
+            kept, mask = _occlusion_cull(coords, res, cam, keep_layers=keep_layers,
+                                         ray_bins=(ray_bins or None))
+
+            initial = _voxels_to_surface(coords, res, mode=mode)
+            occluded = _voxels_to_surface(kept, res, mode=mode)
+            for msh in (initial, occluded):
+                if len(msh.vertices):
+                    msh.apply_transform(_YUP_TO_ZUP_ROT)
+
+            n0, n1 = int(len(coords)), int(len(kept))
+            summary = (f"Generate Sparse Occluded (iso x{m:.1f}, keep_layers={keep_layers}): "
+                       f"{n0} voxels -> {n1} front voxels kept ({100.0 * n1 / max(n0, 1):.0f}%); "
+                       f"{n0 - n1} occluded-back voxels culled.")
+            log.info(f"[Pixal3DGenerateSparseOccluded] {summary}")
+            return io.NodeOutput(initial, occluded, summary, cam)
 
 
 class Pixal3DProcessMesh(io.ComfyNode):
@@ -870,6 +985,7 @@ NODE_CLASS_MAPPINGS = {
     "Pixal3DGenerateMesh": Pixal3DGenerateMesh,
     "Pixal3DGenerateMeshIsometric": Pixal3DGenerateMeshIsometric,
     "Pixal3DGenerateSparse": Pixal3DGenerateSparse,
+    "Pixal3DGenerateSparseOccluded": Pixal3DGenerateSparseOccluded,
     "Pixal3DProcessMesh": Pixal3DProcessMesh,
     "Pixal3DProcessMeshVisibility": Pixal3DProcessMeshVisibility,
     "Pixal3DRasterizePBR": Pixal3DRasterizePBR,
@@ -880,6 +996,7 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "Pixal3DGenerateMesh": "Pixal3D Generate Mesh",
     "Pixal3DGenerateMeshIsometric": "Pixal3D Generate Mesh isometric",
     "Pixal3DGenerateSparse": "Pixal3D Generate Sparse",
+    "Pixal3DGenerateSparseOccluded": "Pixal3D Generate Sparse Occluded",
     "Pixal3DProcessMesh": "Pixal3D Process Mesh",
     "Pixal3DProcessMeshVisibility": "Pixal3D Process Mesh Visibility",
     "Pixal3DRasterizePBR": "Pixal3D Rasterize PBR",
