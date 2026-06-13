@@ -379,9 +379,9 @@ class Pixal3DProcessMeshVisibility(io.ComfyNode):
     in GeometryPack's Preview Mesh (Dual/VTK) field viewers. Optionally tints faces
     (viewed=green / unviewed=red) for plain previews, or keeps only viewed/unviewed.
 
-    Default visibility is ORTHOGONAL along the view axis -- the parallel-projection
-    case, which is the correct notion of 'seen' for isometric/CAD inputs and is
-    insensitive to camera distance/FOV.
+    Default visibility uses Pixal3D's actual PERSPECTIVE camera (wire the Generate
+    Mesh 'camera' output in) so 'seen' is faithful to how the mesh was generated.
+    An orthographic option exists as a camera-free approximation for pure isometric.
     """
 
     @classmethod
@@ -392,10 +392,11 @@ class Pixal3DProcessMeshVisibility(io.ComfyNode):
             io.Boolean.Input("tag_visibility", default=True, optional=True,
                 tooltip="Compute the viewed/not-viewed field. OFF = behaves exactly like "
                         "Pixal3D Process Mesh."),
-            io.Combo.Input("projection", options=["orthographic", "perspective"], default="orthographic",
-                tooltip="orthographic = parallel rays along the view axis (correct 'seen' for "
-                        "isometric/CAD inputs; no camera needed). perspective = pinhole rays from the "
-                        "camera's FOV/distance (matches a perspective generation)."),
+            io.Combo.Input("projection", options=["perspective", "orthographic"], default="perspective",
+                tooltip="perspective = pinhole rays from the camera's ACTUAL FOV/distance -- matches the "
+                        "camera Pixal3D used to generate the mesh (the faithful choice; wire the Generate "
+                        "Mesh 'camera' output here). orthographic = parallel rays along the view axis "
+                        "(a camera-free approximation, only for pure isometric)."),
             io.Combo.Input("view_from", options=["-Y", "+Y", "-X", "+X", "-Z", "+Z"], default="-Y",
                 tooltip="Which side the camera sits on, in the mesh frame. Default -Y matches Pixal3D's "
                         "conditioning camera (on -Y, looking +Y). Flip if the tinted preview looks "
@@ -494,7 +495,10 @@ class Pixal3DProcessMeshVisibility(io.ComfyNode):
                 # pinhole rays from a single camera point on the `sgn` side
                 cam_angle = float((camera or {}).get("camera_angle_x", 0.8575560450553894))
                 radius = float(np.linalg.norm(ext) * 0.5)
-                cam_dist = max(float((camera or {}).get("distance", 2.0)), 2.0 * radius)
+                # Use Pixal3D's actual camera distance (mesh is in the canonical ~[-0.5,0.5]
+                # scale, so distance is faithful as-is); only floor it so the camera can't
+                # end up inside the mesh.
+                cam_dist = max(float((camera or {}).get("distance", 2.0)), radius * 1.05)
                 fwd = np.zeros(3); fwd[axis] = -sgn          # looking toward the object
                 up_guess = np.array([0.0, 0.0, 1.0]) if axis != 2 else np.array([0.0, 1.0, 0.0])
                 right = np.cross(fwd, up_guess); right /= (np.linalg.norm(right) + 1e-9)
