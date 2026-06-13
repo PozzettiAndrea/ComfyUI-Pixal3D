@@ -185,7 +185,9 @@ class Pixal3DGenerateMeshIsometric(io.ComfyNode):
                 "axonometric (parallel-projection) inputs. Tune iso_distance_multiplier."
             ),
             inputs=inputs,
-            outputs=base.outputs,
+            outputs=list(base.outputs) + [
+                io.Custom("PIXAL3D_CAMERA").Output(display_name="camera"),
+            ],
         )
 
     @classmethod
@@ -238,7 +240,9 @@ class Pixal3DGenerateMeshIsometric(io.ComfyNode):
                 f"[Pixal3DGenerateMeshIsometric] mesh={len(tri.vertices)} verts / {len(tri.faces)} faces, "
                 f"voxelgrid={voxelgrid['attrs'].shape[0]} voxels x{voxelgrid['attrs'].shape[1]} attrs"
             )
-            return io.NodeOutput(tri, voxelgrid)
+            # Emit the flattened camera so downstream nodes (e.g. Process Mesh Visibility
+            # in perspective mode) can use the SAME view the mesh was generated under.
+            return io.NodeOutput(tri, voxelgrid, cam)
 
 
 class Pixal3DProcessMesh(io.ComfyNode):
