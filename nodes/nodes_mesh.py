@@ -145,6 +145,102 @@ class Pixal3DGenerateMesh(io.ComfyNode):
             return io.NodeOutput(tri, voxelgrid)
 
 
+class Pixal3DGenerateMeshIsometric(io.ComfyNode):
+    """Pixal3D Generate Mesh tuned for isometric / axonometric (parallel-projection) inputs.
+
+    Pixal3D's view-aligned projection conditioning (ProjGrid) assumes a *perspective*
+    camera (object in [-1,1] at distance 2 -> ~3x front/back foreshortening). An
+    isometric drawing has ~1x (parallel projection, camera at infinity), so under the
+    default camera the projected features land at the wrong pixels.
+
+    This node applies a 'long-lens' transform to the camera: push the camera back by
+    `iso_distance_multiplier` and zoom in (lower the FOV) by the same factor so the
+    object keeps the same on-screen size while the foreshortening flattens toward
+    orthographic. multiplier=1 is the original perspective camera; large values
+    approach a true orthographic / isometric projection. Everything else is identical
+    to Pixal3D Generate Mesh.
+    """
+
+    @classmethod
+    def define_schema(cls):
+        base = Pixal3DGenerateMesh.define_schema()
+        inputs = list(base.inputs)
+        iso_knob = io.Float.Input(
+            "iso_distance_multiplier", default=8.0, min=1.0, max=1000.0, step=0.5, optional=True,
+            tooltip="Flattens the projective conditioning toward orthographic for isometric/"
+                    "axonometric inputs. 1.0 = original perspective camera; higher pushes the "
+                    "camera back + zooms in (same framing, less foreshortening); very high "
+                    "(~100+) approaches true orthographic. The object's on-screen size is "
+                    "preserved automatically. Sweep this if alignment looks off on flat CAD views.")
+        # place the knob right after the 'camera' input (index 2)
+        cam_idx = next((i for i, inp in enumerate(inputs) if getattr(inp, "id", None) == "camera"), 2)
+        inputs.insert(cam_idx + 1, iso_knob)
+        return io.Schema(
+            node_id="Pixal3DGenerateMeshIsometric",
+            display_name="Pixal3D Generate Mesh isometric",
+            category="Pixal3D",
+            description=(
+                "Same four-stage cascade as Pixal3D Generate Mesh, but flattens the camera "
+                "toward orthographic so the projective conditioning matches isometric / "
+                "axonometric (parallel-projection) inputs. Tune iso_distance_multiplier."
+            ),
+            inputs=inputs,
+            outputs=base.outputs,
+        )
+
+    @classmethod
+    def execute(
+        cls,
+        pipeline,
+        image,
+        camera,
+        iso_distance_multiplier: float = 8.0,
+        seed: int = 42,
+        generate_texture: bool = True,
+        max_num_tokens: int = 49152,
+        ss_steps: int = 12, ss_guidance: float = 7.5, ss_rescale: float = 0.7, ss_rescale_t: float = 5.0,
+        shape_steps: int = 12, shape_guidance: float = 7.5, shape_rescale: float = 0.5, shape_rescale_t: float = 3.0,
+        tex_steps: int = 12, tex_guidance: float = 1.0, tex_rescale: float = 0.0, tex_rescale_t: float = 3.0,
+    ):
+        import math
+        from .stages import generate_mesh_and_voxelgrid, _YUP_TO_ZUP_ROT, _phase
+
+        # Long-lens transform: distance *= m, FOV shrinks so framing is preserved and
+        # foreshortening -> orthographic as m grows. Ratios cancel in the projection
+        # (x_ndc = f/(-z) * x), so it's numerically stable even at large m.
+        m = max(1.0, float(iso_distance_multiplier))
+        cam = dict(camera) if isinstance(camera, dict) else camera
+        a0 = float(cam.get("camera_angle_x", 0.8575560450553894))
+        d0 = float(cam.get("distance", 2.0))
+        cam["distance"] = d0 * m
+        cam["camera_angle_x"] = 2.0 * math.atan(math.tan(a0 / 2.0) / m)
+        log.info(
+            f"[Pixal3DGenerateMeshIsometric] iso x{m:.1f}: "
+            f"camera_angle_x {a0:.4f}->{cam['camera_angle_x']:.4f} rad, "
+            f"distance {d0:.3f}->{cam['distance']:.3f} (->orthographic as x grows)"
+        )
+
+        with _phase("Pixal3DGenerateMeshIsometric.execute"):
+            tri, voxelgrid = generate_mesh_and_voxelgrid(
+                image=image,
+                camera_params=cam,
+                seed=seed,
+                generate_texture=generate_texture,
+                pipeline_type=pipeline.get("pipeline_type", "1024_cascade"),
+                attn_backend=pipeline.get("attn_backend", "auto"),
+                max_num_tokens=max_num_tokens,
+                ss_steps=ss_steps, ss_guidance=ss_guidance, ss_rescale=ss_rescale, ss_rescale_t=ss_rescale_t,
+                shape_steps=shape_steps, shape_guidance=shape_guidance, shape_rescale=shape_rescale, shape_rescale_t=shape_rescale_t,
+                tex_steps=tex_steps, tex_guidance=tex_guidance, tex_rescale=tex_rescale, tex_rescale_t=tex_rescale_t,
+            )
+            tri.apply_transform(_YUP_TO_ZUP_ROT)
+            log.info(
+                f"[Pixal3DGenerateMeshIsometric] mesh={len(tri.vertices)} verts / {len(tri.faces)} faces, "
+                f"voxelgrid={voxelgrid['attrs'].shape[0]} voxels x{voxelgrid['attrs'].shape[1]} attrs"
+            )
+            return io.NodeOutput(tri, voxelgrid)
+
+
 class Pixal3DProcessMesh(io.ComfyNode):
     """Heavy cumesh cleanup + UV unwrap. Output mesh is ready for Pixal3DRasterizePBR."""
 
@@ -387,6 +483,7 @@ class Pixal3DExportGLB(io.ComfyNode):
 
 NODE_CLASS_MAPPINGS = {
     "Pixal3DGenerateMesh": Pixal3DGenerateMesh,
+    "Pixal3DGenerateMeshIsometric": Pixal3DGenerateMeshIsometric,
     "Pixal3DProcessMesh": Pixal3DProcessMesh,
     "Pixal3DRasterizePBR": Pixal3DRasterizePBR,
     "Pixal3DExportGLB": Pixal3DExportGLB,
@@ -394,6 +491,7 @@ NODE_CLASS_MAPPINGS = {
 
 NODE_DISPLAY_NAME_MAPPINGS = {
     "Pixal3DGenerateMesh": "Pixal3D Generate Mesh",
+    "Pixal3DGenerateMeshIsometric": "Pixal3D Generate Mesh isometric",
     "Pixal3DProcessMesh": "Pixal3D Process Mesh",
     "Pixal3DRasterizePBR": "Pixal3D Rasterize PBR",
     "Pixal3DExportGLB": "Pixal3D Export GLB",
