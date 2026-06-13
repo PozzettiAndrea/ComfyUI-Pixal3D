@@ -360,6 +360,188 @@ class Pixal3DProcessMesh(io.ComfyNode):
             return io.NodeOutput(out)
 
 
+class Pixal3DProcessMeshVisibility(io.ComfyNode):
+    """Pixal3D Process Mesh + per-face visibility tagging.
+
+    Runs the same cleanup/UV as Pixal3D Process Mesh, then determines, for the
+    processed mesh, which triangles are actually seen from the generation view --
+    i.e. which faces a camera ray (pixel) reaches first, discounting transparency.
+    The Z-up mesh the cascade produces is already in the conditioning camera's
+    frame (camera on -Y looking +Y), so 'viewed' = "associatable to an input
+    pixel"; everything else is occluded/back-facing (hallucinated back side).
+
+    Writes a boolean per-face field to mesh.metadata['viewed_faces'] (+ a
+    'viewed_ratio'); optionally tints faces (viewed=green / unviewed=red) for
+    preview, or keeps only the viewed/unviewed faces.
+
+    Default visibility is ORTHOGONAL along the view axis -- the parallel-projection
+    case, which is the correct notion of 'seen' for isometric/CAD inputs and is
+    insensitive to camera distance/FOV.
+    """
+
+    @classmethod
+    def define_schema(cls):
+        base = Pixal3DProcessMesh.define_schema()
+        inputs = list(base.inputs)
+        vis_inputs = [
+            io.Boolean.Input("tag_visibility", default=True, optional=True,
+                tooltip="Compute the viewed/not-viewed field. OFF = behaves exactly like "
+                        "Pixal3D Process Mesh."),
+            io.Combo.Input("projection", options=["orthographic", "perspective"], default="orthographic",
+                tooltip="orthographic = parallel rays along the view axis (correct 'seen' for "
+                        "isometric/CAD inputs; no camera needed). perspective = pinhole rays from the "
+                        "camera's FOV/distance (matches a perspective generation)."),
+            io.Combo.Input("view_from", options=["-Y", "+Y", "-X", "+X", "-Z", "+Z"], default="-Y",
+                tooltip="Which side the camera sits on, in the mesh frame. Default -Y matches Pixal3D's "
+                        "conditioning camera (on -Y, looking +Y). Flip if the tinted preview looks "
+                        "inside-out."),
+            io.Int.Input("view_resolution", default=1024, min=64, max=4096, step=64, optional=True,
+                tooltip="Ray-grid density used to probe visibility. Higher catches thin slivers but "
+                        "costs more rays; 1024 is plenty for most meshes."),
+            io.Boolean.Input("colorize", default=True, optional=True,
+                tooltip="Tint faces for preview: viewed = green, not-viewed = red. (Sets face colors; "
+                        "turn off if you'll bake PBR downstream.)"),
+            io.Combo.Input("keep", options=["all", "viewed_only", "unviewed_only"], default="all",
+                tooltip="all = full mesh with the field. viewed_only / unviewed_only = return just "
+                        "those faces as the output mesh."),
+            io.Custom("PIXAL3D_CAMERA").Input("camera", optional=True,
+                tooltip="From Pixal3DCameraFromFOV. Only used by 'perspective' projection (FOV + "
+                        "distance). Ignored for orthographic."),
+        ]
+        return io.Schema(
+            node_id="Pixal3DProcessMeshVisibility",
+            display_name="Pixal3D Process Mesh Visibility",
+            category="Pixal3D",
+            description=(
+                "Pixal3D Process Mesh, plus a per-face viewed/not-viewed field marking which "
+                "triangles are reachable by a camera pixel from the generation view (the rest is "
+                "the occluded/back-facing hallucinated side)."
+            ),
+            inputs=inputs + vis_inputs,
+            outputs=[
+                io.Custom("TRIMESH").Output(display_name="mesh"),
+                io.String.Output(display_name="summary"),
+            ],
+        )
+
+    @classmethod
+    def execute(
+        cls,
+        trimesh,
+        remesh: bool = False,
+        remesh_resolution: int = 512,
+        remesh_band: float = 1.0,
+        remove_inner_faces: bool = False,
+        fill_holes: bool = True,
+        fill_holes_perimeter: float = 0.03,
+        floater_threshold: float = 1e-3,
+        target_face_count: int = 200000,
+        weld_vertices: bool = True,
+        weld_digits: int = 4,
+        uv_mode: dict = None,
+        tag_visibility: bool = True,
+        projection: str = "orthographic",
+        view_from: str = "-Y",
+        view_resolution: int = 1024,
+        colorize: bool = True,
+        keep: str = "all",
+        camera: dict = None,
+    ):
+        import math
+        import numpy as np
+        import trimesh as tm
+        from .stages import process_mesh, _phase
+
+        uv_mode = uv_mode or {}
+        unwrap_uv = uv_mode.get("uv_mode", "unwrap") != "skip"
+        with _phase("Pixal3DProcessMeshVisibility.execute"):
+            out = process_mesh(
+                trimesh,
+                remesh=remesh, remesh_resolution=remesh_resolution, remesh_band=remesh_band,
+                remove_inner_faces=remove_inner_faces, fill_holes=fill_holes,
+                fill_holes_perimeter=fill_holes_perimeter, floater_threshold=floater_threshold,
+                target_face_count=target_face_count, weld_vertices=weld_vertices, weld_digits=weld_digits,
+                unwrap_uv=unwrap_uv,
+                chart_cone_angle=uv_mode.get("chart_cone_angle", 90.0),
+                chart_refine_iterations=uv_mode.get("chart_refine_iterations", 0),
+                chart_global_iterations=uv_mode.get("chart_global_iterations", 1),
+                chart_smooth_strength=uv_mode.get("chart_smooth_strength", 1),
+            )
+
+            if not tag_visibility:
+                return io.NodeOutput(out, "visibility tagging off")
+
+            nF = len(out.faces)
+            b0, b1 = out.bounds
+            center = (b0 + b1) * 0.5
+            ext = np.maximum(b1 - b0, 1e-9)
+            axis = {"X": 0, "Y": 1, "Z": 2}[view_from[1]]
+            sgn = -1.0 if view_from[0] == "-" else 1.0  # camera sits on this side of `axis`
+            perp = [i for i in range(3) if i != axis]
+            res = int(view_resolution)
+
+            us = np.linspace(b0[perp[0]], b1[perp[0]], res)
+            vs = np.linspace(b0[perp[1]], b1[perp[1]], res)
+            gu, gv = np.meshgrid(us, vs)
+            n_rays = gu.size
+
+            if projection == "perspective":
+                # pinhole rays from a single camera point on the `sgn` side
+                cam_angle = float((camera or {}).get("camera_angle_x", 0.8575560450553894))
+                radius = float(np.linalg.norm(ext) * 0.5)
+                cam_dist = max(float((camera or {}).get("distance", 2.0)), 2.0 * radius)
+                fwd = np.zeros(3); fwd[axis] = -sgn          # looking toward the object
+                up_guess = np.array([0.0, 0.0, 1.0]) if axis != 2 else np.array([0.0, 1.0, 0.0])
+                right = np.cross(fwd, up_guess); right /= (np.linalg.norm(right) + 1e-9)
+                up = np.cross(right, fwd)
+                campos = center - fwd * cam_dist
+                half = math.tan(cam_angle * 0.5)
+                su = np.linspace(-half, half, res)
+                sv = np.linspace(-half, half, res)
+                su, sv = np.meshgrid(su, sv)
+                dirs = (fwd[None, :] + su.ravel()[:, None] * right[None, :] + sv.ravel()[:, None] * up[None, :])
+                dirs /= (np.linalg.norm(dirs, axis=1, keepdims=True) + 1e-9)
+                origins = np.tile(campos, (n_rays, 1))
+            else:
+                # orthographic: parallel rays along the view axis from just outside the bbox
+                pad = 0.05 * ext[axis] + 1e-6
+                origins = np.zeros((n_rays, 3))
+                origins[:, perp[0]] = gu.ravel()
+                origins[:, perp[1]] = gv.ravel()
+                origins[:, axis] = (b1[axis] + pad) if sgn > 0 else (b0[axis] - pad)
+                dirs = np.zeros((n_rays, 3))
+                dirs[:, axis] = -sgn  # shoot toward the object
+
+            hit_faces = out.ray.intersects_first(ray_origins=origins, ray_directions=dirs)
+            viewed = np.zeros(nF, dtype=bool)
+            seen = hit_faces[hit_faces >= 0]
+            if seen.size:
+                viewed[np.unique(seen)] = True
+            ratio = float(viewed.mean()) if nF else 0.0
+
+            out.metadata = dict(out.metadata or {})
+            out.metadata["viewed_faces"] = viewed
+            out.metadata["viewed_ratio"] = ratio
+
+            if colorize:
+                fc = np.empty((nF, 4), np.uint8)
+                fc[viewed] = (40, 190, 60, 255)
+                fc[~viewed] = (210, 50, 40, 255)
+                out.visual = tm.visual.ColorVisuals(mesh=out, face_colors=fc)
+
+            mesh_out = out
+            if keep != "all":
+                want = viewed if keep == "viewed_only" else ~viewed
+                idx = np.nonzero(want)[0]
+                if idx.size:
+                    mesh_out = out.submesh([idx], append=True)
+
+            summary = (f"Visibility ({projection}, view {view_from}, {res}x{res} rays): "
+                       f"{int(viewed.sum())}/{nF} faces viewed ({100.0 * ratio:.1f}%); keep={keep}.")
+            log.info(f"[Pixal3DProcessMeshVisibility] {summary}")
+            return io.NodeOutput(mesh_out, summary)
+
+
 class Pixal3DRasterizePBR(io.ComfyNode):
     """drtk UV-space PBR bake: trimesh+UVs+voxelgrid -> trimesh with baked PBR textures."""
 
@@ -485,6 +667,7 @@ NODE_CLASS_MAPPINGS = {
     "Pixal3DGenerateMesh": Pixal3DGenerateMesh,
     "Pixal3DGenerateMeshIsometric": Pixal3DGenerateMeshIsometric,
     "Pixal3DProcessMesh": Pixal3DProcessMesh,
+    "Pixal3DProcessMeshVisibility": Pixal3DProcessMeshVisibility,
     "Pixal3DRasterizePBR": Pixal3DRasterizePBR,
     "Pixal3DExportGLB": Pixal3DExportGLB,
 }
@@ -493,6 +676,7 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "Pixal3DGenerateMesh": "Pixal3D Generate Mesh",
     "Pixal3DGenerateMeshIsometric": "Pixal3D Generate Mesh isometric",
     "Pixal3DProcessMesh": "Pixal3D Process Mesh",
+    "Pixal3DProcessMeshVisibility": "Pixal3D Process Mesh Visibility",
     "Pixal3DRasterizePBR": "Pixal3D Rasterize PBR",
     "Pixal3DExportGLB": "Pixal3D Export GLB",
 }
