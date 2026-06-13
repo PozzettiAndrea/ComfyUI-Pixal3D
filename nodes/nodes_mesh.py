@@ -370,9 +370,10 @@ class Pixal3DProcessMeshVisibility(io.ComfyNode):
     frame (camera on -Y looking +Y), so 'viewed' = "associatable to an input
     pixel"; everything else is occluded/back-facing (hallucinated back side).
 
-    Writes a boolean per-face field to mesh.metadata['viewed_faces'] (+ a
-    'viewed_ratio'); optionally tints faces (viewed=green / unviewed=red) for
-    preview, or keeps only the viewed/unviewed faces.
+    Writes a 0/1 scalar field as a trimesh attribute -- face_attributes['viewed']
+    and vertex_attributes['viewed'] -- so it shows up as 'face.viewed' / 'viewed'
+    in GeometryPack's Preview Mesh (Dual/VTK) field viewers. Optionally tints faces
+    (viewed=green / unviewed=red) for plain previews, or keeps only viewed/unviewed.
 
     Default visibility is ORTHOGONAL along the view axis -- the parallel-projection
     case, which is the correct notion of 'seen' for isometric/CAD inputs and is
@@ -519,8 +520,15 @@ class Pixal3DProcessMeshVisibility(io.ComfyNode):
                 viewed[np.unique(seen)] = True
             ratio = float(viewed.mean()) if nF else 0.0
 
+            # Store as trimesh face/vertex attributes (a 0/1 scalar field) so it shows up
+            # as 'face.viewed' / 'viewed' in GeometryPack's Preview Mesh (Dual/VTK) field
+            # viewers; also keep the ratio in metadata.
+            out.face_attributes["viewed"] = viewed.astype(np.float32)
+            vviewed = np.zeros(len(out.vertices), np.float32)
+            if viewed.any():
+                vviewed[np.unique(out.faces[viewed])] = 1.0  # vertex viewed if any incident face is
+            out.vertex_attributes["viewed"] = vviewed
             out.metadata = dict(out.metadata or {})
-            out.metadata["viewed_faces"] = viewed
             out.metadata["viewed_ratio"] = ratio
 
             if colorize:
