@@ -245,6 +245,119 @@ class Pixal3DGenerateMeshIsometric(io.ComfyNode):
             return io.NodeOutput(tri, voxelgrid, cam)
 
 
+def _voxels_to_surface(coords, res, mode="voxel_cubes"):
+    """Boundary surface of an occupied voxel set in the [-0.5, 0.5] cube.
+
+    voxel_cubes: blocky shell -- only faces between an occupied voxel and empty
+    space (internal shared faces culled). marching_cubes: smoother watertight hull.
+    """
+    import numpy as np
+    import trimesh
+
+    occ = np.zeros((res, res, res), dtype=bool)
+    occ[coords[:, 0], coords[:, 1], coords[:, 2]] = True
+    vs = 1.0 / res
+    origin = -0.5
+
+    if mode == "marching_cubes":
+        from trimesh.voxel import ops as vox_ops
+        m = vox_ops.matrix_to_marching_cubes(occ, pitch=vs)
+        m.apply_translation([origin, origin, origin])
+        return m
+
+    # voxel_cubes: emit exposed faces only, per the 6 axis directions
+    DIRS = [
+        # (neighbour-occupancy builder, 4 CCW-outward corner offsets in voxel units)
+        (lambda o: np.pad(o[1:, :, :], ((0, 1), (0, 0), (0, 0))), [(1, 0, 0), (1, 1, 0), (1, 1, 1), (1, 0, 1)]),   # +X
+        (lambda o: np.pad(o[:-1, :, :], ((1, 0), (0, 0), (0, 0))), [(0, 0, 0), (0, 0, 1), (0, 1, 1), (0, 1, 0)]),  # -X
+        (lambda o: np.pad(o[:, 1:, :], ((0, 0), (0, 1), (0, 0))), [(0, 1, 0), (0, 1, 1), (1, 1, 1), (1, 1, 0)]),   # +Y
+        (lambda o: np.pad(o[:, :-1, :], ((0, 0), (1, 0), (0, 0))), [(0, 0, 0), (1, 0, 0), (1, 0, 1), (0, 0, 1)]),  # -Y
+        (lambda o: np.pad(o[:, :, 1:], ((0, 0), (0, 0), (0, 1))), [(0, 0, 1), (1, 0, 1), (1, 1, 1), (0, 1, 1)]),   # +Z
+        (lambda o: np.pad(o[:, :, :-1], ((0, 0), (0, 0), (1, 0))), [(0, 0, 0), (0, 1, 0), (1, 1, 0), (1, 0, 0)]),  # -Z
+    ]
+    vparts, fparts, voff = [], [], 0
+    for nb_fn, offs in DIRS:
+        exposed = occ & ~nb_fn(occ)
+        idx = np.argwhere(exposed)
+        if not len(idx):
+            continue
+        base = idx.astype(np.float64) * vs + origin            # (M,3) min corner
+        quad = base[:, None, :] + np.asarray(offs, np.float64) * vs  # (M,4,3)
+        vparts.append(quad.reshape(-1, 3))
+        b = np.arange(len(idx)) * 4 + voff
+        fparts.append(np.stack([b, b + 1, b + 2], 1))
+        fparts.append(np.stack([b, b + 2, b + 3], 1))
+        voff += len(idx) * 4
+    if not vparts:
+        return trimesh.Trimesh()
+    return trimesh.Trimesh(vertices=np.concatenate(vparts, 0),
+                           faces=np.concatenate(fparts, 0), process=True)
+
+
+class Pixal3DGenerateSparse(io.ComfyNode):
+    """Stage 1 only: the sparse-structure 'blockout' as a surface mesh.
+
+    Runs just the sparse-structure stage of the cascade (projective + global
+    conditioning -> a 32^3 occupancy) and returns the boundary surface of the
+    occupied voxels -- the coarse volume the object lives in. Note the occupancy
+    is a SURFACE shell (voxels the surface passes through), hollow inside, not a
+    solid fill. Fast (one short diffusion stage); good for previewing the camera/
+    conditioning before the full generate.
+    """
+
+    @classmethod
+    def define_schema(cls):
+        return io.Schema(
+            node_id="Pixal3DGenerateSparse",
+            display_name="Pixal3D Generate Sparse",
+            category="Pixal3D",
+            description=(
+                "Run only the sparse-structure stage and return the occupied voxels as a "
+                "surface mesh (the coarse blockout volume). Hollow surface shell, not solid."
+            ),
+            inputs=[
+                io.Custom("PIXAL3D_PIPELINE").Input("pipeline", tooltip="From Pixal3DLoadPipeline."),
+                io.Image.Input("image", tooltip="Preprocessed image (from Pixal3D Preprocess Image)."),
+                io.Custom("PIXAL3D_CAMERA").Input("camera", tooltip="From Pixal3DCameraFromFOV."),
+                io.Int.Input("seed", default=42, min=0, max=2**31 - 1),
+                io.Combo.Input("mode", options=["voxel_cubes", "marching_cubes"], default="voxel_cubes",
+                    tooltip="voxel_cubes = blocky shell (exact voxels, internal faces culled). "
+                            "marching_cubes = smoother watertight hull of the same occupancy."),
+                io.Int.Input("ss_steps", default=12, min=1, max=64, optional=True,
+                    tooltip="Sparse-structure diffusion steps."),
+                io.Float.Input("ss_guidance", default=7.5, min=0.0, max=15.0, step=0.1, optional=True),
+                io.Float.Input("ss_rescale", default=0.7, min=0.0, max=1.0, step=0.05, optional=True),
+                io.Float.Input("ss_rescale_t", default=5.0, min=0.0, max=10.0, step=0.1, optional=True),
+            ],
+            outputs=[
+                io.Custom("TRIMESH").Output(display_name="sparse_mesh"),
+                io.Int.Output(display_name="voxel_count"),
+                io.String.Output(display_name="summary"),
+            ],
+        )
+
+    @classmethod
+    def execute(cls, pipeline, image, camera, seed=42, mode="voxel_cubes",
+                ss_steps=12, ss_guidance=7.5, ss_rescale=0.7, ss_rescale_t=5.0):
+        from .stages import generate_sparse_structure, _YUP_TO_ZUP_ROT, _phase
+        with _phase("Pixal3DGenerateSparse.execute"):
+            coords, res = generate_sparse_structure(
+                image=image, camera_params=camera, seed=seed,
+                attn_backend=pipeline.get("attn_backend", "auto"),
+                ss_res=32, ss_steps=ss_steps, ss_guidance=ss_guidance,
+                ss_rescale=ss_rescale, ss_rescale_t=ss_rescale_t,
+            )
+            mesh = _voxels_to_surface(coords, res, mode=mode)
+            # match Generate Mesh's frame (Y-up native -> Z-up for downstream)
+            if len(mesh.vertices):
+                mesh.apply_transform(_YUP_TO_ZUP_ROT)
+            n = int(len(coords))
+            summary = (f"Pixal3D Generate Sparse: {n} occupied voxels @ {res}^3 ({mode}), "
+                       f"{len(mesh.vertices)} verts / {len(mesh.faces)} faces (hollow surface shell).")
+            log.info(f"[Pixal3DGenerateSparse] {summary}")
+            return io.NodeOutput(mesh, n, summary)
+
+
 class Pixal3DProcessMesh(io.ComfyNode):
     """Heavy cumesh cleanup + UV unwrap. Output mesh is ready for Pixal3DRasterizePBR."""
 
@@ -743,6 +856,7 @@ class Pixal3DExportGLB(io.ComfyNode):
 NODE_CLASS_MAPPINGS = {
     "Pixal3DGenerateMesh": Pixal3DGenerateMesh,
     "Pixal3DGenerateMeshIsometric": Pixal3DGenerateMeshIsometric,
+    "Pixal3DGenerateSparse": Pixal3DGenerateSparse,
     "Pixal3DProcessMesh": Pixal3DProcessMesh,
     "Pixal3DProcessMeshVisibility": Pixal3DProcessMeshVisibility,
     "Pixal3DRasterizePBR": Pixal3DRasterizePBR,
@@ -752,6 +866,7 @@ NODE_CLASS_MAPPINGS = {
 NODE_DISPLAY_NAME_MAPPINGS = {
     "Pixal3DGenerateMesh": "Pixal3D Generate Mesh",
     "Pixal3DGenerateMeshIsometric": "Pixal3D Generate Mesh isometric",
+    "Pixal3DGenerateSparse": "Pixal3D Generate Sparse",
     "Pixal3DProcessMesh": "Pixal3D Process Mesh",
     "Pixal3DProcessMeshVisibility": "Pixal3D Process Mesh Visibility",
     "Pixal3DRasterizePBR": "Pixal3D Rasterize PBR",

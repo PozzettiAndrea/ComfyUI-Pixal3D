@@ -1577,6 +1577,38 @@ def export_glb_yup(tri, filename_prefix: str = "pixal3d") -> str:
 # ----------------------------------------------------------------------------
 
 
+def generate_sparse_structure(
+    image: torch.Tensor,
+    camera_params: dict,
+    seed: int = 42,
+    attn_backend: str = "auto",
+    ss_res: int = 32,
+    ss_steps: int = 12, ss_guidance: float = 7.5, ss_rescale: float = 0.7, ss_rescale_t: float = 5.0,
+):
+    """Stage 1 only: run get_proj_cond_ss + sample_sparse_structure.
+
+    Returns (coords_xyz int (N,3) in the ss_res grid, ss_res). The image is
+    expected already-preprocessed (wire Pixal3D Preprocess Image), matching the
+    cascade which calls run(preprocess_image=False)."""
+    pipeline = init_pipeline(attn_backend=attn_backend)
+    pil = comfy_image_to_pil(image)
+    torch.manual_seed(seed)
+    cond_ss = pipeline.get_proj_cond_ss(
+        [pil],
+        camera_angle_x=camera_params["camera_angle_x"],
+        distance=camera_params["distance"],
+        mesh_scale=camera_params.get("mesh_scale", 1.0),
+    )
+    coords = pipeline.sample_sparse_structure(
+        cond_ss, int(ss_res), 1,
+        {"steps": ss_steps, "guidance_strength": ss_guidance,
+         "guidance_rescale": ss_rescale, "rescale_t": ss_rescale_t},
+    )
+    c = coords.detach().cpu().numpy()
+    torch.cuda.empty_cache()
+    return c[:, 1:].astype(np.int64), int(ss_res)  # drop batch col -> (N,3) x,y,z
+
+
 def generate_mesh_and_voxelgrid(
     image: torch.Tensor,
     camera_params: dict,
