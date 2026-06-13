@@ -798,10 +798,16 @@ def _run_cascade(
     shape_steps: int, shape_guidance: float, shape_rescale: float, shape_rescale_t: float,
     tex_steps: int, tex_guidance: float, tex_rescale: float, tex_rescale_t: float,
     generate_texture: bool = True,
+    occlude_proj: bool = False, occlude_keep_layers: float = 1.0, occlude_ray_bins: int = 0,
 ):
     """Run the 4-stage cascade. Returns (pipeline, MeshWithVoxel, resolution).
     With generate_texture=False the texture stage is skipped (shape only)."""
     pipeline = init_pipeline(attn_backend=attn_backend)
+    # Occlusion-aware projective conditioning (shape/texture stages). Always set so a
+    # cached pipeline doesn't keep a stale flag from a previous run.
+    pipeline._occlude_proj = bool(occlude_proj)
+    pipeline._occlude_keep_layers = float(occlude_keep_layers)
+    pipeline._occlude_ray_bins = int(occlude_ray_bins)
     pil = comfy_image_to_pil(image)
     torch.manual_seed(seed)
     log.info(f"[pixal3d] Running cascade ({pipeline_type}, seed={seed}, "
@@ -1620,6 +1626,7 @@ def generate_mesh_and_voxelgrid(
     shape_steps: int = 12, shape_guidance: float = 7.5, shape_rescale: float = 0.5, shape_rescale_t: float = 3.0,
     tex_steps: int = 12, tex_guidance: float = 1.0, tex_rescale: float = 0.0, tex_rescale_t: float = 3.0,
     generate_texture: bool = True,
+    occlude_proj: bool = False, occlude_keep_layers: float = 1.0, occlude_ray_bins: int = 0,
 ):
     """Run the cascade and split the result into IPC-safe (TRIMESH, PIXAL3D_VOXELGRID).
     The trimesh is the raw DC mesh in pixal3d internal coords ([-0.5, 0.5]^3, Z-up).
@@ -1631,6 +1638,7 @@ def generate_mesh_and_voxelgrid(
         shape_steps, shape_guidance, shape_rescale, shape_rescale_t,
         tex_steps, tex_guidance, tex_rescale, tex_rescale_t,
         generate_texture=generate_texture,
+        occlude_proj=occlude_proj, occlude_keep_layers=occlude_keep_layers, occlude_ray_bins=occlude_ray_bins,
     )
     tri = _trimesh_from_meshwithvoxel(mw)
     voxelgrid = _meshwithvoxel_to_dict(mw, pipeline)

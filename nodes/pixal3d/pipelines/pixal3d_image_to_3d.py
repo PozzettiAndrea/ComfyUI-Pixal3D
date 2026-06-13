@@ -10,6 +10,34 @@ from ..modules import image_feature_extractor
 from ..representations import Mesh, MeshWithVoxel
 
 
+def _occlusion_proj_mask(coords, grid_res, angle, dist, ms, keep_layers, ray_bins, device):
+    """Per-voxel boolean: True = front-most along its camera ray (+ keep_layers behind).
+    Replicates ProjGrid's projection (grid -> Blender rotation -> /mesh_scale/2 ->
+    perspective) so 'visible' matches what the projective conditioning samples. Used to
+    zero the projected feature on occluded voxels while leaving them in the generation."""
+    import math
+    idx = coords[:, 1:].to(torch.float32)
+    p = (idx + 0.5) / grid_res * 2.0 - 1.0
+    R = torch.tensor([[1., 0, 0], [0, 0, -1], [0, 1, 0]], device=device)
+    pr = (p @ R.t()) / ms / 2.0
+    T = torch.tensor([[1., 0, 0, 0], [0, 0, -1, -dist], [0, 1, 0, 0], [0, 0, 0, 1]], device=device)
+    cam = torch.cat([pr, torch.ones(pr.shape[0], 1, device=device)], 1) @ torch.linalg.inv(T).t()
+    xc, yc, zc = cam[:, 0], cam[:, 1], cam[:, 2]
+    depth = -zc
+    t = math.tan(angle / 2.0) + 1e-9
+    fx = 0.5 / t * xc / (-zc + 1e-8) + 0.5
+    fy = -0.5 / t * yc / (-zc + 1e-8) + 0.5
+    rb = int(ray_bins)
+    bx = (fx * rb).long().clamp(0, rb - 1)
+    by = (fy * rb).long().clamp(0, rb - 1)
+    bt = coords[:, 0].long()
+    key = (bt * rb + by) * rb + bx
+    front = torch.full((int(key.max().item()) + 1,), float("inf"), device=device)
+    front.scatter_reduce_(0, key, depth, reduce="amin", include_self=True)
+    margin = keep_layers / (grid_res * ms) + 1e-6
+    return (depth <= front[key] + margin) & (depth > 0)
+
+
 class Pixal3DImageTo3DPipeline(Pipeline):
     """
     Pipeline for inferring Pixal3D (proj mode) image-to-3D models.
@@ -278,6 +306,22 @@ class Pixal3DImageTo3DPipeline(Pipeline):
         y_coords = coords[:, 2].long()
         z_coords = coords[:, 3].long()
         z_proj_sparse = z_proj_grid[batch_indices, x_coords, y_coords, z_coords]
+
+        # Occlusion-aware conditioning: keep the projected feature only on voxels visible
+        # from the camera (front-most per ray + keep_layers); zero it on occluded voxels so
+        # the back isn't told it "looks like" the front pixel. Voxels stay in the generation;
+        # only their proj feature is masked (global cross-attn still applies). Off by default.
+        if getattr(self, "_occlude_proj", False):
+            def _f(v):
+                return float(v.item()) if torch.is_tensor(v) else float(v)
+            keep = _occlusion_proj_mask(
+                coords, grid_res, _f(camera_angle_x), _f(distance), _f(mesh_scale),
+                float(getattr(self, "_occlude_keep_layers", 1.0)),
+                int(getattr(self, "_occlude_ray_bins", 0)) or grid_res,
+                z_proj_sparse.device,
+            )
+            z_proj_sparse = z_proj_sparse * keep.unsqueeze(1).to(z_proj_sparse.dtype)
+
         z_proj_st = SparseTensor(feats=z_proj_sparse, coords=coords)
 
         if grid_resolution_override is not None and grid_resolution_override != orig_grid_res:

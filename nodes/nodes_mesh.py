@@ -117,6 +117,17 @@ class Pixal3DGenerateMesh(io.ComfyNode):
                 io.Float.Input("tex_rescale_t", default=3.0, min=0.0, max=10.0, step=0.1, optional=True,
                     tooltip="Timestep threshold above which tex_rescale is applied. "
                             "Ignored when generate_texture is OFF."),
+
+                # --- Occlusion-aware projective conditioning (shape/texture stages) ---
+                io.Boolean.Input("occlude_proj", default=False, optional=True,
+                    tooltip="Apply the projected image feature only to voxels VISIBLE from the camera "
+                            "(front-most per ray + keep_layers); occluded voxels keep global cross-attn "
+                            "only. Stops the back being told it 'looks like' the front pixel. All voxels "
+                            "stay in the generation. Experimental/OOD (the model trained with full-shell "
+                            "projection) -- A/B it."),
+                io.Float.Input("occlude_keep_layers", default=1.0, min=0.0, max=16.0, step=0.5, optional=True,
+                    tooltip="Voxels behind the front surface that still receive the proj feature (only "
+                            "used when occlude_proj is on). 0 = exact front voxel, 1 = first-hit +-1."),
             ],
             outputs=[
                 io.Custom("TRIMESH").Output(display_name="mesh"),
@@ -136,6 +147,7 @@ class Pixal3DGenerateMesh(io.ComfyNode):
         ss_steps: int = 12, ss_guidance: float = 7.5, ss_rescale: float = 0.7, ss_rescale_t: float = 5.0,
         shape_steps: int = 12, shape_guidance: float = 7.5, shape_rescale: float = 0.5, shape_rescale_t: float = 3.0,
         tex_steps: int = 12, tex_guidance: float = 1.0, tex_rescale: float = 0.0, tex_rescale_t: float = 3.0,
+        occlude_proj: bool = False, occlude_keep_layers: float = 1.0,
     ):
         from .stages import generate_mesh_and_voxelgrid, _YUP_TO_ZUP_ROT, _phase
         with _phase("Pixal3DGenerateMesh.execute"):
@@ -150,6 +162,7 @@ class Pixal3DGenerateMesh(io.ComfyNode):
                 ss_steps=ss_steps, ss_guidance=ss_guidance, ss_rescale=ss_rescale, ss_rescale_t=ss_rescale_t,
                 shape_steps=shape_steps, shape_guidance=shape_guidance, shape_rescale=shape_rescale, shape_rescale_t=shape_rescale_t,
                 tex_steps=tex_steps, tex_guidance=tex_guidance, tex_rescale=tex_rescale, tex_rescale_t=tex_rescale_t,
+                occlude_proj=occlude_proj, occlude_keep_layers=occlude_keep_layers,
             )
             # Pixal3D's cascade outputs Y-up natively; TRELLIS2's verified-working
             # cumesh+drtk UV-bake regime expects Z-up. Rotate here so ProcessMesh /
@@ -223,6 +236,7 @@ class Pixal3DGenerateMeshIsometric(io.ComfyNode):
         ss_steps: int = 12, ss_guidance: float = 7.5, ss_rescale: float = 0.7, ss_rescale_t: float = 5.0,
         shape_steps: int = 12, shape_guidance: float = 7.5, shape_rescale: float = 0.5, shape_rescale_t: float = 3.0,
         tex_steps: int = 12, tex_guidance: float = 1.0, tex_rescale: float = 0.0, tex_rescale_t: float = 3.0,
+        occlude_proj: bool = False, occlude_keep_layers: float = 1.0,
     ):
         from .stages import generate_mesh_and_voxelgrid, _YUP_TO_ZUP_ROT, _phase
 
@@ -240,6 +254,7 @@ class Pixal3DGenerateMeshIsometric(io.ComfyNode):
                 ss_steps=ss_steps, ss_guidance=ss_guidance, ss_rescale=ss_rescale, ss_rescale_t=ss_rescale_t,
                 shape_steps=shape_steps, shape_guidance=shape_guidance, shape_rescale=shape_rescale, shape_rescale_t=shape_rescale_t,
                 tex_steps=tex_steps, tex_guidance=tex_guidance, tex_rescale=tex_rescale, tex_rescale_t=tex_rescale_t,
+                occlude_proj=occlude_proj, occlude_keep_layers=occlude_keep_layers,
             )
             tri.apply_transform(_YUP_TO_ZUP_ROT)
             log.info(
