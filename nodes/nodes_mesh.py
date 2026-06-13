@@ -18,6 +18,26 @@ from comfy_api.latest import io
 log = logging.getLogger("pixal3d")
 
 
+def _long_lens_camera(camera, multiplier):
+    """Isometric long-lens transform: push the camera back x m and shrink the FOV
+    by the same factor, so framing is preserved while perspective foreshortening
+    flattens toward orthographic (m=1 = identity). Ratios cancel in x_ndc=f/(-z)*x,
+    so it's stable at large m. Returns (modified_camera_dict, m)."""
+    import math
+    m = max(1.0, float(multiplier))
+    cam = dict(camera) if isinstance(camera, dict) else camera
+    if m == 1.0:
+        return cam, 1.0
+    a0 = float(cam.get("camera_angle_x", 0.8575560450553894))
+    d0 = float(cam.get("distance", 2.0))
+    cam = dict(cam)
+    cam["distance"] = d0 * m
+    cam["camera_angle_x"] = 2.0 * math.atan(math.tan(a0 / 2.0) / m)
+    log.info(f"[iso] x{m:.1f}: camera_angle_x {a0:.4f}->{cam['camera_angle_x']:.4f} rad, "
+             f"distance {d0:.3f}->{cam['distance']:.3f}")
+    return cam, m
+
+
 class Pixal3DGenerateMesh(io.ComfyNode):
     """Run the 4-stage cascade. Emits the raw DC mesh + the sparse PBR voxel grid."""
 
@@ -204,23 +224,9 @@ class Pixal3DGenerateMeshIsometric(io.ComfyNode):
         shape_steps: int = 12, shape_guidance: float = 7.5, shape_rescale: float = 0.5, shape_rescale_t: float = 3.0,
         tex_steps: int = 12, tex_guidance: float = 1.0, tex_rescale: float = 0.0, tex_rescale_t: float = 3.0,
     ):
-        import math
         from .stages import generate_mesh_and_voxelgrid, _YUP_TO_ZUP_ROT, _phase
 
-        # Long-lens transform: distance *= m, FOV shrinks so framing is preserved and
-        # foreshortening -> orthographic as m grows. Ratios cancel in the projection
-        # (x_ndc = f/(-z) * x), so it's numerically stable even at large m.
-        m = max(1.0, float(iso_distance_multiplier))
-        cam = dict(camera) if isinstance(camera, dict) else camera
-        a0 = float(cam.get("camera_angle_x", 0.8575560450553894))
-        d0 = float(cam.get("distance", 2.0))
-        cam["distance"] = d0 * m
-        cam["camera_angle_x"] = 2.0 * math.atan(math.tan(a0 / 2.0) / m)
-        log.info(
-            f"[Pixal3DGenerateMeshIsometric] iso x{m:.1f}: "
-            f"camera_angle_x {a0:.4f}->{cam['camera_angle_x']:.4f} rad, "
-            f"distance {d0:.3f}->{cam['distance']:.3f} (->orthographic as x grows)"
-        )
+        cam, m = _long_lens_camera(camera, iso_distance_multiplier)
 
         with _phase("Pixal3DGenerateMeshIsometric.execute"):
             tri, voxelgrid = generate_mesh_and_voxelgrid(
@@ -320,6 +326,11 @@ class Pixal3DGenerateSparse(io.ComfyNode):
                 io.Image.Input("image", tooltip="Preprocessed image (from Pixal3D Preprocess Image)."),
                 io.Custom("PIXAL3D_CAMERA").Input("camera", tooltip="From Pixal3DCameraFromFOV."),
                 io.Int.Input("seed", default=42, min=0, max=2**31 - 1),
+                io.Float.Input("iso_distance_multiplier", default=1.0, min=1.0, max=1000.0, step=0.5, optional=True,
+                    tooltip="Isometric long-lens flattening (same as Generate Mesh isometric). 1.0 = the "
+                            "original perspective camera; higher pushes the camera back + shrinks FOV so "
+                            "the projective conditioning matches isometric/parallel inputs (~8 strong, "
+                            "100+ ~orthographic)."),
                 io.Combo.Input("mode", options=["voxel_cubes", "marching_cubes"], default="voxel_cubes",
                     tooltip="voxel_cubes = blocky shell (exact voxels, internal faces culled). "
                             "marching_cubes = smoother watertight hull of the same occupancy."),
@@ -333,16 +344,18 @@ class Pixal3DGenerateSparse(io.ComfyNode):
                 io.Custom("TRIMESH").Output(display_name="sparse_mesh"),
                 io.Int.Output(display_name="voxel_count"),
                 io.String.Output(display_name="summary"),
+                io.Custom("PIXAL3D_CAMERA").Output(display_name="camera"),
             ],
         )
 
     @classmethod
-    def execute(cls, pipeline, image, camera, seed=42, mode="voxel_cubes",
+    def execute(cls, pipeline, image, camera, seed=42, iso_distance_multiplier=1.0, mode="voxel_cubes",
                 ss_steps=12, ss_guidance=7.5, ss_rescale=0.7, ss_rescale_t=5.0):
         from .stages import generate_sparse_structure, _YUP_TO_ZUP_ROT, _phase
+        cam, m = _long_lens_camera(camera, iso_distance_multiplier)
         with _phase("Pixal3DGenerateSparse.execute"):
             coords, res = generate_sparse_structure(
-                image=image, camera_params=camera, seed=seed,
+                image=image, camera_params=cam, seed=seed,
                 attn_backend=pipeline.get("attn_backend", "auto"),
                 ss_res=32, ss_steps=ss_steps, ss_guidance=ss_guidance,
                 ss_rescale=ss_rescale, ss_rescale_t=ss_rescale_t,
@@ -352,10 +365,10 @@ class Pixal3DGenerateSparse(io.ComfyNode):
             if len(mesh.vertices):
                 mesh.apply_transform(_YUP_TO_ZUP_ROT)
             n = int(len(coords))
-            summary = (f"Pixal3D Generate Sparse: {n} occupied voxels @ {res}^3 ({mode}), "
+            summary = (f"Pixal3D Generate Sparse: {n} occupied voxels @ {res}^3 ({mode}, iso x{m:.1f}), "
                        f"{len(mesh.vertices)} verts / {len(mesh.faces)} faces (hollow surface shell).")
             log.info(f"[Pixal3DGenerateSparse] {summary}")
-            return io.NodeOutput(mesh, n, summary)
+            return io.NodeOutput(mesh, n, summary, cam)
 
 
 class Pixal3DProcessMesh(io.ComfyNode):
