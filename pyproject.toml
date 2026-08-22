@@ -9,4 +9,4 @@ Repository = "https://github.com/PozzettiAndrea/ComfyUI-Pixal3D"
 
 [tool.comfy]
 PublisherId = "pznodes"
-DisplayName = "Pixal3D-env"
+DisplayName = "Pixal3D"
