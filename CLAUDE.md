@@ -28,7 +28,7 @@ Process-isolated pack, mirroring `ComfyUI-TRELLIS2`. All Pixal3D Python code (to
 
 ```
 ComfyUI-Pixal3D/
-├── comfy-env-root.toml          # [cuda] = ["flash-attn","sageattention"]; [node_reqs] for GeometryPack
+├── comfy-env-root.toml          # [cuda] = ["flash-attn","sageattention"]; [node_packs] for GeometryPack
 ├── install.py                   # from comfy_env import install; install()
 ├── prestartup_script.py         # setup_env(); copy_files(assets); copy_viewer("glb_three", web/)
 ├── __init__.py                  # register_nodes() + register TRELLIS2-compatible model configs if helpful
